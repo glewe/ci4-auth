@@ -2,9 +2,11 @@
 
 CI4-Auth is a user, group, role and permission management library for Codeigniter 4.
 
-CI4-Auth is based on the great [Myth-Auth](https://github.com/lonnieezell/myth-auth) library for Codeigniter 4. Due credits go to its author Lonnie Ezell and the team for this awesome work.
+CI4-Auth is based on the great [Myth-Auth](https://github.com/lonnieezell/myth-auth) library for Codeigniter 4. Due credits go to its author [Lonnie Ezell](https://github.com/lonnieezell) and the
+team for this awesome work.
 
-I started customizing Myth-Auth to meet my specific requirements but after a while I noticed that my changes got quite large. I decided to build CI4-Auth based on Myth-Auth, changing and adding features I needed for my projects.
+I started customizing Myth-Auth to meet my specific requirements but after a while I noticed that my changes got
+quite large. I decided to build CI4-Auth based on Myth-Auth, changing and adding features I needed for my projects.
 
 ## Requirements
 
@@ -38,7 +40,8 @@ Download the CI4-Auth archive from this repo here.
 
 *Note: CI4-Auth is not available as a Composer package yet. It works from your ThirdParty folder.*
 
-Unzip the CI4-Auth archive and copy the 'lewe' directory to your **\app\ThirdParty** folder in your Codeigniter project. You should see this tree section then:
+Unzip the CI4-Auth archive and copy the 'lewe' directory to your **\app\ThirdParty** folder in your Codeigniter project.
+You should see this tree section then:
 ```
 project-root
 - app
@@ -70,13 +73,16 @@ public $ruleSets = [
 ];
 ```
 
-3. The "Remember Me" functionality is turned off by default. It can be turned on by setting the `$allowRemembering` variable to `true` in **lewe/ci4-auth/src/Config/Auth.php**.
+3. The "Remember Me" functionality is turned off by default. It can be turned on by setting the
+`$allowRemembering` variable to `true` in **lewe/ci4-auth/src/Config/Auth.php**.
 
-4. Edit **app/Config/Email.php** and verify that `fromName` and `fromEmail` are set as they are used when sending emails for password resets, etc.
+4. Edit **app/Config/Email.php** and verify that `fromName` and `fromEmail` are set as they are used when sending
+emails for password resets, etc.
 
 ### Routes
 
-The CI4-Auth routes are defined in **lewe/ci4-auth/src/Config/Routes.php**. Copy the routes group from there to your **app/Config/Routes.php** file, right after the 'Route Definitions' header comment.
+The CI4-Auth routes are defined in **lewe/ci4-auth/src/Config/Routes.php**. Copy the routes group from there to your
+**app/Config/Routes.php** file, right after the 'Route Definitions' header comment.
 ```php
 /*
 * --------------------------------------------------------------------
@@ -102,7 +108,8 @@ $routes->group('', ['namespace' => 'CI4\Auth\Src\Controllers'], function ($route
 
 The views that come with CI4-Auth are based on [Bootstrap 5](http://getbootstrap.com/) and [Font Awesome 5](https://fontawesome.com/).
 
-If you like to use your own view you can override them editing the `$views` array in **lewe/ci4-auth/src/Config/Auth.php**:
+If you like to use your own view you can override them editing the `$views` array in
+**lewe/ci4-auth/src/Config/Auth.php**:
 ```php
 public $views = [
 
@@ -145,7 +152,8 @@ public $views = [
 
 Assuming that your database is setup correctly but still empty you need to run the migrations now.
 
-Copy the file **lewe/ci4-auth/src/Database/Migrations/2021-12-14-000000_create_auth_tables.php** to **app/Database/Migrations**. Then run the command:
+Copy the file **lewe/ci4-auth/src/Database/Migrations/2021-12-14-000000_create_auth_tables.php** to
+**app/Database/Migrations**. Then run the command:
 
     > php spark migrate
 
@@ -153,13 +161,15 @@ Copy the file **lewe/ci4-auth/src/Database/Migrations/2021-12-14-000000_create_a
 
 Assuming that the migrations have been completed successfully, you can run the seeders now to create the CI4-Auth sample data.
 
-Copy the files **lewe/ci4-auth/src/Database/Seeds/*.php** to **app/Database/Seeds**. Then run the following commands:
+Copy the files **lewe/ci4-auth/src/Database/Seeds/*.php** to **app/Database/Seeds**.
+Then run the following command:
 
     > php spark db:seed CI4AuthSeeder
 
 ### Run Application
 
-Start your browser and navigate to your public directory. Use the menu to check out the views that come with CI4-Auth.
+Start your browser and navigate to your public directory. Use the menu to check out the views that come with
+CI4-Auth.
 
 ## Services
 
@@ -180,7 +190,8 @@ In addition to the helper functions that come with Myth-Auth, CI4-Auth provides 
 * Function: Ensures that the current user is in at least one of the passed in groups.
 * Parameters: Group IDs or names (single item or array of items)
 * Returns: `true` or `false`
-*Note: This is not the same helper as in Myth-Auth since Myth-Auth is inconcistent in using the terms 'group' and 'role'.*
+*Note: This is not the same helper as in Myth-Auth since Myth-Auth is inconcistent in
+using the terms 'group' and 'role'.*
 
 **in_roles()**
 
@@ -191,8 +202,8 @@ In addition to the helper functions that come with Myth-Auth, CI4-Auth provides 
 
 ## Helper Functions (Bootstrap 5)
 
-In order to create Bootstrap objects quicker and to avoid duplicating code in views, these helper
-functions are provided:
+In order to create Bootstrap objects quicker and to avoid duplicating code in views, these helper functions are
+provided:
 
 **bs5_alert()**
 
