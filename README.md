@@ -1,4 +1,4 @@
-(https://github.com/glewe/ci4-auth/blob/main/src/Images/icon-64.png?raw=true)
+![CI4-Auth](https://github.com/glewe/ci4-auth/blob/main/src/Images/icon-64.png?raw=true)
 # CI4-Auth
 
 CI4-Auth is a user, group, role and permission management library for Codeigniter 4.
