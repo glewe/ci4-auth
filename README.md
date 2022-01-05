@@ -1,5 +1,6 @@
-![CI4-Auth](https://github.com/glewe/ci4-auth/blob/main/src/Images/icon-64.png?raw=true)
 # CI4-Auth
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+[![PSR12](https://img.shields.io/badge/Style-PSR12-blue.svg)](https://www.php-fig.org/psr/psr-12/)
 
 CI4-Auth is a user, group, role and permission management library for Codeigniter 4.
 
