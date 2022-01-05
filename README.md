@@ -1,4 +1,4 @@
-(src/Images/icon-64.png)
+[CI4Auth](src/Images/icon-64.png)
 # CI4-Auth
 
 CI4-Auth is a user, group, role and permission management library for Codeigniter 4.
