@@ -1,8 +1,8 @@
 # CI4-Auth
-[![Maintenance](https://img.shields.io/badge/Maintained-yes-009900.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
-[![PSR12](https://img.shields.io/badge/Style-PSR12-99ccff.svg)](https://www.php-fig.org/psr/psr-12/)
-[![Bootstrap](https://img.shields.io/badge/Views-Bootstrap%205-7952b3.svg)](https://www.getbootstrap.com/)
+[![PHP](https://img.shields.io/badge/Language-PHP-8892BF.svg)](https://www.php.net/)
+[![Bootstrap 5](https://img.shields.io/badge/Styles-Bootstrap%205-7952b3.svg)](https://www.getbootstrap.com/)
 [![Font Awesome](https://img.shields.io/badge/Icons-Font%20Awesome%205-1e7cd6.svg)](https://www.fontawesome.com/)
+[![Maintained](https://img.shields.io/badge/Maintained-yes-009900.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 
 CI4-Auth is a user, group, role and permission management library for Codeigniter 4.
 
