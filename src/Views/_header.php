@@ -40,5 +40,3 @@
 <body>
 
     <?= view('CI4\Auth\Views\_navbar') ?>
-
-    <main role="main" class="container mt-4">
