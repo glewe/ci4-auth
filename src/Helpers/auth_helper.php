@@ -29,11 +29,11 @@ if (!function_exists('auth_display')) {
                 <hr>
                 <div>
                 <table><tbody>
-                    <tr><td style="width:150px;">User ID</td><td>#{$user->id}</td></tr>
-                    <tr><td>Username</td><td>{$user->username}</td></tr>
-                    <tr><td>Email</td><td>{$user->email}</td></tr>
-                    <tr><td>Groups</td><td>{$groupsForUser}</td></tr>
-                    <tr><td>Roles</td><td>{$rolesForUser}</td></tr>
+                    <tr><td style="width:150px;">User ID</td><td>' . $user->id . '</td></tr>
+                    <tr><td>Username</td><td>' . $user->username . '</td></tr>
+                    <tr><td>Email</td><td>' . $user->email . '</td></tr>
+                    <tr><td>Groups</td><td>' . $groupsForUser . '</td></tr>
+                    <tr><td>Roles</td><td>' . $rolesForUser . '</td></tr>
                 </tbody></table>
                 </div>
             </div>';
