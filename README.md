@@ -96,7 +96,7 @@ The CI4-Auth routes are defined in **lewe/ci4-auth/src/Config/Routes.php**. Copy
 //
 // CI4-Auth Routes
 //
-$routes->group('', ['namespace' => 'CI4\Auth\Src\Controllers'], function ($routes) {
+$routes->group('', ['namespace' => 'CI4\Auth\Controllers'], function ($routes) {
 
     // Sample route with role filter
     // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'role:Administrator']);
