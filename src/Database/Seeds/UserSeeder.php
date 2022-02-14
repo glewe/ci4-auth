@@ -13,6 +13,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         $records = array(
+            ['email' => 'admin@mydomain.com', 'username' => 'admin', 'firstname' => 'Super', 'lastname' => 'Admin', 'displayname' => 'Admin'],
             ['email' => 'mmouse@mydomain.com', 'username' => 'mickey', 'firstname' => 'Mickey', 'lastname' => 'Mouse', 'displayname' => 'Mickey'],
             ['email' => 'dduck@disnmydomainey.com', 'username' => 'donald', 'firstname' => 'Donald', 'lastname' => 'Duck', 'displayname' => 'Donald'],
             ['email' => 'blightyear@mydomain.com', 'username' => 'buzz', 'firstname' => 'Buzz', 'lastname' => 'Lightyear', 'displayname' => 'Buzz'],

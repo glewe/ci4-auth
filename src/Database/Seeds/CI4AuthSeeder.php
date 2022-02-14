@@ -18,5 +18,6 @@ class CI4AuthSeeder extends Seeder
         $this->call('GroupSeeder');
         $this->call('RoleSeeder');
         $this->call('GroupsUsersSeeder');
+        $this->call('RolesUsersSeeder');
     }
 }
