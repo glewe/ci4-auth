@@ -34,7 +34,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
      *
      * @return boolean
      */
-    public function check(string $password, Entity $user = null): bool
+    public function check(string $password, $user = null): bool
     {
         $password = \strtolower($password);
 

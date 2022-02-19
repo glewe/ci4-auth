@@ -41,7 +41,7 @@ class CompositionValidator extends BaseValidator implements ValidatorInterface
      *
      * @return boolean
      */
-    public function check(string $password, Entity $user = null): bool
+    public function check(string $password, $user = null): bool
     {
         if (empty($this->config->minimumPasswordLength)) {
             throw AuthException::forUnsetPasswordLength();

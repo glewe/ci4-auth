@@ -14,12 +14,12 @@ class UserSeeder extends Seeder
     {
         $records = array(
             ['email' => 'admin@mydomain.com', 'username' => 'admin', 'firstname' => 'Super', 'lastname' => 'Admin', 'displayname' => 'Admin'],
-            ['email' => 'mmouse@mydomain.com', 'username' => 'mickey', 'firstname' => 'Mickey', 'lastname' => 'Mouse', 'displayname' => 'Mickey'],
-            ['email' => 'dduck@disnmydomainey.com', 'username' => 'donald', 'firstname' => 'Donald', 'lastname' => 'Duck', 'displayname' => 'Donald'],
-            ['email' => 'blightyear@mydomain.com', 'username' => 'buzz', 'firstname' => 'Buzz', 'lastname' => 'Lightyear', 'displayname' => 'Buzz'],
-            ['email' => 'phead@mydomain.com', 'username' => 'potatoe', 'firstname' => 'Potatoe', 'lastname' => 'Head', 'displayname' => 'Potie'],
-            ['email' => 'ccarl@mydomain.com', 'username' => 'carl', 'firstname' => 'Coyote', 'lastname' => 'Carl', 'displayname' => 'Carl'],
-            ['email' => 'sgponzalez@mydomain.com', 'username' => 'speedy', 'firstname' => 'Speedy', 'lastname' => 'Gonzalez', 'displayname' => 'Speedy'],
+            ['email' => 'mmouse@mydomain.com', 'username' => 'mmouse', 'firstname' => 'Mickey', 'lastname' => 'Mouse', 'displayname' => 'Mickey'],
+            ['email' => 'dduck@mydomain.com', 'username' => 'dduck', 'firstname' => 'Donald', 'lastname' => 'Duck', 'displayname' => 'Donald'],
+            ['email' => 'blightyear@mydomain.com', 'username' => 'blightyear', 'firstname' => 'Buzz', 'lastname' => 'Lightyear', 'displayname' => 'Buzz'],
+            ['email' => 'phead@mydomain.com', 'username' => 'phead', 'firstname' => 'Potatoe', 'lastname' => 'Head', 'displayname' => 'Potie'],
+            ['email' => 'ccarl@mydomain.com', 'username' => 'ccarl', 'firstname' => 'Coyote', 'lastname' => 'Carl', 'displayname' => 'Carl'],
+            ['email' => 'sgonzalez@mydomain.com', 'username' => 'sgonzalez', 'firstname' => 'Speedy', 'lastname' => 'Gonzalez', 'displayname' => 'Speedy'],
         );
 
         // Simple Queries

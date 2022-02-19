@@ -34,7 +34,7 @@ class DictionaryValidator extends BaseValidator implements ValidatorInterface
      *
      * @return boolean
      */
-    public function check(string $password, Entity $user = null): bool
+    public function check(string $password, $user = null): bool
     {
         // Loop over our file
         $fp = fopen(__DIR__ . '/_dictionary.txt', 'r');
