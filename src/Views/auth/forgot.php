@@ -18,7 +18,7 @@
 
                     <p><?= lang('Auth.login.enter_email_instructions') ?></p>
 
-                    <form action="<?= route_to('forgot') ?>" method="post">
+                    <form action="<?= base_url() ?>/forgot" method="post">
                         <?= csrf_field() ?>
 
                         <div class="mb-3">

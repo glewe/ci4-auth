@@ -348,6 +348,15 @@ class UserController extends BaseController
      */
     protected function _render(string $view, array $data = [])
     {
+        //
+        // In case you have a custom configuration that you want to pass to
+        // your views (e.g. theme settings), it is added here.
+        //
+        // It is assumed that have declared and set the variable $myConfig in
+        // your BaseController.
+        //
+        if (isset($this->myConfig)) $data['myConfig'] = $this->myConfig;
+
         return view($view, $data);
     }
 }

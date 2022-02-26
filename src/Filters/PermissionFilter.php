@@ -41,7 +41,6 @@ class PermissionFilter implements FilterInterface
 
         $authorize = service('authorization');
         $result = true;
-
         // Check each requested permission
         foreach ($params as $permission) {
             $result = $result && $authorize->hasPermission($permission, $authenticate->id());

@@ -16,7 +16,7 @@
 
                     <?= view('CI4\Auth\Views\_alert') ?>
 
-                    <form action="<?= route_to('register') ?>" method="post">
+                    <form action="<?= base_url() ?>/register" method="post">
                         <?= csrf_field() ?>
 
                         <div class="mb-3">
@@ -49,7 +49,7 @@
 
                     <hr>
 
-                    <p><?= lang('Auth.login.already_registered') ?> <a class="card-link" href="<?= route_to('login') ?>"><?= lang('Auth.login.sign_in') ?></a></p>
+                    <p><?= lang('Auth.login.already_registered') ?> <a class="card-link" href="<?= base_url() ?>/login"><?= lang('Auth.login.sign_in') ?></a></p>
                 </div>
             </div>
         </div>

@@ -384,6 +384,15 @@ class AuthController extends BaseController
 
     //-------------------------------------------------------------------------
     /**
+     * Displays the Lewe Auth welcome page.
+     */
+    public function welcome()
+    {
+        return $this->_render($this->config->views['welcome'], ['config' => $this->config]);
+    }
+
+    //-------------------------------------------------------------------------
+    /**
      * Render View.
      *
      * @param string  $view
@@ -393,15 +402,15 @@ class AuthController extends BaseController
      */
     protected function _render(string $view, array $data = [])
     {
-        return view($view, $data);
-    }
+        //
+        // In case you have a custom configuration that you want to pass to
+        // your views (e.g. theme settings), it is added here.
+        //
+        // It is assumed that have declared and set the variable $myConfig in
+        // your BaseController.
+        //
+        if (isset($this->myConfig)) $data['myConfig'] = $this->myConfig;
 
-    //-------------------------------------------------------------------------
-    /**
-     * Displays the Lewe Auth welcome page.
-     */
-    public function welcome()
-    {
-        return $this->_render($this->config->views['welcome'], ['config' => $this->config]);
+        return view($view, $data);
     }
 }

@@ -117,7 +117,7 @@ class PermissionController extends BaseController
         // Save the permission
         // Return to Create screen on fail
         //
-        $id = $this->auth->createPermission($this->request->getPost('name'), $this->request->getPost('description'));
+        $id = $this->auth->createPermission(strtolower($this->request->getPost('name')), $this->request->getPost('description'));
         if (!$id) return redirect()->back()->withInput()->with('errors', $permissions->errors());
 
         //
@@ -170,13 +170,26 @@ class PermissionController extends BaseController
         //
         // Save the permission
         //
-        $id = $this->auth->updatePermission($id, $this->request->getPost('name'), $this->request->getPost('description'));
+        $id = $this->auth->updatePermission($id, strtolower($this->request->getPost('name')), $this->request->getPost('description'));
         if (!$id) return redirect()->back()->withInput()->with('errors', $permissions->errors());
 
         //
         // Success! Go back to permissions list
         //
         return redirect()->back()->withInput()->with('success', lang('Auth.permission.update_success', [$permission->name]));
+    }
+
+    //------------------------------------------------------------------------
+    /**
+     * Format permission name.
+     *
+     * @param string  $name
+     *
+     * @return string
+     */
+    protected function _formatPermission(string $name)
+    {
+        return "";
     }
 
     //------------------------------------------------------------------------
@@ -190,6 +203,15 @@ class PermissionController extends BaseController
      */
     protected function _render(string $view, array $data = [])
     {
+        //
+        // In case you have a custom configuration that you want to pass to
+        // your views (e.g. theme settings), it is added here.
+        //
+        // It is assumed that have declared and set the variable $myConfig in
+        // your BaseController.
+        //
+        if (isset($this->myConfig)) $data['myConfig'] = $this->myConfig;
+
         return view($view, $data);
     }
 }

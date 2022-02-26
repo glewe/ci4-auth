@@ -203,7 +203,7 @@
                                             'size' => '8',
                                             'mandatory' => false,
                                             'title' => lang('Auth.user.permissions_all'),
-                                            'desc' => lang('Auth.user.permissions_all_desc') . '<br><span class="fst-italic text-secondary">' . lang('Auth.no_selection') . '</span>',
+                                            'desc' => lang('Auth.user.permissions_all_desc') . '<br><span class="fst-italic text-primary">' . lang('Auth.no_selection') . '</span>',
                                             'errors' => '',
                                         ];
                                         foreach ($permissions as $permission) {

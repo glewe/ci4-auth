@@ -2,11 +2,12 @@
 
 namespace CI4\Auth\Entities;
 
-use CodeIgniter\Entity;
+use CodeIgniter\Entity\Entity;
 use CI4\Auth\Authorization\GroupModel;
 use CI4\Auth\Authorization\RoleModel;
 use CI4\Auth\Authorization\PermissionModel;
 use CI4\Auth\Password;
+use App\Models\UserOptionModel;
 
 class User extends Entity
 {
@@ -53,6 +54,12 @@ class User extends Entity
      * @var array
      */
     protected $groups = [];
+
+    /**
+     * Per-user options cache
+     * @var array
+     */
+    protected $options = [];
 
     /**
      * Per-user roles cache
@@ -205,6 +212,49 @@ class User extends Entity
 
     //-------------------------------------------------------------------------
     /**
+     * Returns a specific user options.
+     *
+     * @param string $option Option to get
+     * 
+     * @return string
+     */
+    public function getOption($option)
+    {
+        if (empty($this->id)) throw new \RuntimeException('Users must be created before getting options.');
+
+        return model(UserOptionModel::class)->getOption([
+            'user_id' => $this->id,
+            'option' => $option
+        ]);
+    }
+
+    //-------------------------------------------------------------------------
+    /**
+     * Returns the user's options, formatted for simple checking:
+     *
+     * [
+     *    option => value,
+     *    option => value,
+     * ]
+     *
+     * @return array|mixed
+     */
+    public function getOptions()
+    {
+        if (empty($this->id)) throw new \RuntimeException('Users must be created before getting options.');
+
+        if (empty($this->options)) {
+            $options = model(UserOptionModel::class)->getOptionsForUser($this->id);
+            foreach ($options as $option) {
+                $this->options[$option['option']] = $option['value'];
+            }
+        }
+
+        return $this->options;
+    }
+
+    //-------------------------------------------------------------------------
+    /**
      * Returns the user's permissions, formatted for simple checking:
      *
      * [
@@ -325,18 +375,6 @@ class User extends Entity
 
     //-------------------------------------------------------------------------
     /**
-     * Removes a ban from a user.
-     *
-     * @return $this
-     */
-    public function unBan()
-    {
-        $this->attributes['status'] = $this->status_message = '';
-        return $this;
-    }
-
-    //-------------------------------------------------------------------------
-    /**
      * Warns the developer it won't work, so they don't spend hours tracking stuff down.
      *
      * @param array $permissions
@@ -346,5 +384,17 @@ class User extends Entity
     public function setPermissions(array $permissions = null)
     {
         throw new \RuntimeException('User entity does not support saving permissions directly.');
+    }
+
+    //-------------------------------------------------------------------------
+    /**
+     * Removes a ban from a user.
+     *
+     * @return $this
+     */
+    public function unBan()
+    {
+        $this->attributes['status'] = $this->status_message = '';
+        return $this;
     }
 }

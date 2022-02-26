@@ -190,7 +190,7 @@ class Publish extends BaseCommand
 
     protected function publishFilters()
     {
-        $filters = ['LoginFilter', 'PermissionFilter', 'RoleFilter'];
+        $filters = ['LoginFilter', 'PermissionFilter', 'RoleFilter', 'GroupFilter'];
 
         foreach ($filters as $filter) {
             $path = "{$this->sourcePath}/Filters/{$filter}.php";
