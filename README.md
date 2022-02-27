@@ -152,6 +152,11 @@ public $views = [
 ];
 ```
 
+### Passing custom config to Views
+
+In case you have a custom configuration that you want to pass to your views (e.g. theme settings, language, etc.), the _render() function of each CI4-Auth controller passes a variable called `$myConfig` to the view
+if it exists. It is assumed that you set this variable in your BaseController.
+
 ### Database Migration
 
 Assuming that your database is setup correctly but still empty you need to run the migrations now.
