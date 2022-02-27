@@ -79,7 +79,7 @@ class Auth extends BaseConfig
      *
      * @var string
      */
-    public $viewLayout = '_layout';
+    public $viewLayout = 'CI4\Auth\Views\_layout';
 
     /**
      * ------------------------------------------------------------------------
