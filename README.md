@@ -209,6 +209,12 @@ using the terms 'group' and 'role'.*
 * Returns: `true` or `false`
 *Note: This is comparable to the in_groups() helper function in Myth-Auth.*
 
+I recommend to add the `auth` helper to your BaseController so you can access those function from any controller, e.g.
+
+```php
+protected $helpers = ['auth', 'bs5', 'session'];
+```
+
 ## Helper Functions (Bootstrap 5)
 
 In order to create Bootstrap objects quicker and to avoid duplicating code in views, these helper functions are
@@ -243,6 +249,12 @@ provided:
 * Function: Creates a search form field.
 * Parameters: Array with search form details.
 * Returns: HTML
+
+I recommend to add the `bs5` helper to your BaseController so you can access those function from any controller, e.g.
+
+```php
+protected $helpers = ['auth', 'bs5', 'session'];
+```
 
 ## Disclaimer
 
