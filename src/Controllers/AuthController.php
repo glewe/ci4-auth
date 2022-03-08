@@ -128,8 +128,8 @@ class AuthController extends BaseController
 
     //-------------------------------------------------------------------------
     /**
-     * Attempts to find a user account with that password
-     * and send password reset instructions to them.
+     * Attempts to find a user account with the given email address and sends
+     * password reset instructions to them.
      */
     public function forgotPasswordDo()
     {

@@ -145,6 +145,21 @@ class UserController extends BaseController
         if (!$users->save($user)) return redirect()->back()->withInput()->with('errors', $users->errors());
 
         //
+        // Send password reset email to the created user
+        //
+        if ($this->config->sendPasswordResetUponCreate) {
+            $user->generateResetHash();
+            $users->save($user);
+
+            $resetter = service('resetter');
+            $sent = $resetter->send($user);
+
+            if (!$sent) {
+                return redirect()->back()->withInput()->with('error', $resetter->error() ?? lang('Auth.exception.unknown_error'));
+            }
+        }
+
+        //
         // Success! Go back to user list
         //
         return redirect()->route('users')->with('success', lang('Auth.user.create_success', [$user->username, $user->email]));
