@@ -83,6 +83,15 @@
                     'errors' => session('errors.pass_confirm'),
                 ]);
 
+                echo bs5_formrow([
+                    'type' => 'check',
+                    'mandatory' => false,
+                    'name' => 'pass_resetmail',
+                    'title' => lang('Auth.user.pass_resetmail'),
+                    'desc' => lang('Auth.user.pass_resetmail_desc'),
+                    'errors' => session('errors.pass_resetmail'),
+                ]);
+
                 ?>
 
                 <div class="card">

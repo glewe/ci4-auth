@@ -360,16 +360,4 @@ class Auth extends BaseConfig
      * @var int
      */
     public $resetTime = 3600;
-
-    /**
-     * ------------------------------------------------------------------------
-     * Send password reset mail upon user creation
-     * ------------------------------------------------------------------------
-     *
-     * With this switch true, a password reset email is sent to a user when
-     * created through the admin interface.
-     *
-     * @var bool
-     */
-    public $sendPasswordResetUponCreate = true;
 }

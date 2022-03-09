@@ -239,6 +239,8 @@ return [
         'password_desc'               => 'Gib ein neues Passwort ein. Wenn das aktuelle Passwort nicht ge&auml;ndert werden soll, lasse dieses Feld leer.',
         'pass_confirm'                => 'Passwort wiederholen',
         'pass_confirm_desc'           => 'Wiederhole das neue Passwort. Wenn das aktuelle Passwort nicht ge&auml;ndert werden soll, lasse dieses Feld leer.',
+        'pass_resetmail'              => 'Password E-Mail',
+        'pass_resetmail_desc'         => 'Wenn diese Option aktiviert is, wird dem Nutzer eine Password Reset E-Mail geschickt.',
         'permissions'                 => 'Pers&ouml;nliche Berechtigungen',
         'permissions_desc'            => 'W&auml;hle eine oder meherere pers&ouml;nliche Berechtigungen f&uuml;r diesen Benutzer aus. Diese Berechtigungen hat der Benutzer zus&auml;tzlich zu den von Gruppen und Rollen.',
         'permissions_all'             => 'Alle Berechtigungen',

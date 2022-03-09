@@ -136,6 +136,41 @@ if (!function_exists('bs5_formrow')) {
 
         switch ($data['type']) {
 
+            case 'check':
+            case 'checkbox':
+                //
+                // Checkbox
+                //
+                // $data[
+                //    'desc'      => Description of the element on the form
+                //    'disabled'  => true or false
+                //    'errors'    => Possible errors from the last post
+                //    'mandatory' => true or false. True will add a red star to the title on the form.
+                //    'name'      => Name of the element to access it by in the controller  
+                //    'title'     => Title of the element on the form
+                //    'type'      => 'text' or 'email'
+                //    'value'     => Value to put into the field
+                // ]
+                //
+                $html = '
+                <!-- Form Row: ' . $data['name'] . ' -->
+                <div class="row">
+                    <label class="col" for="' . $data['name'] . '">
+                        <strong>' . ($data['mandatory'] ? '<i class="text-danger">* </i>' : '') . $data['title'] . '</strong><br>
+                        <span>' . $data['desc'] . '</span>
+                    </label>
+                    <div class="col">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="' . $data['name'] . '" name="' . $data['name'] . '" value="' . $data['name'] . '"' . ($data['disabled'] ? ' disabled' : '') . '>
+                            <label class="form-check-label" for="' . $data['name'] . '">' . $data['title'] . '</label>
+                        </div>
+                        <div class="invalid-feedback">' . $data['errors'] . '</div>
+                    </div>
+                </div>
+                <hr class="my-4">
+                ';
+                break;
+
             case 'email':
             case 'text':
                 //
@@ -155,14 +190,14 @@ if (!function_exists('bs5_formrow')) {
                 $html = '
                 <!-- Form Row: ' . $data['name'] . ' -->
                 <div class="row">
-                <label class="col" for="' . $data['name'] . '">
-                    <strong>' . ($data['mandatory'] ? '<i class="text-danger">* </i>' : '') . $data['title'] . '</strong><br>
-                    <span>' . $data['desc'] . '</span>
-                </label>
-                <div class="col">
-                    <input type="' . $data['type'] . '" class="form-control' . ($data['errors'] ? ' is-invalid' : '') . '" name="' . $data['name'] . '" value="' . $data['value'] . '"' . ($data['disabled'] ? ' disabled' : '') . '>
-                    <div class="invalid-feedback">' . $data['errors'] . '</div>
-                </div>
+                    <label class="col" for="' . $data['name'] . '">
+                        <strong>' . ($data['mandatory'] ? '<i class="text-danger">* </i>' : '') . $data['title'] . '</strong><br>
+                        <span>' . $data['desc'] . '</span>
+                    </label>
+                    <div class="col">
+                        <input type="' . $data['type'] . '" class="form-control' . ($data['errors'] ? ' is-invalid' : '') . '" name="' . $data['name'] . '" value="' . $data['value'] . '"' . ($data['disabled'] ? ' disabled' : '') . '>
+                        <div class="invalid-feedback">' . $data['errors'] . '</div>
+                    </div>
                 </div>
                 <hr class="my-4">
                 ';

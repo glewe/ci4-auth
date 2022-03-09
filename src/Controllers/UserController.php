@@ -147,7 +147,7 @@ class UserController extends BaseController
         //
         // Send password reset email to the created user
         //
-        if ($this->config->sendPasswordResetUponCreate) {
+        if ($this->request->getPost('pass_resetmail')) {
             $user->generateResetHash();
             $users->save($user);
 

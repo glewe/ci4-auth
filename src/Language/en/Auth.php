@@ -239,6 +239,8 @@ return [
         'password_desc'               => 'Enter a new password. If you do not want to change your current password, leave this field empty.',
         'pass_confirm'                => 'Repeat Password',
         'pass_confirm_desc'           => 'Repeat your new password. If you do not want to change your current password, leave this field empty.',
+        'pass_resetmail'              => 'Send Password Reset Mail',
+        'pass_resetmail_desc'         => 'With this switch on, a password reset mail is sent to the user after creation.',
         'permissions'                 => 'Personal Permissions',
         'permissions_desc'            => 'Select one or more individual permissions that this user will be granted. These permissions will be added to those inherited from groups and roles.',
         'permissions_all'             => 'All Permissions',
