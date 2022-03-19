@@ -140,7 +140,14 @@ class UserController extends BaseController
         if (!empty($this->config->defaultUserRole)) $users = $users->withRole($this->config->defaultUserRole);
 
         //
-        // Return to Create screen on fail
+        // Generate password reset hash
+        //
+        if ($this->request->getPost('pass_resetmail')) {
+            $user->generateResetHash();
+        }
+
+        //
+        // Save user record. Return to Create screen on fail.
         //
         if (!$users->save($user)) return redirect()->back()->withInput()->with('errors', $users->errors());
 
@@ -148,12 +155,8 @@ class UserController extends BaseController
         // Send password reset email to the created user
         //
         if ($this->request->getPost('pass_resetmail')) {
-            $user->generateResetHash();
-            $users->save($user);
-
             $resetter = service('resetter');
             $sent = $resetter->send($user);
-
             if (!$sent) {
                 return redirect()->back()->withInput()->with('error', $resetter->error() ?? lang('Auth.exception.unknown_error'));
             }
