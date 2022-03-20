@@ -43,7 +43,7 @@ class Services extends BaseService
      */
     public static function authorization(Model $roleModel = null, Model $permissionModel = null, Model $userModel = null, bool $getShared = true, Model $groupModel = null)
     {
-        if ($getShared) return self::getSharedInstance('authorization', $roleModel, $permissionModel, $userModel);
+        if ($getShared) return self::getSharedInstance('authorization', $roleModel, $permissionModel, $userModel, $getShared, $groupModel);
 
         $groupModel       = $groupModel ?? model(GroupModel::class);
         $roleModel        = $roleModel ?? model(RoleModel::class);
