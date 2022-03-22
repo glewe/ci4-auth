@@ -696,7 +696,7 @@ class FlatAuthorization implements AuthorizeInterface
 
         if (!is_numeric($groupId)) return false;
 
-        if (!$this->groupModel->removePermissionFromRole($permissionId, $groupId)) {
+        if (!$this->groupModel->removePermissionFromGroup($permissionId, $groupId)) {
             $this->error = $this->groupModel->errors();
             return false;
         }
