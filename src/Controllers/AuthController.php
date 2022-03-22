@@ -354,11 +354,49 @@ class AuthController extends BaseController
             'pass_confirm' => 'required|matches[password]',
         ];
 
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        //
+        // For some reason, the validator code here does not work. It does not return.
+        // I could not figure it out, therefore I added some manual validation below.
+        //
+        // $res = $this->validate($rules);
+        // if (!$res) {
+        //     return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        // }
+
+        $valerror = false;
+        $errmsg = array();
+
+        if (!$this->request->getPost('token')) {
+            $valerror = true;
+            $errmsg[] = 'The token field is required.';
         }
 
-        $user = $users->where('email', $this->request->getPost('email'))
+        if (!$this->request->getPost('email')) {
+            $valerror = true;
+            $errmsg[] = 'The email field is required.';
+        }
+
+        if (!$this->request->getPost('password')) {
+            $valerror = true;
+            $errmsg[] = 'The password field is required.';
+        }
+
+        if (!$this->request->getPost('pass_confirm')) {
+            $valerror = true;
+            $errmsg[] = 'The password confirm field is required.';
+        }
+
+        if ($this->request->getPost('password') && $this->request->getPost('pass_confirm') && $this->request->getPost('password') != $this->request->getPost('pass_confirm')) {
+            $valerror = true;
+            $errmsg[] = 'The passwords must match.';
+        }
+
+        if ($valerror) {
+            return redirect()->back()->withInput()->with('errors', $errmsg);
+        }
+
+        $user = $users
+            ->where('email', $this->request->getPost('email'))
             ->where('reset_hash', $this->request->getPost('token'))
             ->first();
 

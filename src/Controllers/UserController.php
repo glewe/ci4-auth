@@ -143,7 +143,8 @@ class UserController extends BaseController
         // Generate password reset hash
         //
         if ($this->request->getPost('pass_resetmail')) {
-            $user->generateResetHash();
+            $user->forcePasswordReset();
+            // $user->generateResetHash();
         }
 
         //
