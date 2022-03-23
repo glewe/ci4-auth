@@ -195,7 +195,7 @@ return [
     'register' => [
         'create_success'              => 'Neuer Benutzer anegelgt: {0}, #{1}',
         'disabled'                    => 'Leider sind neue Benutzerkonten zurzeit nicht erlaubt.',
-        'registerSuccess'             => 'Willkommen an Bord! Du kannst dich nun einloggen.',
+        'success'             => 'Willkommen an Bord! Du kannst dich nun einloggen.',
     ],
 
     // Role

@@ -195,7 +195,7 @@ return [
     'register' => [
         'create_success'              => 'New user created: {0}, #{1}',
         'disabled'                    => 'Sorry, new user accounts are not allowed at this time.',
-        'registerSuccess'             => 'Welcome aboard! Please login with your new credentials.',
+        'success'                     => 'Welcome aboard! Please login with your new credentials.',
     ],
 
     // Role

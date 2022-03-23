@@ -18,6 +18,9 @@
 
                     <form action="<?= base_url() ?>/register" method="post">
                         <?= csrf_field() ?>
+                        <input type="hidden" name="firstname" value="">
+                        <input type="hidden" name="lastname" value="">
+                        <input type="hidden" name="displayname" value="">
 
                         <div class="mb-3">
                             <label for="email"><?= lang('Auth.login.email') ?></label>
