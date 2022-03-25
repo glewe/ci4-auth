@@ -218,6 +218,8 @@ return [
 
     // User
     'user'   => [
+        'active'                      => 'Active',
+        'active_desc'                 => 'Activate or deactivate this user.',
         'create_success'              => 'New user created: {0} ({1})',
         'delete_confirm'              => 'Are you sure you want to delete this user?',
         'delete_success'              => 'User deleted: {0} ({1})',

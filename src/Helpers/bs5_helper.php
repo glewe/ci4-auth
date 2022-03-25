@@ -280,14 +280,36 @@ if (!function_exists('bs5_formrow')) {
                 $html = '
                 <!-- Form Row: ' . $data['name'] . ' -->
                 <div class="row">
-                <label for="' . $data['name'] . '" class="col">
-                    <strong>' . ($data['mandatory'] ? '<i class="text-danger">* </i>' : '') . $data['title'] . '</strong><br>
-                    <span>' . $data['desc'] . '</span>
-                </label>
-                <div class="col">
-                    <input type="' . $data['type'] . '" class="form-control' . ($data['errors'] ? ' is-invalid' : '') . '" name="' . $data['name'] . '" autocomplete="off"' . ($data['disabled'] ? ' disabled' : '') . '>
-                    <div class="invalid-feedback">' . $data['errors'] . '</div>
+                    <label for="' . $data['name'] . '" class="col">
+                        <strong>' . ($data['mandatory'] ? '<i class="text-danger">* </i>' : '') . $data['title'] . '</strong><br>
+                        <span>' . $data['desc'] . '</span>
+                    </label>
+                    <div class="col">
+                        <input type="' . $data['type'] . '" class="form-control' . ($data['errors'] ? ' is-invalid' : '') . '" name="' . $data['name'] . '" autocomplete="off"' . ($data['disabled'] ? ' disabled' : '') . '>
+                        <div class="invalid-feedback">' . $data['errors'] . '</div>
+                    </div>
                 </div>
+                <hr class="my-4">
+                ';
+                break;
+
+            case 'switch':
+                /**
+                 * Switch
+                 */
+                $html = '
+                <!-- Form Row: ' . $data['name'] . ' -->
+                <div class="row">
+                    <label class="col" for="' . $data['name'] . '">
+                        <strong>' . ($data['mandatory'] ? '<i class="text-danger">* </i>' : '') . $data['title'] . '</strong><br>
+                        <span>' . $data['desc'] . '</span>
+                    </label>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" id="' . $data['name'] . '" name="swi_' . $data['name'] . '" value="swi_' . $data['name'] . '"' . ((intval($data['value'])) ? " checked" : "") . '>
+                            <div class="invalid-feedback">' . $data['errors'] . '</div>
+                        </div>
+                    </div>
                 </div>
                 <hr class="my-4">
                 ';

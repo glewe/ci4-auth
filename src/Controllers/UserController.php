@@ -307,6 +307,13 @@ class UserController extends BaseController
         }
 
         //
+        // Get the Active switch.
+        //
+        if ($this->request->getPost('swi_active')) $user->setAttribute('active', 1);
+        else $user->setAttribute('active', 0);
+        $users->update($id, $user);
+
+        //
         // Handle the Groups tab
         //
         if (array_key_exists('sel_groups', $this->request->getPost())) {

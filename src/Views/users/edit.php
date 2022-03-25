@@ -110,6 +110,16 @@
                                             'errors' => session('errors.pass_confirm'),
                                         ]);
 
+                                        echo bs5_formrow([
+                                            'type' => 'switch',
+                                            'mandatory' => false,
+                                            'name' => 'active',
+                                            'title' => lang('Auth.user.active'),
+                                            'desc' => lang('Auth.user.active_desc'),
+                                            'errors' => session('errors.active'),
+                                            'value' => $user->active
+                                        ]);
+
                                         ?>
 
                                     </div>
