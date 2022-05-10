@@ -39,8 +39,25 @@ class CreateAuthTables extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey('email');
         $this->forge->addUniqueKey('username');
-
         $this->forge->createTable('users', true);
+
+        //---------------------------------------------------------------------
+        // Users_Options Table
+        //
+        $fields = [
+            'id'          => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+            'user_id'     => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+            'option'      => ['type' => 'varchar', 'constraint' => 255],
+            'value'       => ['type' => 'varchar', 'constraint' => 255],
+            'created_at'  => ['type' => 'timestamp DEFAULT current_timestamp()', 'null' => false],
+            'updated_at'  => ['type' => 'timestamp DEFAULT current_timestamp() ON UPDATE current_timestamp()', 'null' => false],
+        ];
+
+        $this->forge->addField($fields);
+        $this->forge->addKey('id', true);
+        $this->forge->addKey(['user_id', 'option']);
+        $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
+        $this->forge->createTable('users_options', true);
 
         //---------------------------------------------------------------------
         // Logins Table
@@ -237,7 +254,7 @@ class CreateAuthTables extends Migration
     {
         // drop constraints first to prevent errors
         if ($this->db->DBDriver != 'SQLite3') { // @phpstan-ignore-line
-
+            $this->forge->dropForeignKey('users_options', 'user_id_foreign');
             $this->forge->dropForeignKey('auth_tokens', 'auth_tokens_user_id_foreign');
             $this->forge->dropForeignKey('auth_roles_permissions', 'auth_roles_permissions_role_id_foreign');
             $this->forge->dropForeignKey('auth_roles_permissions', 'auth_roles_permissions_permission_id_foreign');
@@ -252,6 +269,7 @@ class CreateAuthTables extends Migration
         }
 
         $this->forge->dropTable('users', true);
+        $this->forge->dropTable('users_options', true);
         $this->forge->dropTable('auth_logins', true);
         $this->forge->dropTable('auth_tokens', true);
         $this->forge->dropTable('auth_reset_attempts', true);

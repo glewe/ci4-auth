@@ -7,7 +7,7 @@ use CI4\Auth\Authorization\GroupModel;
 use CI4\Auth\Authorization\RoleModel;
 use CI4\Auth\Authorization\PermissionModel;
 use CI4\Auth\Password;
-use App\Models\UserOptionModel;
+use CI4\Auth\Models\UserOptionModel;
 
 class User extends Entity
 {
