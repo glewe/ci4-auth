@@ -1,4 +1,4 @@
-<?= $this->extend($config->viewLayout) ?>
+<?= $this->extend(config('Auth')->viewLayout) ?>
 <?= $this->section('main') ?>
 
 <div class="container mb-4">
