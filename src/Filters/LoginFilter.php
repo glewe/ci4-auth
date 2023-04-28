@@ -30,16 +30,22 @@ class LoginFilter implements FilterInterface
 
         $config = config(App::class);
         if ($config->forceGlobalSecureRequests) {
-            # Remove "https:/"
+            //
+            // Remove "https:/"
+            //
             $current = substr($current, 7);
         }
 
+        //
         // Make sure this isn't already a login route
+        //
         if (in_array((string)$current, [route_to('login'), route_to('forgot'), route_to('reset-password'), route_to('register'), route_to('activate-account')])) {
             return;
         }
 
-        // if no user is logged in then send to the login form
+        //
+        // If no user is logged in then send to the login form
+        //
         $authenticate = service('authentication');
         if (!$authenticate->check()) {
             session()->set('redirect_url', current_url());
@@ -48,7 +54,7 @@ class LoginFilter implements FilterInterface
     }
 
     /**
-     * @param RequestInterface  $request
+     * @param RequestInterface $request
      * @param ResponseInterface $response
      * @param array|null $arguments
      *

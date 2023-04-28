@@ -14,20 +14,19 @@ if (!function_exists('bs5_alert')) {
     /**
      * Creates a Bootstrap 5 alert box.
      *
-     * @param    array    $data    The data for the alert box
-     * 
+     * @param array $data The data for the alert box
+     *
      * @return   string
      */
     function bs5_alert($data)
     {
-
-        $type          = $data['type'];
-        $icon          = $data['icon'];
-        $title         = $data['title'];
-        $subject       = $data['subject'];
-        $text          = $data['text'];
-        $help          = $data['help'];
-        $dismissable   = $data['dismissable'];
+        $type = $data['type'];
+        $icon = $data['icon'];
+        $title = $data['title'];
+        $subject = $data['subject'];
+        $text = $data['text'];
+        $help = $data['help'];
+        $dismissable = $data['dismissable'];
 
         $alert_icon = '';
         switch ($icon) {
@@ -98,7 +97,7 @@ if (!function_exists('bs5_cardheader')) {
     /**
      * Creates a card header for the main card on a page.
      *
-     * @param    array   $data    The data for the card header
+     * @param array $data The data for the card header
      *
      * @return   string
      */
@@ -120,7 +119,7 @@ if (!function_exists('bs5_formrow')) {
     /**
      * Creates a form row.
      *
-     * @param    array   $data    The data for the form row
+     * @param array $data The data for the form row
      *
      * @return   string
      */
@@ -325,19 +324,19 @@ if (!function_exists('bs5_modal')) {
     /**
      * Creates a modal dialog
      *
-     * @param    array   $data    The data for the modal dialog
+     * @param array $data The data for the modal dialog
      *
      * @return   string
      */
     function bs5_modal($data)
     {
-        $id            = $data['id'];
-        $header        = $data['header'];
-        $headerColor   = $data['header_color'];
-        $body          = $data['body'];
-        $btnColor      = $data['btn_color'];
-        $btnName       = $data['btn_name'];
-        $btnText       = $data['btn_text'];
+        $id = $data['id'];
+        $header = $data['header'];
+        $headerColor = $data['header_color'];
+        $body = $data['body'];
+        $btnColor = $data['btn_color'];
+        $btnName = $data['btn_name'];
+        $btnText = $data['btn_text'];
 
         if ($headerColor == 'default') $headerColor = '';
         else $headerColor = 'btn-' . $headerColor;
@@ -370,10 +369,10 @@ if (!function_exists('bs5_modal')) {
 //-----------------------------------------------------------------------------
 if (!function_exists('bs5_searchform')) {
     /**
-     * Creates a search form to ber used on list pages.
+     * Creates a search form to be used on list pages.
      *
-     * @param    string   $action    Form action
-     * @param    string   $search    Search string
+     * @param string $action Form action
+     * @param string $search Search string
      *
      * @return   string
      */

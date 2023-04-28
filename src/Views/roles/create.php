@@ -1,52 +1,52 @@
 <?= $this->extend($config->viewLayout) ?>
 <?= $this->section('main') ?>
 
-<div class="container">
+    <div class="container">
 
-    <div class="card">
+        <?= view('CI4\Auth\Views\_alert') ?>
 
-        <?= bs5_cardheader(['icon' => 'fas fa-user-circle', 'title' => lang('Auth.btn.createRole'), 'help' => '#']) ?>
+        <div class="card">
 
-        <div class="card-body">
+            <?= bs5_cardheader(['icon' => 'fas fa-user-circle', 'title' => lang('Auth.btn.createRole'), 'help' => '#']) ?>
 
-            <?= view('CI4\Auth\Views\_alert') ?>
+            <div class="card-body">
 
-            <form action="<?= base_url() ?>/roles/create" method="post">
-                <?= csrf_field() ?>
+                <form action="<?= base_url() ?>/roles/create" method="post">
+                    <?= csrf_field() ?>
 
-                <?php
-                echo bs5_formrow([
-                    'type' => 'text',
-                    'mandatory' => true,
-                    'name' => 'name',
-                    'title' => lang('Auth.role.name'),
-                    'desc' => lang('Auth.role.name_desc'),
-                    'errors' => session('errors.name'),
-                    'value' => old('name')
-                ]);
+                    <?php
+                    echo bs5_formrow([
+                        'type' => 'text',
+                        'mandatory' => true,
+                        'name' => 'name',
+                        'title' => lang('Auth.role.name'),
+                        'desc' => lang('Auth.role.name_desc'),
+                        'errors' => session('errors.name'),
+                        'value' => old('name')
+                    ]);
 
-                echo bs5_formrow([
-                    'type' => 'text',
-                    'mandatory' => false,
-                    'name' => 'description',
-                    'title' => lang('Auth.role.description'),
-                    'desc' => lang('Auth.role.description_desc'),
-                    'errors' => session('errors.description'),
-                    'value' => old('description')
-                ]);
-                ?>
+                    echo bs5_formrow([
+                        'type' => 'text',
+                        'mandatory' => false,
+                        'name' => 'description',
+                        'title' => lang('Auth.role.description'),
+                        'desc' => lang('Auth.role.description_desc'),
+                        'errors' => session('errors.description'),
+                        'value' => old('description')
+                    ]);
+                    ?>
 
-                <div class="card">
-                    <div class="card-body">
-                        <button type="submit" class="btn btn-primary"><?= lang('Auth.btn.submit') ?></button>
-                        <a class="btn btn-secondary float-end" href="<?= base_url() ?>/roles"><?= lang('Auth.btn.cancel') ?></a>
+                    <div class="card">
+                        <div class="card-body">
+                            <button type="submit" class="btn btn-primary"><?= lang('Auth.btn.submit') ?></button>
+                            <a class="btn btn-secondary float-end" href="<?= base_url() ?>/roles"><?= lang('Auth.btn.cancel') ?></a>
+                        </div>
                     </div>
-                </div>
 
-            </form>
+                </form>
 
+            </div>
         </div>
     </div>
-</div>
 
 <?= $this->endSection() ?>

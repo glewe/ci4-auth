@@ -19,12 +19,15 @@ class GroupSeeder extends Seeder
             ['name' => 'Looney', 'description' => 'Looney characters'],
         );
 
+        //
         // Simple Queries
+        //
         // $this->db->query("INSERT INTO users (username, email) VALUES(:username:, :email:)", $data);
 
-        // Using Query Builder
+        //
+        // Insert records
+        //
         foreach ($records as $record) {
-
             $this->db->table('auth_groups')->insert($record);
         }
     }

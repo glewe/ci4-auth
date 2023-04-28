@@ -42,7 +42,7 @@ class PermissionController extends BaseController
     /**
      * Shows all permission records.
      *
-     * @return void
+     * @return \CodeIgniter\HTTP\RedirectResponse | \CI4\Auth\Controllers\view
      */
     public function permissions()
     {

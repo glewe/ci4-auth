@@ -2,7 +2,9 @@
 
 return [
 
+    //
     // _Global
+    //
     'description'                    => 'Descripción',
     'getHelpForPage'                 => 'Ayuda para esta página...',
     'name'                           => 'Nombre',
@@ -15,7 +17,9 @@ return [
         'warning'                     => 'Aviso',
     ],
 
+    //
     // Activation
+    //
     'activation' => [
         'no_user'                     => 'No se localiza un usuario con ese código de activación.',
         'resend'                      => 'Reenviar mensaje de reactivación de nuevo.',
@@ -25,7 +29,9 @@ return [
         'not_activated'               => 'Esta cuenta aún no se ha activado.',
     ],
 
+    //
     // Buttons
+    //
     'btn' => [
         'action'                      => 'Acción',
         'cancel'                      => 'Cancelar',
@@ -46,7 +52,9 @@ return [
         'view'                        => 'Ver',
     ],
 
+    //
     // Exceptions
+    //
     'exception' => [
         'invalid_fields'              => 'El campo "{0}" no se puede usar para validar credenciales.',
         'invalid_model'               => 'El modelo {0} se debe cargar antes de usarlo.',
@@ -59,7 +67,9 @@ return [
         'user_not_found'              => 'No localizamos un usuario con ID = {0, number}.',
     ],
 
+    //
     // Forgot Password
+    //
     'forgot' => [
         'error_email'                 => 'No se ha podido enviar el correo con las instrucciones de reseteo de contraseña a: {0}',
         'error_reset'                 => 'No se han podido enviar instrucciones de reseteo a {0}',
@@ -70,7 +80,9 @@ return [
         'reset_success'               => 'tu contraseña se ha modificado correctamente. Logéate con la nueva contraseña.',
     ],
 
+    //
     // Group
+    //
     'group'   => [
         'create_success'              => 'Nuevo grupo creado: {0}',
         'delete_confirm'              => '¿Seguro que quieres borrar este grupo?',
@@ -88,7 +100,9 @@ return [
         'groups'                      => 'Grupos',
     ],
 
+    //
     // Login
+    //
     'login' => [
         'already_registered'          => '¿Ya registrado?',
         'bad_attempt'                 => 'Logueo incorrecto. Por favor, comprueba tus credenciales.',
@@ -122,12 +136,16 @@ return [
         'we_never_share'              => 'Nunca compartiremos tu correo con nadie.',
     ],
 
+    //
     // Modal Dialogs
+    //
     'modal' => [
         'confirm'                     => 'Por favor, Confirma',
     ],
 
+    //
     // Navbar
+    //
     'nav' => [
         'home'                        => 'Inicio',
         'authorization'   => [
@@ -144,10 +162,14 @@ return [
             'forgot_password'          => 'Recordar Contraseña',
             'reset_password'           => 'Resetear Contraseña',
             'register'                 => 'Registrarse',
+            'whoami'                   => '¿Quién Soy?',
         ],
+        'settings'                     => 'Configuración',
     ],
 
+    //
     // Password
+    //
     'password' => [
         'error_common'                => 'La contraseña no debe ser una contraseña común.',
         'error_empty'                 => 'Se necesita una contraseña.',
@@ -167,7 +189,9 @@ return [
         'user_not_exist'              => 'No se ha cambiado la contraseña. No existe el usuario',
     ],
 
+    //
     // Permission
+    //
     'permission'   => [
         'create_success'              => 'Creado nuevo permiso: {0}',
         'delete_confirm'              => '¿Seguro que quieres borrar este permiso?',
@@ -191,14 +215,18 @@ return [
         'tab_usage'                   => 'Uso',
     ],
 
+    //
     // Register
+    //
     'register' => [
         'create_success'              => 'Nuevo usuario creado: {0}, #{1}',
         'disabled'                    => 'Lo sentimmos, no se permiten nuevas cuentas de usuario en estos momentos.',
         'registerSuccess'             => '¡Bienvenido! Por favor, logéate con tus nuevas credenciales.',
     ],
 
+    //
     // Role
+    //
     'role'   => [
         'create_success'              => 'Nuevo rol creado: {0}',
         'delete_confirm'              => '¿Seguro que quieres borrar este rol?',
@@ -216,7 +244,9 @@ return [
         'roles'                       => 'Roles',
     ],
 
+    //
     // User
+    //
     'user'   => [
         'active'                      => 'Activo',
         'active_desc'                 => 'Activado o desactivado el usario.',
@@ -258,5 +288,4 @@ return [
         'username'                    => 'Nombre de Usuario',
         'username_desc'               => 'Introduce un nombre de usuario.',
     ],
-
 ];

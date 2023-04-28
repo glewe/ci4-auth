@@ -39,15 +39,16 @@ class AuthenticationBase
     protected $config;
 
     //-------------------------------------------------------------------------
+
     /**
      */
     public function __construct($config)
     {
-
         $this->config = $config;
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Returns the current error, if any.
      *
@@ -55,11 +56,11 @@ class AuthenticationBase
      */
     public function error()
     {
-
         return $this->error;
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Whether to continue instead of throwing exceptions, as defined in config.
      *
@@ -67,11 +68,11 @@ class AuthenticationBase
      */
     public function silent()
     {
-
-        return (bool) $this->config->silent;
+        return (bool)$this->config->silent;
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Logs a user into the system.
      * NOTE: does not perform validation. All validation should be done prior to
@@ -85,7 +86,6 @@ class AuthenticationBase
      */
     public function login(User $user = null, bool $remember = false): bool
     {
-
         if (empty($user)) {
             $this->user = null;
             return false;
@@ -93,39 +93,52 @@ class AuthenticationBase
 
         $this->user = $user;
 
+        //
         // Always record a login attempt
+        //
         $ipAddress = service('request')->getIPAddress();
-        $this->recordLoginAttempt($user->email, $ipAddress, $user->id ?? null, true);
+        $this->recordLoginAttempt($user->email, $ipAddress, $user->id ?? null, true, 'Success');
 
+        //
         // Regenerate the session ID to help protect against session fixation
+        //
         if (ENVIRONMENT !== 'testing') {
             session()->regenerate();
         }
 
+        //
         // Let the session know we're logged in
+        //
         session()->set('logged_in', $this->user->id);
 
+        //
         // When logged in, ensure cache control headers are in place
+        //
         service('response')->noCache();
 
         if ($remember && $this->config->allowRemembering) {
             $this->rememberUser($this->user->id);
         }
 
+        //
         // We'll give a 20% chance to need to do a purge since we don't need to
         // purge THAT often, it's just a maintenance issue to keep the table 
         // from getting out of control.
+        //
         if (mt_rand(1, 100) < 20) {
             $this->loginModel->purgeOldRememberTokens();
         }
 
-        // trigger login event, in case anyone cares
+        //
+        // Trigger login event, in case anyone cares
+        //
         Events::trigger('login', $user);
 
         return true;
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Checks to see if the user is logged in.
      *
@@ -133,13 +146,17 @@ class AuthenticationBase
      */
     public function isLoggedIn(): bool
     {
+        //
         // On the off chance
+        //
         if ($this->user instanceof User) {
             return true;
         }
 
         if ($userID = session('logged_in')) {
+            //
             // Store our current user object
+            //
             $this->user = $this->userModel->find($userID);
             return $this->user instanceof User;
         }
@@ -149,10 +166,11 @@ class AuthenticationBase
 
 
     //-------------------------------------------------------------------------
+
     /**
      * Logs a user into the system by their ID.
      *
-     * @param int  $id
+     * @param int $id
      * @param bool $remember
      */
     public function loginByID(int $id, bool $remember = false)
@@ -167,6 +185,7 @@ class AuthenticationBase
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Logs a user out of the system.
      */
@@ -174,8 +193,10 @@ class AuthenticationBase
     {
         helper('cookie');
 
+        //
         // Destroy the session data - but ensure a session is still
         // available for flash messages, etc.
+        //
         if (isset($_SESSION)) {
             foreach ($_SESSION as $key => $value) {
                 $_SESSION[$key] = NULL;
@@ -183,18 +204,28 @@ class AuthenticationBase
             }
         }
 
+        //
         // Regenerate the session ID for a touch of added safety.
+        //
         session()->regenerate(true);
 
+        //
         // Remove the cookie
+        //
         delete_cookie("remember");
 
+        //
         // Handle user-specific tasks
+        //
         if ($user = $this->user()) {
+            //
             // Take care of any remember me functionality
+            //
             $this->loginModel->purgeRememberTokens($user->id);
 
+            //
             // Trigger logout event
+            //
             Events::trigger('logout', $user);
 
             $this->user = null;
@@ -202,29 +233,32 @@ class AuthenticationBase
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Record a login attempt
      *
-     * @param string      $email
+     * @param string $email
      * @param string|null $ipAddress
-     * @param int|null    $userID
-     *
-     * @param bool        $success
+     * @param int|null $userID
+     * @param bool $success
+     * @param string $info
      *
      * @return bool|int|string
      */
-    public function recordLoginAttempt(string $email, string $ipAddress = null, int $userID = null, bool $success)
+    public function recordLoginAttempt(string $email, string $ipAddress = null, int $userID = null, bool $success, string $info)
     {
         return $this->loginModel->insert([
             'ip_address' => $ipAddress,
             'email' => $email,
             'user_id' => $userID,
             'date' => date('Y-m-d H:i:s'),
-            'success' => (int)$success
+            'success' => (int)$success,
+            'info' => $info,
         ]);
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Generates a timing-attack safe remember me token and stores the necessary
      * info in the db and a cookie.
@@ -237,20 +271,26 @@ class AuthenticationBase
      */
     public function rememberUser(int $userID)
     {
-        $selector  = bin2hex(random_bytes(12));
+        $selector = bin2hex(random_bytes(12));
         $validator = bin2hex(random_bytes(20));
-        $expires   = date('Y-m-d H:i:s', time() + $this->config->rememberLength);
+        $expires = date('Y-m-d H:i:s', time() + $this->config->rememberLength);
 
         $token = $selector . ':' . $validator;
 
+        //
         // Store it in the database
+        //
         $this->loginModel->rememberUser($userID, $selector, hash('sha256', $validator), $expires);
 
+        //
         // Save it to the user's browser in a cookie.
+        //
         $appConfig = config('App');
         $response = service('response');
 
+        //
         // Create the cookie
+        //
         $response->setCookie(
             'remember',                      // Cookie Name
             $token,                          // Value
@@ -264,47 +304,57 @@ class AuthenticationBase
     }
 
     //-------------------------------------------------------------------------
+
     /**
-     * Sets a new validator for this user/selector. This allows a one-time use 
-     * of remember-me tokens, but still allows a user to be remembered on 
+     * Sets a new validator for this user/selector. This allows a one-time use
+     * of remember-me tokens, but still allows a user to be remembered on
      * multiple browsers/devices.
      *
-     * @param int    $userID
+     * @param int $userID
      * @param string $selector
      */
     public function refreshRemember(int $userID, string $selector)
     {
         $existing = $this->loginModel->getRememberToken($selector);
 
+        //
         // No matching record? Shouldn't happen, but remember the user now.
+        //
         if (empty($existing)) {
             return $this->rememberUser($userID);
         }
 
+        //
         // Update the validator in the database and the session
+        //
         $validator = bin2hex(random_bytes(20));
 
         $this->loginModel->updateRememberValidator($selector, $validator);
 
+        //
         // Save it to the user's browser in a cookie.
+        //
         helper('cookie');
 
         $appConfig = config('App');
 
+        //
         // Create the cookie
+        //
         set_cookie(
-            'remember',                               // Cookie Name
-            $selector . ':' . $validator,                 // Value
-            (string) $this->config->rememberLength,   // # Seconds until it expires
+            'remember',                         // Cookie Name
+            $selector . ':' . $validator,       // Value
+            (string)$this->config->rememberLength,   // # Seconds until it expires
             $appConfig->cookieDomain,
             $appConfig->cookiePath,
             $appConfig->cookiePrefix,
-            $appConfig->cookieSecure,                 // Only send over HTTPS?
-            true                                      // Hide from Javascript?
+            $appConfig->cookieSecure,                // Only send over HTTPS?
+            true                             // Hide from Javascript?
         );
     }
 
     //------------------------------------------------------------------------
+
     /**
      * Returns the User ID for the current logged in user.
      *
@@ -316,6 +366,7 @@ class AuthenticationBase
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Returns the User instance for the current logged in user.
      *
@@ -327,6 +378,7 @@ class AuthenticationBase
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Grabs the current user from the database.
      *
@@ -366,6 +418,7 @@ class AuthenticationBase
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Sets the model that should be used to record login attempts (but failed
      * and successful).

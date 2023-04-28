@@ -25,6 +25,7 @@ class RoleController extends BaseController
     protected $session;
 
     //-------------------------------------------------------------------------
+
     /**
      */
     public function __construct()
@@ -33,14 +34,14 @@ class RoleController extends BaseController
         // Most services in this controller require the session to be started
         //
         $this->session = service('session');
-
         $this->config = config('Auth');
         $this->auth = service('authorization');
     }
 
     // -------------------------------------------------------------------------
+
     /**
-     * Shows all user records.
+     * Shows all role records.
      *
      * @return void
      */
@@ -50,7 +51,7 @@ class RoleController extends BaseController
 
         $data = [
             'config' => $this->config,
-            'roles'  => $roles->orderBy('name', 'asc')->findAll(),
+            'roles' => $roles->orderBy('name', 'asc')->findAll(),
         ];
 
         if ($this->request->getMethod() === 'post') {
@@ -86,6 +87,7 @@ class RoleController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Displays the user create page.
      */
@@ -95,6 +97,7 @@ class RoleController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Attempt to create a new user.
      * To be be used by administrators. User will be activated automatically.
@@ -124,6 +127,7 @@ class RoleController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Displays the user edit page.
      */
@@ -145,6 +149,7 @@ class RoleController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Attempt to create a new role.
      */
@@ -190,11 +195,12 @@ class RoleController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Render View.
      *
-     * @param string  $view
-     * @param array   $data
+     * @param string $view
+     * @param array $data
      *
      * @return view
      */

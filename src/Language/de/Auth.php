@@ -2,7 +2,9 @@
 
 return [
 
+    //
     // _Global
+    //
     'description'                    => 'Beschreibung',
     'getHelpForPage'                 => 'Hilfe f&uuml;r diese Seite...',
     'name'                           => 'Name',
@@ -15,7 +17,9 @@ return [
         'warning'                     => 'Warnung',
     ],
 
+    //
     // Activation
+    //
     'activation' => [
         'no_user'                     => 'Es konnte kein Benutzer mit diesem Aktivierungscode gefunden werden.',
         'resend'                      => 'Aktivierungs-Mail nocheinmal schicken.',
@@ -25,7 +29,9 @@ return [
         'not_activated'               => 'Dieses Benutzerkonto ist noch nicht aktiviert.',
     ],
 
+    //
     // Buttons
+    //
     'btn' => [
         'action'                      => 'Aktion',
         'cancel'                      => 'Abbrechen',
@@ -46,7 +52,9 @@ return [
         'view'                        => 'Ansicht',
     ],
 
+    //
     // Exceptions
+    //
     'exception' => [
         'invalid_fields'              => 'Das "{0}" Feld kann nicht f&uuml;r die Validierung beim Anmelden benutzt werden.',
         'invalid_model'               => 'Das {0} Modell muss vor seiner Nutzung geladen werden.',
@@ -59,7 +67,9 @@ return [
         'user_not_found'              => 'Es kann kein Benutzerkonto mit der ID = {0, number} gefunden werden.',
     ],
 
+    //
     // Forgot Password
+    //
     'forgot' => [
         'error_email'                 => 'Die Email zum Zur&uuml;cksetzen des Passworts konnte nicht an {0} versendet werden.',
         'error_reset'                 => 'Die Email zum Zur&uuml;cksetzen konnte nicht an {0} versendet werden.',
@@ -70,7 +80,9 @@ return [
         'reset_success'               => 'Dein Passwort wurde erfolgreich ge&auml;ndert. Bitte logge dich micht dem neuen Passwort ein.',
     ],
 
+    //
     // Group
+    //
     'group'   => [
         'create_success'              => 'Neue Gruppe anagelegt: {0}',
         'delete_confirm'              => 'Bist du sicher, dass du diese Gruppe l&ouml;schen willst?',
@@ -88,7 +100,9 @@ return [
         'groups'                      => 'Gruppen',
     ],
 
+    //
     // Login
+    //
     'login' => [
         'already_registered'          => 'Bist du schon registriert?',
         'bad_attempt'                 => 'Login fehlgeschlagen. Bitte &uuml;berpr&uuml;fe deine Eingaben.',
@@ -122,12 +136,16 @@ return [
         'we_never_share'              => 'Wir geben die Email Adresse an niemanden weiter.',
     ],
 
+    //
     // Modal Dialogs
+    //
     'modal' => [
         'confirm'                     => 'Bitte Best&auml;tigen',
     ],
 
+    //
     // Navbar
+    //
     'nav' => [
         'home'                        => 'Home',
         'authorization'   => [
@@ -144,10 +162,14 @@ return [
             'forgot_password'          => 'Password vergessen',
             'reset_password'           => 'Password zur&uuml;cksetzen',
             'register'                 => 'Registrieren',
+            'whoami'                   => 'Wer bin ich?',
         ],
+        'settings'                     => 'Einstellungen',
     ],
 
+    //
     // Password
+    //
     'password' => [
         'error_common'                => 'Das Passwort darf kein gebr&auml;chlicher Begriff sein.',
         'error_empty'                 => 'Ein Passwort ist erforderlich.',
@@ -167,7 +189,9 @@ return [
         'user_not_exist'              => 'Das Passwort wurde nicht ge&auml;ndert. Der Benutzer existiert nicht.',
     ],
 
+    //
     // Permission
+    //
     'permission'   => [
         'create_success'              => 'Neue Berechtigung anagelegt: {0}',
         'delete_confirm'              => 'Bist du sicher, dass du diese Berechtigung l&ouml;schen willst?',
@@ -191,14 +215,18 @@ return [
         'tab_usage'                   => 'Nutzung',
     ],
 
+    //
     // Register
+    //
     'register' => [
         'create_success'              => 'Neuer Benutzer anegelgt: {0}, #{1}',
         'disabled'                    => 'Leider sind neue Benutzerkonten zurzeit nicht erlaubt.',
         'success'             => 'Willkommen an Bord! Du kannst dich nun einloggen.',
     ],
 
+    //
     // Role
+    //
     'role'   => [
         'create_success'              => 'Neue Rolle anegelegt: {0}',
         'delete_confirm'              => 'Bist du sicher, dass du diese Rolle l&ouml;schen willst?',
@@ -216,7 +244,9 @@ return [
         'roles'                       => 'Rollen',
     ],
 
+    //
     // User
+    //
     'user'   => [
         'active'                      => 'Aktiv',
         'active_desc'                 => 'Aktiviere oder deaktiviere diesen Nutzer.',
@@ -260,5 +290,4 @@ return [
         'username'                    => 'Benutzername',
         'username_desc'               => 'Gib einen Benutzernamen ein.',
     ],
-
 ];

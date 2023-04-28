@@ -2,8 +2,7 @@
 
 [![PHP](https://img.shields.io/badge/Language-PHP-8892BF.svg)](https://www.php.net/)
 [![Bootstrap 5](https://img.shields.io/badge/Styles-Bootstrap%205-7952b3.svg)](https://www.getbootstrap.com/)
-[![Font Awesome](https://img.shields.io/badge/Icons-Font%20Awesome%205-1e7cd6.svg)](https://www.fontawesome.com/)
-[![Maintained](https://img.shields.io/badge/Maintained-no-990000.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
+[![Font Awesome](https://img.shields.io/badge/Icons-Font%20Awesome%206-1e7cd6.svg)](https://www.fontawesome.com/)
 
 CI4-Auth is a user, group, role and permission management library for Codeigniter 4.
 
@@ -15,19 +14,22 @@ quite large. I decided to build CI4-Auth based on Myth-Auth, changing and adding
 
 ## Requirements
 
--   PHP 7.3+, 8.0+ (Attention: PHP 8.1 not supported yet by CI 4 as of 2022-01-01)
--   CodeIgniter 4.0.4+
+- PHP 7.4+, 8.0+
+- CodeIgniter 4.0+
 
 ## Features
 
--   Core Myth-Auth features
--   Role objects are consistently called "role" in the code (e.g. tables, variables, classes)
--   Added "Groups" as an addl. object, functioning just like roles
--   Separated user controller functions from the Auth Controller
--   Added views to manage users, groups, roles and permissions
--   Added Bootstrap 5 and Font Awesome 5 support
--   Added database seeders to create sample data
--   Removed all languages but English and German (I don't speak anything else :-) )
+- Core Myth-Auth features
+- Role objects are consistently called "role" in the code (e.g. tables, variables, classes)
+- Added "Groups" as an addl. object, functioning just like roles
+- Separated user controller functions from the Auth Controller
+- Added views to manage users, groups, roles and permissions
+- Added Bootstrap 5 and Font Awesome 5 support
+- Added database seeders to create sample data
+- Language support for English, German and Spanish
+- Bootstrap 5 (CDN)
+- Font Awesome 6 (CDN)
+- Google Font "Open Sans" (CDN)
 
 ## Installation
 
@@ -36,6 +38,8 @@ quite large. I decided to build CI4-Auth based on Myth-Auth, changing and adding
 Install an appstarter project with Codigniter 4 as described [here](https://codeigniter.com/user_guide/installation/installing_composer.html).
 
 Make sure your app and database is configured right and runs fine showing the Codigniter 4 welcome page.
+
+Also, check the $baseUrl setting in **app/Config/App.php** points to your public directory to make sure that the navbar links work.
 
 ### Download CI4-Auth
 
@@ -103,19 +107,65 @@ The CI4-Auth routes are defined in **lewe/ci4-auth/src/Config/Routes.php**. Copy
 //
 $routes->group('', ['namespace' => 'CI4\Auth\Controllers'], function ($routes) {
 
-    // Sample route with role filter
+    // If you want to use group, login, permission or role filters in your route
+    // definitions, you need to add the filter aliases to your Config/Filters.php file.
+    // (see CI4-Auth readme).
+    //
+    // Sample routes with filters:
+    // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'group:Disney']);
+    // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'login']);
+    // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'permission:View Roles']);
     // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'role:Administrator']);
 
     $routes->get('/', 'AuthController::welcome');
+    $routes->get('/auth/error', 'AuthController::error');
 
     ...
 
 });
 ```
+### Filters
 
+Filters allow you to restrict access to routes based on conditions, e.g. a permission or role membership.
+
+CI4-Auth comes with four filter classes: `Group`, `Login`, `Permission` and `Role`. They reside in `lewe/ci4-auth/src/Filters/`.
+You can use those filters in your route specifications. The filter is checked before the route is executed. In the
+following example, the user must hold the 'Administrator' role to open the route:
+
+```php
+$routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'role:Administrator']);
+```
+You can also add several filters like so:
+
+```php
+$routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'role:Administrator', 'filter' => 'group:Admins']);
+```
+You must register the aliases for those filters in your **app/Config/Filter.php** file:
+
+```php
+...
+use CI4\Auth\Filters\GroupFilter;
+use CI4\Auth\Filters\LoginFilter;
+use CI4\Auth\Filters\PermissionFilter;
+use CI4\Auth\Filters\RoleFilter;
+
+class Filters extends BaseConfig
+{
+    /**
+     * Configures aliases for Filter classes to
+     * make reading things nicer and simpler.
+     */
+    public array $aliases = [
+        ...
+        'group'         => GroupFilter::class,
+        'login'         => LoginFilter::class,
+        'permission'    => PermissionFilter::class,
+        'role'          => RoleFilter::class,
+    ];
+```
 ### Views
 
-The views that come with CI4-Auth are based on [Bootstrap 5](http://getbootstrap.com/) and [Font Awesome 5](https://fontawesome.com/).
+The views that come with CI4-Auth are based on [Bootstrap 5](http://getbootstrap.com/) and [Font Awesome 6](https://fontawesome.com/).
 
 If you like to use your own view you can override them editing the `$views` array in
 **lewe/ci4-auth/src/Config/Auth.php**:
@@ -125,6 +175,9 @@ public $views = [
 
     // Welcome page
     'welcome'            => 'CI4\Auth\Views\welcome',
+
+    // Error page
+    'auth/error'         => 'CI4\Auth\Views\error',
 
     // Auth
     'login'              => 'CI4\Auth\Views\auth\login',
@@ -158,6 +211,21 @@ public $views = [
 ];
 ```
 
+### Base Controller
+
+In ***app/Controllers/BaseController.php** add 'auth', 'bs5' and 'session' to the $helpers array:
+
+```php
+    /**
+     * An array of helpers to be loaded automatically upon class instantiation.
+     * These helpers will be available to all other controllers that extend 
+     * BaseController.
+     *
+     * @var array
+     */
+    protected $helpers = ['auth', 'bs5', 'session'];
+```
+
 ### Passing custom config to Views
 
 In case you have a custom configuration that you want to pass to your views (e.g. theme settings, language, etc.), the \_render() function of each CI4-Auth controller passes a variable called `$myConfig` to the view
@@ -167,7 +235,7 @@ if it exists. It is assumed that you set this variable in your BaseController.
 
 Assuming that your database is setup correctly but still empty you need to run the migrations now.
 
-Copy the file **lewe/ci4-auth/src/Database/Migrations/2021-12-14-000000_create_auth_tables.php** to
+Copy the file **lewe/ci4-auth/src/Database/Migrations/..._create_auth_tables.php** to
 **app/Database/Migrations**. Then run the command:
 
     > php spark migrate
@@ -180,6 +248,8 @@ Copy the files **lewe/ci4-auth/src/Database/Seeds/\*.php** to **app/Database/See
 Then run the following command:
 
     > php spark db:seed CI4AuthSeeder
+
+All users created by the seed will have the password `Qwer!1234`.
 
 ### Run Application
 
@@ -196,30 +266,30 @@ In addition to the helper functions that come with Myth-Auth, CI4-Auth provides 
 
 **dnd()**
 
--   Function: Dump'n'Die. Returns a preformatted output of objects and variables.
--   Parameters: Variable/Object, Switch to die after output or not
--   Returns: Preformatted output
+- Function: Dump'n'Die. Returns a preformatted output of objects and variables.
+- Parameters: Variable/Object, Switch to die after output or not
+- Returns: Preformatted output
+
+**has_permission()**
+
+- Function: Checks whether the current user has the passed permission.
+- Parameters: Permission ID
+- Returns: `true` or `false`
 
 **in_groups()**
 
--   Function: Ensures that the current user is in at least one of the passed in groups.
--   Parameters: Group IDs or names (single item or array of items)
--   Returns: `true` or `false`
-    _Note: This is not the same helper as in Myth-Auth since Myth-Auth is inconcistent in
+- Function: Checks whether the current user is in at least one of the passed groups.
+- Parameters: Group IDs or names (single item or array of items)
+- Returns: `true` or `false`
+- _Note: This is not the same helper as in Myth-Auth since Myth-Auth is inconcistent in
     using the terms 'group' and 'role'._
 
 **in_roles()**
 
--   Function: Ensures that the current user is in at least one of the passed in roles.
--   Parameters: Role IDs or names (single item or array of items).
--   Returns: `true` or `false`
-    _Note: This is comparable to the in_groups() helper function in Myth-Auth._
-
-I recommend to add the `auth` helper to your BaseController so you can access those function from any controller, e.g.
-
-```php
-protected $helpers = ['auth', 'bs5', 'session'];
-```
+- Function: Checks whether the current user is in at least one of the passed roles.
+- Parameters: Role IDs or names (single item or array of items).
+- Returns: `true` or `false`
+- _Note: This is comparable to the in_groups() helper function in Myth-Auth._
 
 ## Helper Functions (Bootstrap 5)
 
@@ -228,39 +298,33 @@ provided:
 
 **bs5_alert()**
 
--   Function: Creates a Bootstrap 5 alert box.
--   Parameters: Array with alert box details.
--   Returns: HTML
+- Function: Creates a Bootstrap 5 alert box.
+- Parameters: Array with alert box details.
+- Returns: HTML
 
 **bs5_cardheader()**
 
--   Function: Creates a Bootstrap card header.
--   Parameters: Array with card header details.
--   Returns: HTML
+- Function: Creates a Bootstrap card header.
+- Parameters: Array with card header details.
+- Returns: HTML
 
 **bs5_formrow()**
 
--   Function: Creates a two-column form field div (text, email, select, password).
--   Parameters: Array with form field details.
--   Returns: HTML
+- Function: Creates a two-column form field div (text, email, select, password).
+- Parameters: Array with form field details.
+- Returns: HTML
 
 **bs5_modal()**
 
--   Function: Creates a modal dialog.
--   Parameters: Array with modal dialog details.
--   Returns: HTML
+- Function: Creates a modal dialog.
+- Parameters: Array with modal dialog details.
+- Returns: HTML
 
 **bs5_searchform()**
 
--   Function: Creates a search form field.
--   Parameters: Array with search form details.
--   Returns: HTML
-
-I recommend to add the `bs5` helper to your BaseController so you can access those function from any controller, e.g.
-
-```php
-protected $helpers = ['auth', 'bs5', 'session'];
-```
+- Function: Creates a search form field.
+- Parameters: Array with search form details.
+- Returns: HTML
 
 ## Disclaimer
 

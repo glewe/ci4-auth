@@ -12,12 +12,12 @@ class CI4AuthSeeder extends Seeder
      */
     public function run()
     {
-
         $this->call('UserSeeder');
         $this->call('PermissionSeeder');
         $this->call('GroupSeeder');
         $this->call('RoleSeeder');
         $this->call('GroupsUsersSeeder');
         $this->call('RolesUsersSeeder');
+        $this->call('RolesPermissionsSeeder');
     }
 }

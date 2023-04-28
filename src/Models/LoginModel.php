@@ -13,7 +13,7 @@ class LoginModel extends Model
     protected $useSoftDeletes = false;
 
     protected $allowedFields = [
-        'ip_address', 'email', 'user_id', 'date', 'success'
+        'ip_address', 'email', 'user_id', 'date', 'success', 'info'
     ];
 
     protected $useTimestamps = false;

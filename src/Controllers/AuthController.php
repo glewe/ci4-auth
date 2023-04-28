@@ -26,7 +26,9 @@ class AuthController extends BaseController
     protected $session;
 
     //-------------------------------------------------------------------------
+
     /**
+     * Constructor.
      */
     public function __construct()
     {
@@ -34,13 +36,13 @@ class AuthController extends BaseController
         // Most services in this controller require the session to be started
         //
         $this->session = service('session');
-
         $this->config = config('Auth');
         $this->auth = service('authentication');
         $this->authorize = service('authorization');
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Activate account.
      *
@@ -50,11 +52,13 @@ class AuthController extends BaseController
     {
         $users = model(UserModel::class);
 
+        //
         // First things first - log the activation attempt.
+        //
         $users->logActivationAttempt(
             $this->request->getGet('token'),
             $this->request->getIPAddress(),
-            (string) $this->request->getUserAgent()
+            (string)$this->request->getUserAgent()
         );
 
         $throttler = service('throttler');
@@ -74,6 +78,7 @@ class AuthController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Resend activation account.
      *
@@ -109,11 +114,24 @@ class AuthController extends BaseController
             return redirect()->back()->withInput()->with('error', $activator->error() ?? lang('Auth.exception.unknown_error'));
         }
 
+        //
         // Success!
+        //
         return redirect()->route('login')->with('message', lang('Auth.activation.success'));
     }
 
     //-------------------------------------------------------------------------
+
+    /**
+     * Displays the Lewe Auth error page.
+     */
+    public function error()
+    {
+        return $this->_render($this->config->views['auth/error'], ['config' => $this->config]);
+    }
+
+    //-------------------------------------------------------------------------
+
     /**
      * Displays the forgot password form.
      */
@@ -127,6 +145,7 @@ class AuthController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Attempts to find a user account with the given email address and sends
      * password reset instructions to them.
@@ -145,7 +164,9 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', lang('Auth.forgot.no_user'));
         }
 
-        // Save the reset hash /
+        //
+        // Save the reset hash
+        //
         $user->generateResetHash();
         $users->save($user);
 
@@ -160,6 +181,7 @@ class AuthController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Displays the login form, or redirects
      * the user to their destination/home if
@@ -167,29 +189,32 @@ class AuthController extends BaseController
      */
     public function login()
     {
-        // No need to show a login form if the user
-        // is already logged in.
+        //
+        // No need to show a login form if the user is already logged in.
+        //
         if ($this->auth->check()) {
             $redirectURL = session('redirect_url') ?? site_url('/');
             unset($_SESSION['redirect_url']);
             return redirect()->to($redirectURL);
         }
 
+        //
         // Set a return URL if none is specified
+        //
         $_SESSION['redirect_url'] = session('redirect_url') ?? previous_url() ?? site_url('/');
 
         return $this->_render($this->config->views['login'], ['config' => $this->config]);
     }
 
     //-------------------------------------------------------------------------
+
     /**
-     * Attempts to verify the user's credentials
-     * through a POST request.
+     * Attempts to verify the user's credentials through a POST request.
      */
     public function loginDo()
     {
         $rules = [
-            'login'   => 'required',
+            'login' => 'required',
             'password' => 'required',
         ];
 
@@ -205,15 +230,21 @@ class AuthController extends BaseController
         $password = $this->request->getPost('password');
         $remember = (bool)$this->request->getPost('remember');
 
+        //
         // Determine credential type
+        //
         $type = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
+        //
         // Try to log them in...
+        //
         if (!$this->auth->attempt([$type => $login, 'password' => $password], $remember)) {
             return redirect()->back()->withInput()->with('error', $this->auth->error() ?? lang('Auth.login.bad_attempt'));
         }
 
+        //
         // Is the user being forced to reset their password?
+        //
         if ($this->auth->user()->force_pass_reset === true) {
             return redirect()->to(route_to('reset-password') . '?token=' . $this->auth->user()->reset_hash)->withCookies();
         }
@@ -225,6 +256,7 @@ class AuthController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Log the user out.
      */
@@ -235,6 +267,7 @@ class AuthController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Displays the user registration page.
      */
@@ -254,42 +287,53 @@ class AuthController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Attempt to register a new user.
      */
     public function registerDo()
     {
+        //
         // Check if registration is allowed
+        //
         if (!$this->config->allowRegistration) return redirect()->back()->withInput()->with('error', lang('Auth.register.disabled'));
 
         $users = model(UserModel::class);
 
+        //
         // Validate basics first since some password rules rely on these fields
+        //
         $rules = [
             'username' => 'required|alpha_numeric_space|min_length[3]|max_length[30]|is_unique[users.username]',
-            'email'    => 'required|valid_email|is_unique[users.email]',
-            'firstname'       => 'max_length[80]',
-            'lastname'        => 'max_length[80]',
-            'displayname'     => 'max_length[80]',
+            'email' => 'required|valid_email|is_unique[users.email]',
+            'firstname' => 'max_length[80]',
+            'lastname' => 'max_length[80]',
+            'displayname' => 'max_length[80]',
         ];
 
         if (!$this->validate($rules)) return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 
+        //
         // Validate passwords since they can only be validated properly here
+        //
         $rules = [
-            'password'     => 'required|strong_password',
+            'password' => 'required|strong_password',
             'pass_confirm' => 'required|matches[password]',
         ];
 
         if (!$this->validate($rules)) return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 
+        //
         // Save the user
+        //
         $allowedPostFields = array_merge(['password'], $this->config->validFields, $this->config->personalFields);
         $user = new User($this->request->getPost($allowedPostFields));
 
         $this->config->requireActivation === null ? $user->activate() : $user->generateActivateHash();
 
+        //
         // Ensure default role gets assigned if set
+        //
         if (!empty($this->config->defaultUserRole)) $users = $users->withRole($this->config->defaultUserRole);
 
         if (!$users->save($user)) return redirect()->back()->withInput()->with('errors', $users->errors());
@@ -298,15 +342,20 @@ class AuthController extends BaseController
             $activator = service('activator');
             $sent = $activator->send($user);
             if (!$sent) return redirect()->back()->withInput()->with('error', $activator->error() ?? lang('Auth.exception.unknown_error'));
+            //
             // Success!
+            //
             return redirect()->route('login')->with('message', lang('Auth.activation.success'));
         }
 
+        //
         // Success!
+        //
         return redirect()->route('login')->with('message', lang('Auth.register.success'));
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Displays the Reset Password form.
      */
@@ -320,11 +369,12 @@ class AuthController extends BaseController
 
         return $this->_render($this->config->views['reset'], [
             'config' => $this->config,
-            'token'  => $token,
+            'token' => $token,
         ]);
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Verifies the code with the email and saves the new password,
      * if they all pass validation.
@@ -348,9 +398,9 @@ class AuthController extends BaseController
         );
 
         $rules = [
-            'token'      => 'required',
-            'email'      => 'required|valid_email',
-            'password'    => 'required|strong_password',
+            'token' => 'required',
+            'email' => 'required|valid_email',
+            'password' => 'required|strong_password',
             'pass_confirm' => 'required|matches[password]',
         ];
 
@@ -410,10 +460,10 @@ class AuthController extends BaseController
         }
 
         // Success! Save the new password, and cleanup the reset hash.
-        $user->password       = $this->request->getPost('password');
-        $user->reset_hash       = null;
-        $user->reset_at       = date('Y-m-d H:i:s');
-        $user->reset_expires    = null;
+        $user->password = $this->request->getPost('password');
+        $user->reset_hash = null;
+        $user->reset_at = date('Y-m-d H:i:s');
+        $user->reset_expires = null;
         $user->force_pass_reset = false;
         $users->save($user);
 
@@ -421,6 +471,7 @@ class AuthController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Displays the Lewe Auth welcome page.
      */
@@ -430,11 +481,22 @@ class AuthController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
+    /**
+     * Displays the whoami page.
+     */
+    public function whoami()
+    {
+        return $this->_render($this->config->views['whoami'], ['config' => $this->config]);
+    }
+
+    //-------------------------------------------------------------------------
+
     /**
      * Render View.
      *
-     * @param string  $view
-     * @param array   $data
+     * @param string $view
+     * @param array $data
      *
      * @return view
      */

@@ -2,7 +2,9 @@
 
 return [
 
+    //
     // _Global
+    //
     'description'                    => 'Description',
     'getHelpForPage'                 => 'Get help for this page...',
     'name'                           => 'Name',
@@ -15,7 +17,9 @@ return [
         'warning'                     => 'Warning',
     ],
 
+    //
     // Activation
+    //
     'activation' => [
         'no_user'                     => 'Unable to locate a user with that activation code.',
         'resend'                      => 'Resend activation message one more time.',
@@ -25,7 +29,9 @@ return [
         'not_activated'               => 'This user account is not yet activated.',
     ],
 
+    //
     // Buttons
+    //
     'btn' => [
         'action'                      => 'Action',
         'cancel'                      => 'Cancel',
@@ -46,7 +52,9 @@ return [
         'view'                        => 'View',
     ],
 
+    //
     // Exceptions
+    //
     'exception' => [
         'invalid_fields'              => 'The "{0}" field cannot be used to validate credentials.',
         'invalid_model'               => 'The {0} model must be loaded prior to use.',
@@ -59,7 +67,9 @@ return [
         'user_not_found'              => 'Unable to locate a user with ID = {0, number}.',
     ],
 
+    //
     // Forgot Password
+    //
     'forgot' => [
         'error_email'                 => 'Unable to send email with password reset instructions to: {0}',
         'error_reset'                 => 'Unable to send reset instructions to {0}',
@@ -70,7 +80,9 @@ return [
         'reset_success'               => 'Your password has been successfully changed. Please login with the new password.',
     ],
 
+    //
     // Group
+    //
     'group'   => [
         'create_success'              => 'New group created: {0}',
         'delete_confirm'              => 'Are you sure you want to delete this group?',
@@ -88,7 +100,9 @@ return [
         'groups'                      => 'Groups',
     ],
 
+    //
     // Login
+    //
     'login' => [
         'already_registered'          => 'Already registered?',
         'bad_attempt'                 => 'Unable to log you in. Please check your credentials.',
@@ -122,12 +136,16 @@ return [
         'we_never_share'              => 'We\'ll never share your email with anyone else.',
     ],
 
+    //
     // Modal Dialogs
+    //
     'modal' => [
         'confirm'                     => 'Please Confirm',
     ],
 
+    //
     // Navbar
+    //
     'nav' => [
         'home'                        => 'Home',
         'authorization'   => [
@@ -144,10 +162,14 @@ return [
             'forgot_password'          => 'Forgot Password',
             'reset_password'           => 'Reset Password',
             'register'                 => 'Register',
+            'whoami'                   => 'Who am I?',
         ],
+        'settings'                     => 'Settings',
     ],
 
+    //
     // Password
+    //
     'password' => [
         'error_common'                => 'Password must not be a common password.',
         'error_empty'                 => 'A Password is required.',
@@ -167,7 +189,9 @@ return [
         'user_not_exist'              => 'Password was not changed. User does not exist',
     ],
 
+    //
     // Permission
+    //
     'permission'   => [
         'create_success'              => 'New permission created: {0}',
         'delete_confirm'              => 'Are you sure you want to delete this permission?',
@@ -191,14 +215,18 @@ return [
         'tab_usage'                   => 'Usage',
     ],
 
+    //
     // Register
+    //
     'register' => [
         'create_success'              => 'New user created: {0}, #{1}',
         'disabled'                    => 'Sorry, new user accounts are not allowed at this time.',
         'success'                     => 'Welcome aboard! Please login with your new credentials.',
     ],
 
+    //
     // Role
+    //
     'role'   => [
         'create_success'              => 'New role created: {0}',
         'delete_confirm'              => 'Are you sure you want to delete this role?',
@@ -216,7 +244,9 @@ return [
         'roles'                       => 'Roles',
     ],
 
+    //
     // User
+    //
     'user'   => [
         'active'                      => 'Active',
         'active_desc'                 => 'Activate or deactivate this user.',
@@ -260,5 +290,4 @@ return [
         'username'                    => 'Username',
         'username_desc'               => 'Enter a username.',
     ],
-
 ];

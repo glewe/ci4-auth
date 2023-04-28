@@ -18,9 +18,16 @@ if (!function_exists('auth_display')) {
             $user   = $authenticate->user();
             $groups = $authorize->userGroups($user->id);
             $roles  = $authorize->userRoles($user->id);
+            $permissions = $user->getPermissions();
+            asort($permissions);
 
             $groupsForUser = implode(', ', array_column($groups, 'name'));
             $rolesForUser  = implode(', ', array_column($roles, 'name'));
+
+            $pList = '';
+            foreach($permissions as $p) {
+                $pList .= '<li>'.$p.'</li>';
+            }
 
             $html  = '
             <div class="alert alert-dismissable fade show alert-info" role="alert">
@@ -29,11 +36,17 @@ if (!function_exists('auth_display')) {
                 <hr>
                 <div>
                 <table><tbody>
-                    <tr><td style="width:150px;">User ID</td><td>' . $user->id . '</td></tr>
-                    <tr><td>Username</td><td>' . $user->username . '</td></tr>
-                    <tr><td>Email</td><td>' . $user->email . '</td></tr>
-                    <tr><td>Groups</td><td>' . $groupsForUser . '</td></tr>
-                    <tr><td>Roles</td><td>' . $rolesForUser . '</td></tr>
+                    <tr><td class="fw-bold" style="width:150px;">User ID</td><td>' . $user->id . '</td></tr>
+                    <tr><td class="fw-bold">Username</td><td>' . $user->username . '</td></tr>
+                    <tr><td class="fw-bold">Email</td><td>' . $user->email . '</td></tr>
+                    <tr><td class="fw-bold">Groups</td><td>' . $groupsForUser . '</td></tr>
+                    <tr><td class="fw-bold">Roles</td><td>' . $rolesForUser . '</td></tr>
+                    <tr>
+                        <td class="fw-bold align-top">Permissions</td>
+                        <td>
+                            <ul>' . $pList . '</ul>
+                        </td>
+                    </tr>
                 </tbody></table>
                 </div>
             </div>';

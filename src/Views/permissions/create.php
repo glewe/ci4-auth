@@ -1,52 +1,52 @@
 <?= $this->extend($config->viewLayout) ?>
 <?= $this->section('main') ?>
 
-<div class="container">
+    <div class="container">
 
-    <div class="card">
+        <?= view('CI4\Auth\Views\_alert') ?>
 
-        <?= bs5_cardheader(['icon' => 'fas fa-key', 'title' => lang('Auth.btn.createPermission'), 'help' => '#']) ?>
+        <div class="card">
 
-        <div class="card-body row">
+            <?= bs5_cardheader(['icon' => 'fas fa-key', 'title' => lang('Auth.btn.createPermission'), 'help' => '#']) ?>
 
-            <?= view('CI4\Auth\Views\_alert') ?>
+            <div class="card-body row">
 
-            <form action="<?= base_url() ?>/permissions/create" method="post">
-                <?= csrf_field() ?>
+                <form action="<?= base_url() ?>/permissions/create" method="post">
+                    <?= csrf_field() ?>
 
-                <?php
-                echo bs5_formrow([
-                    'type' => 'text',
-                    'mandatory' => true,
-                    'name' => 'name',
-                    'title' => lang('Auth.permission.name'),
-                    'desc' => lang('Auth.permission.name_desc'),
-                    'errors' => session('errors.name'),
-                    'value' => old('name')
-                ]);
+                    <?php
+                    echo bs5_formrow([
+                        'type' => 'text',
+                        'mandatory' => true,
+                        'name' => 'name',
+                        'title' => lang('Auth.permission.name'),
+                        'desc' => lang('Auth.permission.name_desc'),
+                        'errors' => session('errors.name'),
+                        'value' => old('name')
+                    ]);
 
-                echo bs5_formrow([
-                    'type' => 'text',
-                    'mandatory' => false,
-                    'name' => 'description',
-                    'title' => lang('Auth.permission.description'),
-                    'desc' => lang('Auth.permission.description_desc'),
-                    'errors' => session('errors.description'),
-                    'value' => old('description')
-                ]);
-                ?>
+                    echo bs5_formrow([
+                        'type' => 'text',
+                        'mandatory' => false,
+                        'name' => 'description',
+                        'title' => lang('Auth.permission.description'),
+                        'desc' => lang('Auth.permission.description_desc'),
+                        'errors' => session('errors.description'),
+                        'value' => old('description')
+                    ]);
+                    ?>
 
-                <div class="card">
-                    <div class="card-body">
-                        <button type="submit" class="btn btn-primary"><?= lang('Auth.btn.submit') ?></button>
-                        <a class="btn btn-secondary float-end" href="<?= base_url() ?>/permissions"><?= lang('Auth.btn.cancel') ?></a>
+                    <div class="card">
+                        <div class="card-body">
+                            <button type="submit" class="btn btn-primary"><?= lang('Auth.btn.submit') ?></button>
+                            <a class="btn btn-secondary float-end" href="<?= base_url() ?>/permissions"><?= lang('Auth.btn.cancel') ?></a>
+                        </div>
                     </div>
-                </div>
 
-            </form>
+                </form>
 
+            </div>
         </div>
     </div>
-</div>
 
 <?= $this->endSection() ?>

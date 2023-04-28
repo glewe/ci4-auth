@@ -13,12 +13,12 @@ class GroupFilter implements FilterInterface
     /**
      * Do whatever processing this filter needs to do. By default it should not
      * return anything during normal execution. However, when an abnormal state
-     * is found, it should return an instance of CodeIgniter\HTTP\Response. If 
-     * it does, script execution will end and that Response will be sent back to 
-     * the client, allowing for error pages, redirects, etc.
+     * is found, it should return an instance of CodeIgniter\HTTP\Response. If
+     * it does, script execution will end and that Response will be sent back
+     * to the client, allowing for error pages, redirects, etc.
      *
      * @param RequestInterface $request
-     * @param array|null                         $params
+     * @param array|null $params
      *
      * @return mixed
      */
@@ -30,7 +30,9 @@ class GroupFilter implements FilterInterface
 
         $authenticate = service('authentication');
 
-        // if no user is logged in then send to the login form
+        //
+        // If no user is logged in then send to the login form
+        //
         if (!$authenticate->check()) {
             session()->set('redirect_url', current_url());
             return redirect('login');
@@ -38,13 +40,16 @@ class GroupFilter implements FilterInterface
 
         $authorize = service('authorization');
 
-        // Check each requested permission
+        //
+        // Check each requested group
+        //
         foreach ($params as $group) {
             if ($authorize->inGroup($group, $authenticate->id())) return;
         }
 
         if ($authenticate->silent()) {
-            $redirectURL = session('redirect_url') ?? '/';
+//                $redirectURL = session('redirect_url') ?? '/';
+            $redirectURL = '/error';
             unset($_SESSION['redirect_url']);
             return redirect()->to($redirectURL)->with('error', lang('Auth.exception.insufficient_permissions'));
         } else {
@@ -59,9 +64,9 @@ class GroupFilter implements FilterInterface
      * to stop execution of other after filters, short of
      * throwing an Exception or Error.
      *
-     * @param RequestInterface  $request
+     * @param RequestInterface $request
      * @param ResponseInterface $response
-     * @param array|null                          $arguments
+     * @param array|null $arguments
      *
      * @return void
      */

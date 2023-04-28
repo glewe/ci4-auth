@@ -25,6 +25,7 @@ class GroupController extends BaseController
     protected $session;
 
     //-------------------------------------------------------------------------
+
     /**
      */
     public function __construct()
@@ -33,16 +34,16 @@ class GroupController extends BaseController
         // Most services in this controller require the session to be started
         //
         $this->session = service('session');
-
         $this->config = config('Auth');
         $this->auth = service('authorization');
     }
 
     // -------------------------------------------------------------------------
+
     /**
      * Shows all user records.
      *
-     * @return void
+     * @return \CodeIgniter\HTTP\RedirectResponse | string
      */
     public function groups()
     {
@@ -50,7 +51,7 @@ class GroupController extends BaseController
 
         $data = [
             'config' => $this->config,
-            'groups'  => $groups->orderBy('name', 'asc')->findAll(),
+            'groups' => $groups->orderBy('name', 'asc')->findAll(),
         ];
 
         if ($this->request->getMethod() === 'post') {
@@ -89,18 +90,24 @@ class GroupController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Displays the user create page.
+     *
+     * @return string
      */
-    public function groupsCreate($id = null)
+    public function groupsCreate($id = null): string
     {
         return $this->_render($this->config->views['groupsCreate'], ['config' => $this->config]);
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Attempt to create a new user.
      * To be be used by administrators. User will be activated automatically.
+     *
+     * @return \CodeIgniter\HTTP\RedirectResponse
      */
     public function groupsCreateDo()
     {
@@ -127,6 +134,7 @@ class GroupController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Displays the user edit page.
      */
@@ -148,8 +156,9 @@ class GroupController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
-     * Attempt to create a new group.
+     * Attempt to edit a group.
      */
     public function groupsEditDo($id = null)
     {
@@ -197,13 +206,14 @@ class GroupController extends BaseController
     }
 
     //-------------------------------------------------------------------------
+
     /**
      * Render View.
      *
-     * @param string  $view
-     * @param array   $data
+     * @param string $view
+     * @param array $data
      *
-     * @return view
+     * @return string
      */
     protected function _render(string $view, array $data = [])
     {

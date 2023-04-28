@@ -43,7 +43,7 @@ class UserController extends BaseController
     /**
      * Shows all user records.
      *
-     * @return void
+     * @return \CodeIgniter\HTTP\RedirectResponse | string
      */
     public function users()
     {

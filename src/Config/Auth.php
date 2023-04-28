@@ -41,11 +41,15 @@ class Auth extends BaseConfig
         // Welcome page
         'welcome'            => 'CI4\Auth\Views\welcome',
 
+        // Error page
+        'auth/error'              => 'CI4\Auth\Views\error',
+
         // Auth
         'login'              => 'CI4\Auth\Views\auth\login',
         'register'           => 'CI4\Auth\Views\auth\register',
         'forgot'             => 'CI4\Auth\Views\auth\forgot',
         'reset'              => 'CI4\Auth\Views\auth\reset',
+        'whoami'             => 'CI4\Auth\Views\auth\whoami',
 
         // Groups
         'groups'             => 'CI4\Auth\Views\groups\list',

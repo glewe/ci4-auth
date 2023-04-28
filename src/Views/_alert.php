@@ -3,8 +3,8 @@
     echo bs5_alert($data = [
         'type' => 'info',
         'icon'  => '',
-        'title' => '',
-        'subject' => lang('Auth.alert.information'),
+        'title' => lang('Auth.alert.information'),
+        'subject' => '',
         'text' => session('message'),
         'help' => '',
         'dismissable' => true,
@@ -16,8 +16,8 @@ endif ?>
     echo bs5_alert($data = [
         'type' => 'success',
         'icon'  => '',
-        'title' => '',
-        'subject' => lang('Auth.alert.information'),
+        'title' => lang('Auth.alert.information'),
+        'subject' => '',
         'text' => session('success'),
         'help' => '',
         'dismissable' => true,
@@ -29,8 +29,8 @@ endif ?>
     echo bs5_alert($data = [
         'type' => 'warning',
         'icon'  => '',
-        'title' => '',
-        'subject' => lang('Auth.alert.warning'),
+        'title' => lang('Auth.alert.warning'),
+        'subject' => '',
         'text' => session('warning'),
         'help' => '',
         'dismissable' => true,
@@ -42,8 +42,8 @@ endif ?>
     echo bs5_alert($data = [
         'type' => 'danger',
         'icon'  => '',
-        'title' => '',
-        'subject' => lang('Auth.alert.error'),
+        'title' => lang('Auth.alert.error'),
+        'subject' => '',
         'text' => session('error'),
         'help' => '',
         'dismissable' => true,

@@ -3,10 +3,11 @@
 
 <div class="container mb-4">
 
-    <div class="card">
-        <div class="card-body">
+    <?= view('CI4\Auth\Views\_alert') ?>
 
-            <h3 class="my-4">Welcome to CI4-Auth</h3>
+    <div class="card">
+        <?= bs5_cardheader(['icon' => 'fas fa-shield-alt text-warning', 'title' => 'Welcome to CI4-Auth', 'help' => 'https://github.com/glewe/ci4-auth']) ?>
+        <div class="card-body fs-5">
 
             <p>CI4-Auth is based on the great <a href="https://github.com/lonnieezell/myth-auth" target="_blank">Myth-Auth</a> library for Codeigniter 4.
                 Due credits go to its author <a href="https://github.com/lonnieezell" target="_blank">Lonnie Ezell</a> and the team for this awesome work.</p>
@@ -18,15 +19,16 @@
 
             <h3 class="my-4">Authentication</h3>
 
-            <p>The Authentication menu in the navbar contains links to all views having to do with user authentication, e.g. log in, log out, register etc.</p>
+            <p>The Authentication menu (<i class="fas fa-user"></i>) in the navbar contains links to all views having to do with user authentication, e.g. log in, log out, register etc.
+            I did not make them dependent on the login status to make testing easier. Hide them accordingly later.</p>
 
             <h3 class="my-4">Authorization</h3>
 
-            <p>The Authentication menu handles everything for managing user, groups, roles and permissions.</p>
+            <p>The Authorization menu (<i class="fas fa-cog"></i>) holds the links to manage users, groups, roles and permissions.</p>
 
             <h3 class="my-4">Enjoy and extend</h3>
 
-            <p>The views provided in CI4-Auth are considered basic. They provide access to the auth objects and also show some ways to utilize Bootstrap 5 and Font Awesome 5.</p>
+            <p>The views provided in CI4-Auth are considered basic. They provide access to the auth objects and also show some ways to utilize Bootstrap and Font Awesome.</p>
             <p>Feel free to change or extend them to your liking.</p>
 
             <h3 class="my-4">Report bugs</h3>
@@ -38,6 +40,11 @@
             <p>Best regards,<br>
                 George Lewe</p>
 
+        </div>
+        <div class="card-footer pt-3">
+            <p>CodeIgniter <?= CodeIgniter\CodeIgniter::CI_VERSION ?><br>
+            Page rendered in {elapsed_time} seconds<br>
+            Environment: <?= ENVIRONMENT ?></p>
         </div>
     </div>
 </div>
