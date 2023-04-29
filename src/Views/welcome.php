@@ -43,6 +43,7 @@
         </div>
         <div class="card-footer pt-3">
             <p>CodeIgniter <?= CodeIgniter\CodeIgniter::CI_VERSION ?><br>
+            CI4-Auth <?= config('AuthInfo')->version ?><br>
             Page rendered in {elapsed_time} seconds<br>
             Environment: <?= ENVIRONMENT ?></p>
         </div>

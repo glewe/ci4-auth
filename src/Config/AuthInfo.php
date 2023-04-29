@@ -4,7 +4,7 @@ namespace CI4\Auth\Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class Product extends Auth
+class AuthInfo extends BaseConfig
 {
     /**
      * ------------------------------------------------------------------------
@@ -22,7 +22,7 @@ class Product extends Auth
      *
      * @var string
      */
-    public $version = '2.0.0';
+    public $version = '2.0.1';
 
     /**
      * ------------------------------------------------------------------------
