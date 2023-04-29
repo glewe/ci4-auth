@@ -26,7 +26,7 @@ class PermissionFilter implements FilterInterface
     {
         if (!function_exists('logged_in')) helper('auth');
 
-        if (empty($params)) return;
+        if (empty($params)) return false;
 
         $authenticate = service('authentication');
 
@@ -50,17 +50,18 @@ class PermissionFilter implements FilterInterface
         if (!$result) {
             if ($authenticate->silent()) {
 //                $redirectURL = session('redirect_url') ?? '/';
-                $redirectURL = '/auth/error';
+                $redirectURL = '/error_auth';
                 unset($_SESSION['redirect_url']);
                 return redirect()->to($redirectURL)->with('error', lang('Auth.exception.insufficient_permissions'));
             } else {
 //                $redirectURL = session('redirect_url') ?? '/';
-                $redirectURL = '/auth/error';
+                $redirectURL = '/error_auth';
                 unset($_SESSION['redirect_url']);
 //                throw new PermissionException(lang('Auth.exception.insufficient_permissions'));
                 return redirect()->to($redirectURL)->with('error', lang('Auth.exception.insufficient_permissions'));
             }
         }
+        return false;
     }
 
     //--------------------------------------------------------------------------

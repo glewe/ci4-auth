@@ -118,7 +118,7 @@ $routes->group('', ['namespace' => 'CI4\Auth\Controllers'], function ($routes) {
     // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'role:Administrator']);
 
     $routes->get('/', 'AuthController::welcome');
-    $routes->get('/auth/error', 'AuthController::error');
+    $routes->get('/error_auth', 'AuthController::error');
 
     ...
 
@@ -177,7 +177,7 @@ public $views = [
     'welcome'            => 'CI4\Auth\Views\welcome',
 
     // Error page
-    'auth/error'         => 'CI4\Auth\Views\error',
+    'error_auth'         => 'CI4\Auth\Views\error_auth',
 
     // Auth
     'login'              => 'CI4\Auth\Views\auth\login',

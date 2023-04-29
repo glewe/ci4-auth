@@ -42,7 +42,7 @@ class Auth extends BaseConfig
         'welcome'            => 'CI4\Auth\Views\welcome',
 
         // Error page
-        'auth/error'              => 'CI4\Auth\Views\error',
+        'error_auth'              => 'CI4\Auth\Views\error_auth',
 
         // Auth
         'login'              => 'CI4\Auth\Views\auth\login',

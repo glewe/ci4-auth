@@ -22,7 +22,7 @@ class Product extends Auth
      *
      * @var string
      */
-    public $version = '1.0.0-SNAPSHOT';
+    public $version = '2.0.0';
 
     /**
      * ------------------------------------------------------------------------
@@ -108,7 +108,7 @@ class Product extends Auth
      * ------------------------------------------------------------------------
      *
      */
-    public $siteName  = 'MySite';
+    public $siteName = 'MySite';
     public $siteOwner = 'John Doe';
     public $siteOwnerAddr1 = 'Street 123';
     public $siteOwnerAddr2 = '1235 Town';

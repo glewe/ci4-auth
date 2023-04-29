@@ -127,7 +127,7 @@ class AuthController extends BaseController
      */
     public function error()
     {
-        return $this->_render($this->config->views['auth/error'], ['config' => $this->config]);
+        return $this->_render($this->config->views['error_auth'], ['config' => $this->config]);
     }
 
     //-------------------------------------------------------------------------
@@ -498,7 +498,7 @@ class AuthController extends BaseController
      * @param string $view
      * @param array $data
      *
-     * @return view
+     * @return string
      */
     protected function _render(string $view, array $data = [])
     {
