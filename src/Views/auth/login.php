@@ -11,8 +11,8 @@
                 <div class="card">
 
                     <div class="card-header">
-                        <i class="fas fa-sign-in-alt fa-lg me-2"></i><strong><?= lang('Auth.login.title') ?></strong></i>
-                        <a href="#" target="_blank" class="float-end card-header-help-icon" title="Get help for this page..."><i class="far fa-question-circle fa-lg"></i></a>
+                        <i class="bi-box-arrow-in-right me-2"></i><strong><?= lang('Auth.login.title') ?></strong></i>
+                        <a href="#" target="_blank" class="float-end card-header-help-icon" title="Get help for this page..."><i class="bi-question-circle"></i></a>
                     </div>
 
                     <div class="card-body">

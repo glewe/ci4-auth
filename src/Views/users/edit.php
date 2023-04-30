@@ -7,7 +7,7 @@
 
         <div class="card">
 
-            <?= bs5_cardheader(['icon' => 'fas fa-user-edit', 'title' => lang('Auth.btn.editUser'), 'help' => '#']) ?>
+            <?= bs5_cardheader(['icon' => 'bi-person-fill-gear', 'title' => lang('Auth.btn.editUser'), 'help' => '#']) ?>
 
             <div class="card-body">
 

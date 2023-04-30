@@ -20,7 +20,7 @@
 
         <div class="card">
 
-            <?= bs5_cardheader(['icon' => 'fas fa-key', 'title' => lang('Auth.permission.permissions'), 'help' => '#']) ?>
+            <?= bs5_cardheader(['icon' => 'bi-key-fill', 'title' => lang('Auth.permission.permissions'), 'help' => '#']) ?>
 
             <div class="card-body">
 
@@ -51,8 +51,8 @@
                                         <div>
                                             <button id="action-<?= $permission->id ?>" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><?= lang('Auth.btn.action') ?></button>
                                             <div class="dropdown-menu" aria-labelledby="action-<?= $permission->id ?>">
-                                                <a class="dropdown-item" href="permissions/edit/<?= $permission->id ?>"><i class="far fa-edit fa-sm me-2"></i><?= lang('Auth.btn.edit') ?></a>
-                                                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeletePermission_<?= $permission->id ?>"><i class="far fa-trash-alt fa-sm me-2"></i><?= lang('Auth.btn.delete') ?></button>
+                                                <a class="dropdown-item" href="permissions/edit/<?= $permission->id ?>"><i class="bi-pencil-square me-2"></i><?= lang('Auth.btn.edit') ?></a>
+                                                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeletePermission_<?= $permission->id ?>"><i class="bi-trash me-2"></i><?= lang('Auth.btn.delete') ?></button>
                                             </div>
                                         </div>
                                     </div>

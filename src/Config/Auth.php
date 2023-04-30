@@ -81,9 +81,13 @@ class Auth extends BaseConfig
      * Layout for the views to extend
      * ------------------------------------------------------------------------
      *
+     * This setting specifies the layout of your views. In order to use the
+     * layout that comes with CI4-Auth use:
+     *     public $viewLayout = 'CI4\Auth\Views\_layout';
+     *
      * @var string
      */
-    public $viewLayout = 'CI4\Auth\Views\_layout';
+    public $viewLayout = 'Views\_layout';
 
     /**
      * ------------------------------------------------------------------------

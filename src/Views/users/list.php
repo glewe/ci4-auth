@@ -20,7 +20,7 @@
 
         <div class="card">
 
-            <?= bs5_cardheader(['icon' => 'fas fa-user', 'title' => lang('Auth.user.users'), 'help' => '#']) ?>
+            <?= bs5_cardheader(['icon' => 'bi-person-fill', 'title' => lang('Auth.user.users'), 'help' => '#']) ?>
 
             <div class="card-body">
 
@@ -56,8 +56,8 @@
                                         <div class="btn-user">
                                             <button id="action-<?= $user->id ?>" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><?= lang('Auth.btn.action') ?></button>
                                             <div class="dropdown-menu" aria-labelledby="action-<?= $user->id ?>">
-                                                <a class="dropdown-item" href="users/edit/<?= $user->id ?>"><i class="far fa-edit fa-sm me-2"></i><?= lang('Auth.btn.edit') ?></a>
-                                                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteUser_<?= $user->id ?>"><i class="far fa-trash-alt fa-sm me-2"></i><?= lang('Auth.btn.delete') ?></button>
+                                                <a class="dropdown-item" href="users/edit/<?= $user->id ?>"><i class="bi-pencil-square me-2"></i><?= lang('Auth.btn.edit') ?></a>
+                                                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteUser_<?= $user->id ?>"><i class="bi-trash me-2"></i><?= lang('Auth.btn.delete') ?></button>
                                             </div>
                                         </div>
                                     </div>

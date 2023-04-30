@@ -20,7 +20,7 @@
 
         <div class="card">
 
-            <?= bs5_cardheader(['icon' => 'fas fa-users', 'title' => lang('Auth.group.groups'), 'help' => '#']) ?>
+            <?= bs5_cardheader(['icon' => 'bi-people-fill', 'title' => lang('Auth.group.groups'), 'help' => '#']) ?>
 
             <div class="card-body">
 
@@ -50,8 +50,8 @@
                                         <div>
                                             <button id="action-<?= $group->id ?>" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><?= lang('Auth.btn.action') ?></button>
                                             <div class="dropdown-menu" aria-labelledby="action-<?= $group->id ?>">
-                                                <a class="dropdown-item" href="groups/edit/<?= $group->id ?>"><i class="far fa-edit fa-sm me-2"></i><?= lang('Auth.btn.edit') ?></a>
-                                                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteGroup_<?= $group->id ?>"><i class="far fa-trash-alt fa-sm me-2"></i><?= lang('Auth.btn.delete') ?></button>
+                                                <a class="dropdown-item" href="groups/edit/<?= $group->id ?>"><i class="bi-pencil-square me-2"></i><?= lang('Auth.btn.edit') ?></a>
+                                                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteGroup_<?= $group->id ?>"><i class="bi-trash me-2"></i><?= lang('Auth.btn.delete') ?></button>
                                             </div>
                                         </div>
                                     </div>
