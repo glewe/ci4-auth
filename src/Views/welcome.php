@@ -6,7 +6,7 @@
     <?= view('CI4\Auth\Views\_alert') ?>
 
     <div class="card">
-        <?= bs5_cardheader(['icon' => 'fas fa-shield-alt text-warning', 'title' => 'Welcome to CI4-Auth', 'help' => 'https://github.com/glewe/ci4-auth']) ?>
+        <?= bs5_cardheader(['icon' => 'bi-shield-shaded', 'title' => 'Welcome to CI4-Auth', 'help' => 'https://github.com/glewe/ci4-auth']) ?>
         <div class="card-body fs-5">
 
             <p>CI4-Auth is based on the great <a href="https://github.com/lonnieezell/myth-auth" target="_blank">Myth-Auth</a> library for Codeigniter 4.
@@ -19,12 +19,12 @@
 
             <h3 class="my-4">Authentication</h3>
 
-            <p>The Authentication menu (<i class="fas fa-user"></i>) in the navbar contains links to all views having to do with user authentication, e.g. log in, log out, register etc.
+            <p>The Authentication menu (<i class="bi-person-fill"></i>) in the navbar contains links to all views having to do with user authentication, e.g. log in, log out, register etc.
             I did not make them dependent on the login status to make testing easier. Hide them accordingly later.</p>
 
             <h3 class="my-4">Authorization</h3>
 
-            <p>The Authorization menu (<i class="fas fa-cog"></i>) holds the links to manage users, groups, roles and permissions.</p>
+            <p>The Authorization menu (<i class="bi-gear-fill"></i>) holds the links to manage users, groups, roles and permissions.</p>
 
             <h3 class="my-4">Enjoy and extend</h3>
 
