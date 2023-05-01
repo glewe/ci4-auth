@@ -18,6 +18,15 @@ return [
     ],
 
     //
+    // Account
+    //
+    'account' => [
+        'active'                      => 'Konto aktiv',
+        'banned'                      => 'Konto gebannt',
+        'inactive'                    => 'Konto nicht aktiv',
+    ],
+
+    //
     // Activation
     //
     'activation' => [
@@ -250,6 +259,8 @@ return [
     'user'   => [
         'active'                      => 'Aktiv',
         'active_desc'                 => 'Aktiviere oder deaktiviere diesen Nutzer.',
+        'banned'                      => 'Gebannt',
+        'banned_desc'                 => 'Banne oder unbanne diesen Nutzer.',
         'create_success'              => 'Neuer Benutzer anegelegt: {0} ({1})',
         'delete_confirm'              => 'Bist du sicher, dass du diesen Benutzer l&ouml;schen willst?',
         'delete_success'              => 'Benutzer gel&ouml;scht: {0}',

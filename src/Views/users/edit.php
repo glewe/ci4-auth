@@ -117,7 +117,19 @@
                                                 'title' => lang('Auth.user.active'),
                                                 'desc' => lang('Auth.user.active_desc'),
                                                 'errors' => session('errors.active'),
-                                                'value' => $user->active
+                                                'value' => $user->active,
+                                                'disabled' => ($user->id==1) ? true : false
+                                            ]);
+
+                                            echo bs5_formrow([
+                                                'type' => 'switch',
+                                                'mandatory' => false,
+                                                'name' => 'banned',
+                                                'title' => lang('Auth.user.banned'),
+                                                'desc' => lang('Auth.user.banned_desc'),
+                                                'errors' => session('errors.banned'),
+                                                'value' => $user->banned,
+                                                'disabled' => ($user->id==1) ? true : false
                                             ]);
 
                                             ?>

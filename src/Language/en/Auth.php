@@ -18,6 +18,15 @@ return [
     ],
 
     //
+    // Account
+    //
+    'account' => [
+        'active'                      => 'Account active',
+        'banned'                      => 'Account banned',
+        'inactive'                    => 'Account not active',
+    ],
+
+    //
     // Activation
     //
     'activation' => [
@@ -250,6 +259,8 @@ return [
     'user'   => [
         'active'                      => 'Active',
         'active_desc'                 => 'Activate or deactivate this user.',
+        'banned'                      => 'Banned',
+        'banned_desc'                 => 'Ban or unban this user.',
         'create_success'              => 'New user created: {0} ({1})',
         'delete_confirm'              => 'Are you sure you want to delete this user?',
         'delete_success'              => 'User deleted: {0} ({1})',

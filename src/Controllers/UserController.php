@@ -232,14 +232,12 @@ class UserController extends BaseController
         //
         $emailChange = true;
         if ($this->request->getPost('email') == $user->email) {
-
             $rules['email'] = 'required|valid_email';
             $emailChange = false;
         }
 
         $usernameChange = true;
         if ($this->request->getPost('username') == $user->username) {
-
             $rules['username'] = 'required|alpha_numeric_space|min_length[3]|max_length[30]';
             $usernameChange = false;
         }
@@ -311,6 +309,13 @@ class UserController extends BaseController
         //
         if ($this->request->getPost('swi_active')) $user->setAttribute('active', 1);
         else $user->setAttribute('active', 0);
+        $users->update($id, $user);
+
+        //
+        // Get the Banned switch.
+        //
+        if ($this->request->getPost('swi_banned')) $user->setAttribute('status', 'banned');
+        else $user->setAttribute('banned', 0);
         $users->update($id, $user);
 
         //

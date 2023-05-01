@@ -38,6 +38,21 @@
             text-align: center;
             width: 20px;
         }
+        .tooltip-danger {
+            --bs-tooltip-bg: var(--bs-danger);
+        }
+        .tooltip-info {
+            --bs-tooltip-bg: var(--bs-info);
+        }
+        .tooltip-primary {
+            --bs-tooltip-bg: var(--bs-primary);
+        }
+        .tooltip-success {
+            --bs-tooltip-bg: var(--bs-success);
+        }
+        .tooltip-warning {
+            --bs-tooltip-bg: var(--bs-warning);
+        }
     </style>
 
 </head>

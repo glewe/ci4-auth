@@ -39,7 +39,11 @@
                             <div class="col-lg-1 text-end"><?= lang('Auth.btn.action') ?></div>
                         </div>
 
-                        <?php foreach ($users as $user) : ?>
+                        <?php foreach ($users as $user) :
+
+                            $userGroups = $user->getGroups();
+                            $userRoles = $user->getRoles();
+                            ?>
 
                             <form name="form_<?= $user->id ?>" action="<?= base_url() ?>/users" method="post">
                                 <?= csrf_field() ?>
@@ -49,9 +53,25 @@
                                     <div class="col-lg-1"><?= $i++; ?></div>
                                     <div class="col-lg-2"><?= $user->username ?></div>
                                     <div class="col-lg-3"><?= $user->email ?></div>
-                                    <div class="col-lg-2">...</div>
-                                    <div class="col-lg-2">...</div>
-                                    <div class="col-lg-1">...</div>
+                                    <div class="col-lg-2">
+                                        <?php foreach ($userGroups as $group) :
+                                            echo $group . '<br>';
+                                        endforeach; ?>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <?php foreach ($userRoles as $role) :
+                                            echo $role . '<br>';
+                                        endforeach; ?>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <?= $user->isActivated() ?
+                                            '<a href="#" data-bs-toggle="tooltip" data-bs-title="'.lang('Auth.account.active').'" data-bs-custom-class="tooltip-success"><i class="bi-check-square-fill text-success"></i></a>' :
+                                            '<a href="#" data-bs-toggle="tooltip" data-bs-title="'.lang('Auth.account.inactive').'" data-bs-custom-class="tooltip-warning"><i class="bi-x-square-fill text-warning"></i></a>'
+                                        ?>
+                                        <?= $user->isBanned() ?
+                                            '<a href="#" data-bs-toggle="tooltip" data-bs-title="'.lang('Auth.account.banned').'" data-bs-custom-class="tooltip-danger"><i class="bi-sign-stop-fill text-danger"></i></a>' : ''
+                                        ?>
+                                    </div>
                                     <div class="col-lg-1 text-end">
                                         <div class="btn-user">
                                             <button id="action-<?= $user->id ?>" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><?= lang('Auth.btn.action') ?></button>

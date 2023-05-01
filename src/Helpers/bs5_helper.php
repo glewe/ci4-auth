@@ -285,7 +285,16 @@ if (!function_exists('bs5_formrow')) {
                         <span>' . $data['desc'] . '</span>
                     </label>
                     <div class="col">
-                        <input type="' . $data['type'] . '" class="form-control' . ($data['errors'] ? ' is-invalid' : '') . '" name="' . $data['name'] . '" autocomplete="off"' . ($data['disabled'] ? ' disabled' : '') . '>
+                        <input 
+                            type="' . $data['type'] . '" 
+                            class="form-control' . ($data['errors'] ? ' is-invalid' : '') . '" 
+                            name="' . $data['name'] . '" 
+                            autocomplete=off 
+                            readonly 
+                            onfocus="this.removeAttribute(\'readonly\');" 
+                            onblur="this.setAttribute(\'readonly\',\'\');"' .
+                            ($data['disabled'] ? ' disabled' : '') . '
+                        >
                         <div class="invalid-feedback">' . $data['errors'] . '</div>
                     </div>
                 </div>
@@ -306,7 +315,17 @@ if (!function_exists('bs5_formrow')) {
                     </label>
                     <div class="col">
                         <div class="form-check form-switch">
-                            <input type="checkbox" class="form-check-input" id="' . $data['name'] . '" name="swi_' . $data['name'] . '" value="swi_' . $data['name'] . '"' . ((intval($data['value'])) ? " checked" : "") . '>
+                        <div class="form-check form-switch">
+                            <input 
+                                type="checkbox" 
+                                class="form-check-input" 
+                                id="' . $data['name'] . '" 
+                                name="swi_' . $data['name'] . '" 
+                                value="swi_' . $data['name'] . '"' .
+                                ((intval($data['value'])) ? " checked" : "") .
+                                ($data['disabled'] ? ' disabled' : '') . '
+                            >
+                            <div class="invalid-feedback">' . $data['errors'] . '</div>
                             <div class="invalid-feedback">' . $data['errors'] . '</div>
                         </div>
                     </div>

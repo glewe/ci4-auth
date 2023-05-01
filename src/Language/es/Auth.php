@@ -18,6 +18,15 @@ return [
     ],
 
     //
+    // Account
+    //
+    'account' => [
+        'active'                      => 'Cuenta activa',
+        'banned'                      => 'Cuenta prohibida',
+        'inactive'                    => 'Cuenta no activa',
+    ],
+
+    //
     // Activation
     //
     'activation' => [
@@ -250,6 +259,8 @@ return [
     'user'   => [
         'active'                      => 'Activo',
         'active_desc'                 => 'Activado o desactivado el usario.',
+        'banned'                      => 'Proscrito',
+        'banned_desc'                 => 'Prohibir o anular la prohibición de este usuario.',
         'create_success'              => 'Nuevo usuario creado: {0} ({1})',
         'delete_confirm'              => '¿Seguro que quieres borrar este usuario?',
         'delete_success'              => 'Usuario borrado: {0} ({1})',
