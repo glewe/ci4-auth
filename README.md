@@ -35,9 +35,9 @@ quite large. I decided to build CI4-Auth based on Myth-Auth, changing and adding
 
 ## Documentation
 
-- [Installation](docs/installation.cmd)
-- [2FA](docs/2fa.cmd)
-- [Helpers](docs/helpers.cmd)
+- [Installation](https://github.com/glewe/ci4-auth/blob/main/docs/installation.md)
+- [2FA](https://github.com/glewe/ci4-auth/blob/main/docs/2fa.md)
+- [Helpers](https://github.com/glewe/ci4-auth/blob/main/docs/helpers.md)
 
 ## Disclaimer
 
