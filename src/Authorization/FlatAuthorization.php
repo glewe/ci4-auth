@@ -57,8 +57,6 @@ class FlatAuthorization implements AuthorizeInterface
      * @param GroupModel       $groupModel
      * @param RoleModel        $roleModel
      * @param PermissionModel  $permissionModel
-     *
-     * @return array|string|null
      */
     public function __construct(Model $groupModel, Model $roleModel, Model $permissionModel)
     {
@@ -554,7 +552,7 @@ class FlatAuthorization implements AuthorizeInterface
 
     //-------------------------------------------------------------------------
     /**
-     * Checks a user's roles to see if they have the specified permission.
+     * Checks whether a user has a given permission.
      *
      * @param int|string $permission Permission ID or name
      * @param int $userId
@@ -563,7 +561,6 @@ class FlatAuthorization implements AuthorizeInterface
      */
     public function hasPermission($permission, int $userId)
     {
-        // @phpstan-ignore-next-line
         if (empty($permission) || (!is_string($permission) && !is_numeric($permission))) return null;
 
         if (empty($userId) || !is_numeric($userId)) return null;
@@ -578,6 +575,39 @@ class FlatAuthorization implements AuthorizeInterface
 
         // Still here? Then we have one last check to make - any user private permissions.
         return $this->doesUserHavePermission($userId, (int)$permissionId);
+    }
+
+    //-------------------------------------------------------------------------
+    /**
+     * Checks whether a user has any of the given permissions.
+     *
+     * Permissions can be either a string, with the name of the permission, an
+     * INT with the ID of the permission, or an array of strings/ids of
+     * permissions that the user must have ONE of.
+     * (It's an OR check not an AND check)
+     *
+     * @param mixed $permissions Permission ID or name (or array of)
+     * @param int $userId
+     *
+     * @return bool
+     */
+    public function hasPermissions($permissions, int $userId)
+    {
+        if (empty($userId) || !is_numeric($userId)) return null;
+
+        if (!is_array($permissions)) $permissions = [$permissions];
+        if (empty($permissions)) return false;
+
+        foreach ($permissions as $permission) {
+            // Get the Permission ID
+            $permissionId = $this->getPermissionID($permission);
+            if (!is_numeric($permissionId)) return false;
+            // First check the permission model. If that exists, then we're golden.
+            if ($this->permissionModel->doesUserHavePermission($userId, (int)$permissionId)) return true;
+            // Still here? Then we have one last check to make - any user private permissions.
+            return $this->doesUserHavePermission($userId, (int)$permissionId);
+        }
+        return false;
     }
 
     //-------------------------------------------------------------------------
@@ -1066,6 +1096,7 @@ class FlatAuthorization implements AuthorizeInterface
         if (is_numeric($userId)) {
             return $this->groupModel->getGroupsForUser($userId);
         }
+        return false;
     }
 
     //-------------------------------------------------------------------------
@@ -1081,5 +1112,6 @@ class FlatAuthorization implements AuthorizeInterface
         if (is_numeric($userId)) {
             return $this->roleModel->getRolesForUser($userId);
         }
+        return false;
     }
 }

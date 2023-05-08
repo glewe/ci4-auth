@@ -8,6 +8,7 @@ use CodeIgniter\Session\Session;
 use CI4\Auth\Config\Auth as AuthConfig;
 use CI4\Auth\Entities\User;
 use CI4\Auth\Models\UserModel;
+use RobThree\Auth\TwoFactorAuth;
 
 use App\Controllers\BaseController;
 
@@ -25,6 +26,29 @@ class AuthController extends BaseController
      */
     protected $session;
 
+    /**
+     * @var TwoFactorAuth
+     */
+    protected $tfa;
+
+    /**
+     * The 2FA secret key will be encrypted before put into the database and
+     * decrypted before used during the 2FA login. This is the cipher algo
+     * for en- and decrypting.
+     *
+     * @var string
+     */
+    protected $cipher = "AES-256-CBC";
+
+    /**
+     * The 2FA secret key will be encrypted before put into the database and
+     * decrypted before used during the 2FA login. This is the passphrase
+     * for en- and decrypting.
+     *
+     * @var string
+     */
+    protected $passphrase;
+
     //-------------------------------------------------------------------------
 
     /**
@@ -39,6 +63,8 @@ class AuthController extends BaseController
         $this->config = config('Auth');
         $this->auth = service('authentication');
         $this->authorize = service('authorization');
+        $this->tfa = new TwoFactorAuth($this->config->authenticatorTitle);
+        $this->passphrase = hex2bin('8849523a8e0e1ff45f440da048428b2554d2660c80957fcedbeb9575c079d7eb');
     }
 
     //-------------------------------------------------------------------------
@@ -249,10 +275,160 @@ class AuthController extends BaseController
             return redirect()->to(route_to('reset-password') . '?token=' . $this->auth->user()->reset_hash)->withCookies();
         }
 
-        $redirectURL = session('redirect_url') ?? site_url('/');
-        unset($_SESSION['redirect_url']);
+        //
+        // At this point we know that the user submitted the correct credentials.
+        // Now we need to check whether a 2FA is required.
+        //
+        $users = model(UserModel::class);
+        $user = $users->where('email', $this->auth->user()->email)->first();
 
-        return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.login.success'));
+        if ($this->auth->user()->hasSecret()) {
+            //
+            // User has setup 2FA. Save the user's email in a session variable
+            // and redirect to 2FA login page.
+            //
+            session()->set('2fa_in_progress', $user->email);
+            session()->set('ci4auth-remember', $remember);
+            $redirectURL = site_url('/login2fa');
+            return redirect()->to($redirectURL)->withCookies();
+        } else {
+            //
+            // User has not setup 2FA.
+            //
+            if ($this->config->require2FA) {
+                //
+                // 2FA is required. Login the user and redirect to 2FA Setup.
+                //
+                session()->set('2fa_setup_required', $user->email);
+                $redirectURL = site_url('/setup2fa');
+                unset($_SESSION['redirect_url']);
+                return redirect()->to($redirectURL)->withCookies();
+            } else {
+                //
+                // 2FA is not setup and not required. Login the user.
+                //
+                $this->auth->login($user, $remember);
+                $redirectURL = session('redirect_url') ?? site_url('/');
+                unset($_SESSION['redirect_url']);
+                return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.login.success'));
+            }
+        }
+    }
+
+    //-------------------------------------------------------------------------
+
+    /**
+     * Displays the 2FA login page.
+     */
+    public function login2fa()
+    {
+        //
+        // Redirect back if already logged in
+        //
+        if ($this->auth->check()) {
+            $redirectURL = session('redirect_url') ?? site_url('/');
+            unset($_SESSION['redirect_url']);
+            return redirect()->to($redirectURL);
+        }
+
+        //
+        // Redirect back if 2fa_in_progress cookie not set
+        //
+        if (!session('2fa_in_progress')) {
+            $redirectURL = session('redirect_url') ?? site_url('/');
+            unset($_SESSION['redirect_url']);
+            return redirect()->to($redirectURL);
+        }
+
+        //
+        // Get the remember setting from the login page
+        //
+        $remember = session('ci4auth_remember');
+
+        $users = model(UserModel::class);
+        $user = $users->where('email', session('2fa_in_progress'))->first();
+
+        return $this->_render(
+            $this->config->views['login2fa'],
+            [
+                'config' => $this->config,
+                'user' => $user,
+                'remember' => session('ci4auth-remember'),
+            ]
+        );
+    }
+
+    //-------------------------------------------------------------------------
+
+    /**
+     * Attempts to verify the user's 2FA PIN through a POST request.
+     */
+    public function login2faDo()
+    {
+        $rules = [
+            'pin' => 'required|numeric',
+        ];
+
+        //
+        // Validate input
+        //
+        $res = $this->validate($rules);
+        if (!$res) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        //
+        // Redirect back if 2fa_in_progress cookie not set
+        //
+        if (!session('2fa_in_progress')) {
+            $redirectURL = session('redirect_url') ?? site_url('/');
+            unset($_SESSION['redirect_url']);
+            return redirect()->to($redirectURL)->withCookies()->with('errors', lang('Auth.2fa.login.no_2fa_in_progress'));
+        }
+        //
+        // Check PIN
+        //
+        if ($this->request->getPost('pin')) {
+            $users = model(UserModel::class);
+            $user = $users->where('email', session('2fa_in_progress'))->first();
+            //
+            // Get the hashed secret, decrypt and verify the PIN with it.
+            //
+            $pin = $this->request->getPost('pin');
+            $secret_hash = $user->getSecret();
+            $secret = $this->decrypt($secret_hash, $this->passphrase);
+            $verifyResult = $this->tfa->verifyCode($secret, $pin);
+            if ($verifyResult) {
+                //
+                // Success. Log the user in.
+                //
+                $this->auth->login($user, session('ci4auth-remember'));
+                $redirectURL = session('redirect_url') ?? site_url('/');
+                unset($_SESSION['redirect_url']);
+                unset($_SESSION['2fa_in_progress']);
+                unset($_SESSION['ci4auth-remember']);
+                return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.login.success'));
+            } else {
+                //
+                // No match. Reload page with the same secret.
+                //
+                $qrcode = $this->tfa->getQRCodeImageAsDataUri($user->email, $secret);
+                session()->setFlashdata('error', lang('Auth.2fa.setup.mismatch'));
+                return $this->_render(
+                    $this->config->views['login2fa'],
+                    [
+                        'config' => $this->config,
+                        'user' => $user,
+                        'remember' => session('ci4auth-remember'),
+                    ]
+                );
+            }
+        } else {
+            //
+            // No PIN submitted.
+            //
+            return redirect()->back()->withInput()->with('errors', lang('Auth.2fa.authenticator_code_missing'));
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -473,6 +649,148 @@ class AuthController extends BaseController
     //-------------------------------------------------------------------------
 
     /**
+     * Displays the 2FA setup page.
+     *
+     * @param string $secret - Optional, to show the same QR code on wrong verify
+     */
+    public function setup2fa($secret = null)
+    {
+        //
+        // Redirect back if not logged in and no forced 2FA setup is in progress
+        //
+        if (!$this->auth->check() && !session('2fa_setup_required')) return redirect()->back();
+
+        if (!$this->auth->check() && session('2fa_setup_required')) {
+            //
+            // The user got here after logging in fine with his credentials
+            // but a 2FA setup is required. He must setup 2FA before he can be
+            // logged in for good.
+            //
+            // At login, the user's email was saved in session('2fa_setup_required')
+            // so we know who we are dealing with here.
+            //
+            $users = model(UserModel::class);
+            $user = $users->where('email', session('2fa_setup_required'))->first();
+            $has_secret = false;
+        } else {
+            //
+            // The user called this page to setup his 2FA
+            //
+            $user = user();
+            $has_secret = user()->hasSecret();
+        }
+
+        //
+        // Init 2FA variables
+        //
+        if (!$secret) $secret = $this->tfa->createSecret();
+        $qrcode = $this->tfa->getQRCodeImageAsDataUri($user->email, $secret);
+
+        //
+        // Render the page
+        //
+        return $this->_render(
+            $this->config->views['setup2fa'],
+            [
+                'config' => $this->config,
+                'qrcode' => $qrcode,
+                'secret' => $secret,
+                'user' => $user,
+                'has_secret' => $has_secret,
+            ]
+        );
+    }
+
+    //-------------------------------------------------------------------------
+
+    /**
+     * Attempt to setup 2FA for a user.
+     */
+    public function setup2faDo()
+    {
+        $users = model(UserModel::class);
+        $user = $users->where('email', $this->request->getPost('hidden_email'))->first();
+
+        $rules = [
+            'authenticator_code' => 'required|numeric',
+        ];
+
+        //
+        // Validate input
+        //
+        $res = $this->validate($rules);
+        if (!$res) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        //
+        // Save the settings
+        //
+        if ($this->request->getPost('authenticator_code')) {
+            $secret = $this->request->getPost('hidden_secret');
+            $totp = $this->request->getPost('authenticator_code');
+            $verifyResult = $this->tfa->verifyCode($secret, $totp);
+            if ($verifyResult) {
+                //
+                // Success. Hash and save the secret to the user record.
+                //
+                $user->setSecret($this->encrypt($secret, $this->cipher));
+                $users->save($user);
+                //
+                // In case this was a required setup, log in the user for
+                // good and unset the session variable.
+                //
+                if (session('2fa_setup_required')) {
+                    if (!session('ci4auth-remember') || session('ci4auth-remember') == NULL) {
+                        $remember = false;
+                    } else {
+                        $remember = session('ci4auth-remember');
+                    }
+                    $this->auth->login($user, $remember);
+                    unset($_SESSION['redirect_url']);
+                    unset($_SESSION['2fa_in_progress']);
+                    unset($_SESSION['2fa_setup_progress']);
+                    unset($_SESSION['ci4auth-remember']);
+                }
+                return redirect()->route('/')->with('message', lang('Auth.2fa.setup.success'));
+            } else {
+                //
+                // No match. Reload page with the same secret.
+                //
+                $qrcode = $this->tfa->getQRCodeImageAsDataUri($user->email, $secret);
+                session()->setFlashdata('error', lang('Auth.2fa.setup.mismatch'));
+                return $this->_render(
+                    $this->config->views['setup2fa'],
+                    [
+                        'config' => $this->config,
+                        'qrcode' => $qrcode,
+                        'secret' => $secret,
+                        'user' => $user,
+                        'has_secret' => $user->hasSecret(),
+                    ]
+                );
+            }
+        } else {
+            //
+            // No code submitted.
+            //
+            return redirect()->back()->withInput()->with('errors', lang('Auth.2fa.setup.authenticator_code_missing'));
+        }
+    }
+
+    //-------------------------------------------------------------------------
+
+    /**
+     * Displays the About page.
+     */
+    public function about()
+    {
+        return $this->_render($this->config->views['about'], ['config' => $this->config]);
+    }
+
+    //-------------------------------------------------------------------------
+
+    /**
      * Displays the Lewe Auth welcome page.
      */
     public function welcome()
@@ -512,5 +830,70 @@ class AuthController extends BaseController
         if (isset($this->myConfig)) $data['myConfig'] = $this->myConfig;
 
         return view($view, $data);
+    }
+
+    //-------------------------------------------------------------------------
+
+    /**
+     * Encrypts (but does not authenticate) a string.
+     *
+     * @param string $plaintext - String to encrypt
+     * @param boolean $encode - Return base64-encoded or not
+     * @return string
+     */
+    protected function encrypt($plaintext, $encode = false)
+    {
+        $nonceSize = openssl_cipher_iv_length($this->cipher);
+        $nonce = openssl_random_pseudo_bytes($nonceSize);
+
+        $ciphertext = openssl_encrypt(
+            $plaintext,
+            $this->cipher,
+            $this->passphrase,
+            OPENSSL_RAW_DATA,
+            $nonce
+        );
+
+        //
+        // Now let's pack the IV and the ciphertext together (concatenate).
+        //
+        if ($encode) {
+            return base64_encode($nonce . $ciphertext);
+        }
+
+        return $nonce . $ciphertext;
+    }
+
+    //-------------------------------------------------------------------------
+
+    /**
+     * Decrypts (but does not verify) an encrypted string.
+     *
+     * @param string $ciphertext - Encrypted string
+     * @param boolean $encoded - Is base64 encoded string submitted or not?
+     * @return string
+     */
+    protected function decrypt($ciphertext, $encoded = false)
+    {
+        if ($encoded) {
+            $message = base64_decode($ciphertext, true);
+            if ($message === false) {
+                throw new Exception('Encryption failure');
+            }
+        }
+
+        $nonceSize = openssl_cipher_iv_length($this->cipher);
+        $nonce = mb_substr($message, 0, $nonceSize, '8bit');
+        $ciphertext = mb_substr($message, $nonceSize, null, '8bit');
+
+        $plaintext = openssl_decrypt(
+            $ciphertext,
+            $this->cipher,
+            $this->passphrase,
+            OPENSSL_RAW_DATA,
+            $nonce
+        );
+
+        return $plaintext;
     }
 }

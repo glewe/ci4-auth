@@ -42,13 +42,18 @@ class Auth extends BaseConfig
         'welcome'            => 'CI4\Auth\Views\welcome',
 
         // Error page
-        'error_auth'              => 'CI4\Auth\Views\error_auth',
+        'error_auth'         => 'CI4\Auth\Views\error_auth',
+
+        // About page
+        'about'              => 'CI4\Auth\Views\about',
 
         // Auth
         'login'              => 'CI4\Auth\Views\auth\login',
         'register'           => 'CI4\Auth\Views\auth\register',
         'forgot'             => 'CI4\Auth\Views\auth\forgot',
         'reset'              => 'CI4\Auth\Views\auth\reset',
+        'setup2fa'           => 'CI4\Auth\Views\auth\setup2fa',
+        'login2fa'           => 'CI4\Auth\Views\auth\login2fa',
         'whoami'             => 'CI4\Auth\Views\auth\whoami',
 
         // Groups
@@ -224,6 +229,28 @@ class Auth extends BaseConfig
 
     /**
      * ------------------------------------------------------------------------
+     * Require 2FA
+     * ------------------------------------------------------------------------
+     *
+     * Whether users are required to set up a TOTP 2FA.
+     *
+     * @var bool
+     */
+    public $require2FA = true;
+
+    /**
+     * ------------------------------------------------------------------------
+     * Authenticator Title
+     * ------------------------------------------------------------------------
+     *
+     * The title string shown in the authenticator App when registering 2FA.
+     *
+     * @var string
+     */
+    public $authenticatorTitle = 'CI4Auth';
+
+    /**
+     * ------------------------------------------------------------------------
      * Error handling
      * ------------------------------------------------------------------------
      *
@@ -368,4 +395,16 @@ class Auth extends BaseConfig
      * @var int
      */
     public $resetTime = 3600;
+
+    /**
+     * ------------------------------------------------------------------------
+     * Show Release Info on About page
+     * ------------------------------------------------------------------------
+     *
+     * Set to true to display an expandable section with release notes on the
+     * About page.
+     *
+     * @var bool
+     */
+    public $showReleaseInfo = true;
 }

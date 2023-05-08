@@ -73,7 +73,7 @@ class Auth extends BaseCollector
             $groupsForUser = implode(', ', array_column($groups, 'name'));
             $rolesForUser  = implode(', ', array_column($roles, 'name'));
 
-            $html  = '<div class="alert alert-dismissable fade show alert-info" role="alert">';
+            $html  = '<div class="alert alert-dismissible fade show alert-info" role="alert">';
             $html .= '<button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" title="Close"></button>';
             $html .= '<h4 class="alert-heading">Current User</h4>';
             $html .= '<hr><div>';

@@ -72,6 +72,22 @@ class UserController extends BaseController
                     }
                     return redirect()->route('users')->with('success', lang('Auth.user.delete_success', [$user->username, $user->email]));
                 }
+            } else if (array_key_exists('btn_remove_secret', $this->request->getPost())) {
+                //
+                // [Remove Secret]
+                //
+                $recId = $this->request->getPost('hidden_id');
+                if (!$user = $users->where('id', $recId)->first()) {
+                    return redirect()->route('users')->with('errors', lang('Auth.user.not_found', [$recId]));
+                } else {
+                    $user->removeSecret();
+                    if (!$users->update($recId, $user)) {
+                        return redirect()->back()->withInput()->with('errors', $users->errors());
+                    } else {
+//                        return redirect()->route('users');
+                        return redirect()->route('users')->with('success', lang('Auth.user.remove_secret_success', [$user->username, $user->email]));
+                    }
+                }
             } else if (array_key_exists('btn_search', $this->request->getPost()) && array_key_exists('search', $this->request->getPost())) {
                 //
                 // [Search]
@@ -375,7 +391,7 @@ class UserController extends BaseController
      * @param string  $view
      * @param array   $data
      *
-     * @return view
+     * @return string
      */
     protected function _render(string $view, array $data = [])
     {

@@ -5,7 +5,8 @@ use CI4\Auth\Entities\User;
 //-----------------------------------------------------------------------------
 if (!function_exists('auth_display')) {
     /**
-     * Returns the data of this collector to be formatted in the toolbar
+     * Returns a formatted display of the currently logged in user and details
+     * about him.
      *
      * @return string
      */
@@ -30,34 +31,36 @@ if (!function_exists('auth_display')) {
             }
 
             $html  = '
-            <div class="alert alert-dismissable fade show alert-info" role="alert">
+            <div class="alert alert-dismissible fade show alert-info" role="alert">
                 <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" title="Close"></button>
-                <h4 class="alert-heading">Current User</h4>
+                <h4 class="alert-heading">' . lang('Auth.current_user') . '</h4>
                 <hr>
                 <div>
-                <table><tbody>
-                    <tr><td class="fw-bold" style="width:150px;">User ID</td><td>' . $user->id . '</td></tr>
-                    <tr><td class="fw-bold">Username</td><td>' . $user->username . '</td></tr>
-                    <tr><td class="fw-bold">Email</td><td>' . $user->email . '</td></tr>
-                    <tr><td class="fw-bold">Groups</td><td>' . $groupsForUser . '</td></tr>
-                    <tr><td class="fw-bold">Roles</td><td>' . $rolesForUser . '</td></tr>
+                <table>
+                <tbody>
+                    <tr><td class="fw-bold" style="width:150px;">' . lang('Auth.user_id') . '</td><td>' . $user->id . '</td></tr>
+                    <tr><td class="fw-bold">' . lang('Auth.login.username') . '</td><td>' . $user->username . '</td></tr>
+                    <tr><td class="fw-bold">' . lang('Auth.login.email') . '</td><td>' . $user->email . '</td></tr>
+                    <tr><td class="fw-bold">' . lang('Auth.group.groups') . '</td><td>' . $groupsForUser . '</td></tr>
+                    <tr><td class="fw-bold">' . lang('Auth.role.roles') . '</td><td>' . $rolesForUser . '</td></tr>
                     <tr>
-                        <td class="fw-bold align-top">Permissions</td>
+                        <td class="fw-bold align-top">' . lang('Auth.permission.permissions') . '</td>
                         <td>
                             <ul>' . $pList . '</ul>
                         </td>
                     </tr>
-                </tbody></table>
+                </tbody>
+                </table>
                 </div>
             </div>';
         } else {
             $html  = '
-            <div class="alert alert-dismissable fade show alert-warning" role="alert">
+            <div class="alert alert-dismissible fade show alert-warning" role="alert">
                 <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" title="Close"></button>
-                <h4 class="alert-heading">Current User</h4>
+                <h4 class="alert-heading">' . lang('Auth.current_user') . '</h4>
                 <hr>
                 <div>
-                None logged in.
+                ' . lang('Auth.no_login') . '
                 </div>
             </div>';
         }
@@ -79,8 +82,6 @@ if (!function_exists("dnd")) {
      *
      * @param mixed $a      Data to dump
      * @param bool  $die    True or false (die or not)
-     *
-     * @return bool
      */
     function dnd($a, $die = true)
     {
@@ -106,6 +107,36 @@ if (!function_exists('has_permission')) {
 
         if ($authenticate->check()) {
             return $authorize->hasPermission($permission, $authenticate->id()) ?? false;
+        }
+
+        return false;
+    }
+}
+
+//-----------------------------------------------------------------------------
+if (!function_exists('has_permissions')) {
+    /**
+     * Ensures that the current user has at least one of the given permissions.
+     * The permissions can be passed with their name or ID.
+     * You can pass either a single item or an array of items.
+     *
+     * Example:
+     *  has_permissions([1, 2, 3]);
+     *  has_permissions(14);
+     *  has_permissions('admins');
+     *  has_permissions( ['Manage Groups', 'Manage Roles'] );
+     *
+     * @param mixed $permissions
+     *
+     * @return bool
+     */
+    function has_permissions($permissions): bool
+    {
+        $authenticate = service('authentication');
+        $authorize    = service('authorization');
+
+        if ($authenticate->check()) {
+            return $authorize->hasPermissions($permissions, $authenticate->id()) ?? false;
         }
 
         return false;
@@ -171,7 +202,7 @@ if (!function_exists('in_roles')) {
 //-----------------------------------------------------------------------------
 if (!function_exists('logged_in')) {
     /**
-     * Checks to see if the user is logged in.
+     * Checks to see if a user is logged in.
      *
      * @return bool
      */

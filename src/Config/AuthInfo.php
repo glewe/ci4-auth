@@ -22,7 +22,7 @@ class AuthInfo extends BaseConfig
      *
      * @var string
      */
-    public $version = '2.1.0';
+    public $version = '3.0.0';
 
     /**
      * ------------------------------------------------------------------------
@@ -71,6 +71,15 @@ class AuthInfo extends BaseConfig
 
     /**
      * ------------------------------------------------------------------------
+     * Support Url
+     * ------------------------------------------------------------------------
+     *
+     * @var string
+     */
+    public $supportUrl = 'https://github.com/glewe/ci4-auth/issues';
+
+    /**
+     * ------------------------------------------------------------------------
      * First Year
      * ------------------------------------------------------------------------
      *
@@ -78,7 +87,7 @@ class AuthInfo extends BaseConfig
      *
      * @var string
      */
-    public $firstYear = '2021';
+    public $firstYear = '2022';
 
     /**
      * ------------------------------------------------------------------------
@@ -89,7 +98,7 @@ class AuthInfo extends BaseConfig
      *
      * @var string
      */
-    public $keyWords = 'lewe codeigniter authentication authorization';
+    public $keyWords = 'lewe codeigniter 2fa authentication authorization two factor';
 
     /**
      * ------------------------------------------------------------------------
@@ -100,7 +109,7 @@ class AuthInfo extends BaseConfig
      *
      * @var string
      */
-    public $description = 'A Codeigniter 4 web based application including user, group, role and permission management.';
+    public $description = 'A Codeigniter 4 web based application including user, group, role and permission management, plus 2FA.';
 
     /**
      * ------------------------------------------------------------------------

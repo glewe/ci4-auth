@@ -5,11 +5,55 @@ return [
     //
     // _Global
     //
+    'current_user'                   => 'Aktueller Benutzer',
     'description'                    => 'Beschreibung',
+    'for'                            => 'f&uuml;r',
     'getHelpForPage'                 => 'Hilfe f&uuml;r diese Seite...',
     'name'                           => 'Name',
+    'no_login'                       => 'Niemand ist eingeloggt.',
     'no_selection'                   => 'Eine Auswahl in dieser Listbox hat keinen Effekt. Sie wird hier nur zu Informationswzwecken eingesetzt.',
+    'user_id'                        => 'Konto ID',
 
+    //
+    // 2FA
+    //
+    '2fa' => [
+        'setup' => [
+            '2fa_optional'                => 'Diese Applikation erlaubt das Einrichten einer Zwei-Faktor-Authentifizierung.',
+            '2fa_required'                => 'Diese Applikation erfordert das Einrichten einer Zwei-Faktor-Authentifizierung.',
+            'authenticator_code'          => 'Authenticator Code (sechstellige Nummer)',
+            'authenticator_code_desc'     => 'F&uuml;ge einen Eintrag in deiner Authenticator App hinzu indem du den oben angezeigten Barcode einscanst oder den Schl&uuml;ssel manuell eingibst. Nach Einrichten des neuen Eintrags gib den n&auml;chsten generierten Code in das Feld unten ein und klicke auf "Verifizieren".',
+            'authenticator_code_missing'  => 'Bitte gebe einen Authenticator Code zur Verifizierung ein.',
+            'header'                      => 'Zwei-Faktor-Authentifizierung Einrichten',
+            'mismatch'                    => 'Der angegebene Code stimmt nich &uuml;berein. Bitte versuche es nochmal.',
+            'onboarding_comment'          => 'Hier kannst du den Onboarding Prozess durchf&uuml;hren. Dazu brauchts du ein mobiles Ger&auml;t und eine Authenticator App wie Google Authenticator oder Microsoft Authenticator.',
+            'secret_exists'               => 'Du hast deine 2FA schon eingerichtet. Wenn du es erneut tust, wird dein alter Schl&uuml;ssel &uuml;berschrieben. Authenticator App Eintr&auml;ge, die auf dem alten Schl&uuml;ssel basieren, werden dann nicht mehr funktionieren.',
+            'success'                     => 'Deine 2FA Einrichtung wurde erfolgreich abgeschlossen.',
+        ],
+        'login' => [
+            'header'                      => '2FA Login',
+            'pin'                         => 'Bitte gib die PIN von deiner Authenticator App ein.',
+            'pin_login'                   => 'PIN Login',
+            'no_2fa_in_progress'          => 'Es ist kein 2FA Login ausstehend.'
+        ],
+    ],
+
+    //
+    // About
+    //
+    'about' => [
+        'about'                       => '&Uuml;ber',
+        'copyright'                   => 'Copyright',
+        'credits'                     => 'Credits',
+        'documentation'               => 'Dokumentation',
+        'release_info'                => 'Release Information',
+        'support'                     => 'Support',
+        'version'                     => 'Version',
+    ],
+
+    //
+    // Alerts
+    //
     'alert' => [
         'error'                       => 'Fehler',
         'information'                 => 'Information',
@@ -21,6 +65,7 @@ return [
     // Account
     //
     'account' => [
+        '2fa'                         => '2FA konfiguriert',
         'active'                      => 'Konto aktiv',
         'banned'                      => 'Konto gebannt',
         'inactive'                    => 'Konto nicht aktiv',
@@ -55,9 +100,11 @@ return [
         'editPermission'              => 'Berechtigung Bearbeiten',
         'editRole'                    => 'Rolle Bearbeiten',
         'editUser'                    => 'Benutzer Bearbeiten',
+        'remove_secret'               => '2FA Schl&uuml;ssel Entfernen',
         'reset'                       => 'Zur&uuml;cksetzen',
         'search'                      => 'Suchen',
         'submit'                      => 'Abschicken',
+        'verify'                      => 'Verifizieren',
         'view'                        => 'Ansicht',
     ],
 
@@ -156,7 +203,7 @@ return [
     // Navbar
     //
     'nav' => [
-        'home'                        => 'Home',
+        'home'                         => 'Home',
         'authorization'   => [
             'self'                     => 'Authorisierung',
             'groups'                   => 'Gruppen',
@@ -171,6 +218,7 @@ return [
             'forgot_password'          => 'Password vergessen',
             'reset_password'           => 'Password zur&uuml;cksetzen',
             'register'                 => 'Registrieren',
+            'setup2fa'                 => '2FA Einrichten',
             'whoami'                   => 'Wer bin ich?',
         ],
         'settings'                     => 'Einstellungen',
@@ -288,6 +336,9 @@ return [
         'permissions_desc'            => 'W&auml;hle eine oder meherere pers&ouml;nliche Berechtigungen f&uuml;r diesen Benutzer aus. Diese Berechtigungen hat der Benutzer zus&auml;tzlich zu den von Gruppen und Rollen.',
         'permissions_all'             => 'Alle Berechtigungen',
         'permissions_all_desc'        => 'Dies ist die Liste aller aktuellen Berechtigungen des Benuzters. Enthalten sind pers&ouml;nliche, Gruppen- und Rollenberechtigungen.',
+        'remove_secret_confirm'       => '2FA Schl&uuml;ssel Entfernen',
+        'remove_secret_confirm_desc'  => 'Bist du sicher, dass du den 2FA Schl&uuml;ssel f&uuml;r diesen Benutzer entfernen willst? Der Benutzer kann einen neuen anlegen, indem er den 2FA Einrichten Prozess neu durchf&uuml;hrt.',
+        'remove_secret_success'       => '2FA Schl&uuml;ssel des Benutzers gel&ouml;scht: {0} ({1})',
         'roles'                       => 'Benutzerrollen',
         'roles_desc'                  => 'W&auml;hle eine oder meherere Rollen f&uuml;r diesen Benutzer aus.',
         'status'                      => 'Status',

@@ -25,7 +25,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
 
         if (empty($this->user)) {
             //
-            // Always record a login attempt, whether success or not.
+            // User empty or unknown
             //
             $ipAddress = service('request')->getIPAddress();
             $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false, 'User unknown');
@@ -35,7 +35,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
 
         if ($this->user->isBanned()) {
             //
-            // Always record a login attempt, whether success or not.
+            // User banned
             //
             $ipAddress = service('request')->getIPAddress();
             $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false, 'User banned');
@@ -46,7 +46,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
 
         if (!$this->user->isActivated()) {
             //
-            // Always record a login attempt, whether success or not.
+            // User inactive
             //
             $ipAddress = service('request')->getIPAddress();
             $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false, 'User inactive');
@@ -56,7 +56,13 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
             return false;
         }
 
-        return $this->login($this->user, $remember);
+        //
+        // Credentials are ok.
+        // Do not login the user yet. Return true only because a 2FA might still
+        // be needed.
+        //
+//        return $this->login($this->user, $remember);
+        return true;
     }
 
     //-------------------------------------------------------------------------

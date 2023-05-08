@@ -316,6 +316,17 @@ class User extends Entity
 
     //-------------------------------------------------------------------------
     /**
+     * Checks to see if a user has a secret hash (2FA setup).
+     *
+     * @return bool
+     */
+    public function hasSecret(): bool
+    {
+        return isset($this->attributes['secret_hash']) && $this->attributes['secret_hash'] != '';
+    }
+
+    //-------------------------------------------------------------------------
+    /**
      * Checks to see if a user is active.
      *
      * @return bool
@@ -384,6 +395,37 @@ class User extends Entity
     public function setPermissions(array $permissions = null)
     {
         throw new \RuntimeException('User entity does not support saving permissions directly.');
+    }
+
+    //-------------------------------------------------------------------------
+    /**
+     * Encrypts the secret when set.
+     *
+     * @param string $secret
+     */
+    public function setSecret(string $secret)
+    {
+        $this->attributes['secret_hash'] = $secret;
+    }
+
+    //-------------------------------------------------------------------------
+    /**
+     * Encrypts the secret when set.
+     *
+     * @return string
+     */
+    public function getSecret()
+    {
+        return $this->attributes['secret_hash'];
+    }
+
+    //-------------------------------------------------------------------------
+    /**
+     * Removes the secret.
+     */
+    public function removeSecret()
+    {
+        $this->attributes['secret_hash'] = '';
     }
 
     //-------------------------------------------------------------------------

@@ -76,7 +76,7 @@ class AuthenticationBase
     /**
      * Logs a user into the system.
      * NOTE: does not perform validation. All validation should be done prior to
-     * using the login method.
+     * using the login method, incl. 2FA.
      *
      * @param User $user
      * @param bool $remember

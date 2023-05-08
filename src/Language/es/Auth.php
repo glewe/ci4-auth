@@ -5,22 +5,57 @@ return [
     //
     // _Global
     //
+    'current_user'                   => 'Usuario Actual',
     'description'                    => 'Descripción',
+    'for'                            => 'para',
     'getHelpForPage'                 => 'Ayuda para esta página...',
     'name'                           => 'Nombre',
+    'no_login'                       => 'Ninguno ha iniciado sesión.',
     'no_selection'                   => 'Seleccionar algo de esta lista no tendrá efectos. Se muestra solo a modo informativo.',
+    'user_id'                        => 'ID de usuario',
 
-    'alert' => [
-        'error'                       => 'Error',
-        'information'                 => 'Información',
-        'no_change'                   => 'Nada ha cambiado.',
-        'warning'                     => 'Aviso',
+    //
+    // 2FA
+    //
+    '2fa' => [
+        'setup' => [
+            '2fa_optional'                => 'Esta aplicación le permite configurar una autenticación de dos factores para iniciar sesión.',
+            '2fa_required'                => 'Esta aplicación requiere una autenticación de dos factores para iniciar sesión.',
+            'authenticator_code'          => 'Código de autenticación (seis dígitos numéricos)',
+            'authenticator_code_desc'     => 'En su aplicación de autenticación, agregue una nueva entrada escaneando el código de barras anterior o ingresando la clave secreta manualmente. Después de agregar la nueva entrada, ingrese el siguiente código generado por su aplicación en el campo a continuación y haga clic en "Verificar".',
+            'authenticator_code_missing'  => 'Envíe un código de autenticación para verificarlo.',
+            'header'                      => 'Configuración de la autenticación de dos factores',
+            'mismatch'                    => 'El código introducido no coincide. Inténtalo de nuevo.',
+            'onboarding_comment'          => 'Aquí puedes hacer el proceso de onboarding. Necesitará un dispositivo móvil y una aplicación de autenticación como Google Authenticator o Microsoft Authenticator.',
+            'secret_exists'               => 'Ya configuraste tu 2FA. Hacerlo de nuevo sobrescribirá su clave secreta con una nueva. Las entradas de la aplicación Authenticator basadas en el antiguo ya no funcionarán.',
+            'success'                     => 'Su configuración de 2FA se ha completado correctamente.',
+        ],
+        'login' => [
+            'header'                      => '2FA Entrar',
+            'pin'                         => 'Introduce el PIN desde tu aplicación de autenticación.',
+            'pin_login'                   => 'Inicio de sesión con PIN',
+            'no_2fa_in_progress'          => 'No hay inicio de sesión 2FA en curso.'
+        ],
+    ],
+
+    //
+    // About
+    //
+    'about' => [
+        'about'                       => 'Acerca',
+        'copyright'                   => 'Copyright',
+        'credits'                     => 'Créditos',
+        'documentation'               => 'Documentación',
+        'release_info'                => 'Información de la versión',
+        'support'                     => 'Apoyo',
+        'version'                     => 'Versión',
     ],
 
     //
     // Account
     //
     'account' => [
+        '2fa'                         => '2FA configurado',
         'active'                      => 'Cuenta activa',
         'banned'                      => 'Cuenta prohibida',
         'inactive'                    => 'Cuenta no activa',
@@ -36,6 +71,16 @@ return [
         'success'                     => 'Por favor, confirma tu cuenta haciendo click en el enlace que te hemos enviado por correo.',
         'error_sending'               => 'Fallo al enviar mebseje de activación a: {0}',
         'not_activated'               => 'Esta cuenta aún no se ha activado.',
+    ],
+
+    //
+    // Alerts
+    //
+    'alert' => [
+        'error'                       => 'Error',
+        'information'                 => 'Información',
+        'no_change'                   => 'Nada ha cambiado.',
+        'warning'                     => 'Aviso',
     ],
 
     //
@@ -55,9 +100,11 @@ return [
         'editPermission'              => 'Editar Permiso',
         'editRole'                    => 'Editar Rol',
         'editUser'                    => 'Editar Usuario',
+        'remove_secret'               => 'Quitar Secreto',
         'reset'                       => 'Resetear',
         'search'                      => 'Buscar',
         'submit'                      => 'Enviar',
+        'verify'                      => 'Verificar',
         'view'                        => 'Ver',
     ],
 
@@ -171,6 +218,7 @@ return [
             'forgot_password'          => 'Recordar Contraseña',
             'reset_password'           => 'Resetear Contraseña',
             'register'                 => 'Registrarse',
+            'setup2fa'                 => 'Configuración 2FA',
             'whoami'                   => '¿Quién Soy?',
         ],
         'settings'                     => 'Configuración',
@@ -282,10 +330,15 @@ return [
         'password_desc'               => 'Introduce una nueva contraseña. Si no quieres cambiar tu contraseña, deja este campo en blanco.',
         'pass_confirm'                => 'Repite Contraseña',
         'pass_confirm_desc'           => 'Repite tu nueva contraseña. Si no quieres cambiar tu contraseña, deja este campo en blanco.',
+        'pass_resetmail'              => 'Enviar correo de restablecimiento de contraseña',
+        'pass_resetmail_desc'         => 'Con este interruptor activado, se envía un correo de restablecimiento de contraseña al usuario después de la creación.',
         'permissions'                 => 'Permisos Personales',
         'permissions_desc'            => 'Seleccione uno o más permisos individuales que se otorgarán a este usuario. Estos permisos se sumarán a los heredados de grupos y roles.',
         'permissions_all'             => 'Todos los Permisos',
         'permissions_all_desc'        => 'Este es el listado de todos los permisos que tiene este usuario. Incluyen los permisos personales de arriba más los permisos heredados de los grupos y roles a los que pertenece.',
+        'remove_secret_confirm'       => 'Eliminar la clave secreta 2FA',
+        'remove_secret_confirm_desc'  => '¿Está seguro de que desea eliminar el secreto 2FA para este usuario? El usuario puede crear uno nuevo pasando por el proceso de onboarding (Configuración 2FA) nuevamente.',
+        'remove_secret_success'       => 'Se ha eliminado la clave secreta del usuario: {0} ({1})',
         'roles'                       => 'Roles de Usuario',
         'roles_desc'                  => 'Selecciona uno o más roles a asignar a este usuario.',
         'status'                      => 'Estado',
