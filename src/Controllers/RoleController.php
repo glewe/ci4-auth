@@ -6,7 +6,7 @@ use CodeIgniter\Controller;
 use CodeIgniter\Session\Session;
 
 use CI4\Auth\Config\Auth as AuthConfig;
-use CI4\Auth\Models\RoleModel;
+use CI4\Auth\Authorization\RoleModel;
 
 use App\Controllers\BaseController;
 
@@ -48,11 +48,17 @@ class RoleController extends BaseController
     public function roles()
     {
         $roles = model(RoleModel::class);
+        $allRoles = $roles->orderBy('name', 'asc')->findAll();
 
         $data = [
             'config' => $this->config,
-            'roles' => $roles->orderBy('name', 'asc')->findAll(),
+            'roles' => $allRoles,
         ];
+
+        foreach ($allRoles as $role) {
+            $rolePermissions[$role->id][] = $roles->getPermissionsForRole($role->id);
+        }
+        $data['rolePermissions'] = $rolePermissions;
 
         if ($this->request->getMethod() === 'post') {
             //
@@ -175,14 +181,11 @@ class RoleController extends BaseController
         if (!$res) return redirect()->back()->withInput()->with('errors', $roles->errors());
 
         //
-        // Save the permissions given to this role
+        // Save the permissions given to this role.
+        // First, delete all permissions, then add each selected one.
         //
+        $roles->removeAllPermissionsFromRole((int)$id);
         if (array_key_exists('sel_permissions', $this->request->getPost())) {
-            //
-            // Delete all existing permissions for this role first.
-            //
-            $roles->removeAllPermissionsFromRole((int)$id);
-
             foreach ($this->request->getPost('sel_permissions') as $perm) {
                 $roles->addPermissionToRole($perm, $id);
             }

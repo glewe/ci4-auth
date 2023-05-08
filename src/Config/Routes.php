@@ -5,11 +5,19 @@
 //
 $routes->group('', ['namespace' => 'CI4\Auth\Controllers'], function ($routes) {
 
-    // Sample route with role filter
+    // If you want to use group, login, permission or role filters in your route
+    // definitions, you need to add the filter aliases to your Config/Filters.php file.
+    // (see CI4-Auth readme).
+    //
+    // Sample routes with filters:
+    // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'group:Disney']);
+    // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'login']);
+    // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'permission:View Roles']);
     // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'role:Administrator']);
 
     $routes->get('/', 'AuthController::welcome');
     $routes->get('/error_auth', 'AuthController::error');
+    $routes->get('/about', 'AuthController::about');
 
     // Authentication
     $routes->get('login', 'AuthController::login', ['as' => 'login']);
@@ -23,6 +31,10 @@ $routes->group('', ['namespace' => 'CI4\Auth\Controllers'], function ($routes) {
     $routes->post('forgot', 'AuthController::forgotPasswordDo');
     $routes->get('reset-password', 'AuthController::resetPassword', ['as' => 'reset-password']);
     $routes->post('reset-password', 'AuthController::resetPasswordDo');
+    $routes->get('setup2fa', 'AuthController::setup2fa', ['as' => 'setup2fa']);
+    $routes->post('setup2fa', 'AuthController::setup2faDo');
+    $routes->get('login2fa', 'AuthController::login2fa', ['as' => 'login2fa']);
+    $routes->post('login2fa', 'AuthController::login2faDo');
     $routes->get('whoami', 'AuthController::whoami');
 
     // Groups

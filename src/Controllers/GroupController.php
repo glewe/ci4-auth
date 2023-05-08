@@ -48,11 +48,17 @@ class GroupController extends BaseController
     public function groups()
     {
         $groups = model(GroupModel::class);
+        $allGroups = $groups->orderBy('name', 'asc')->findAll();
 
         $data = [
             'config' => $this->config,
-            'groups' => $groups->orderBy('name', 'asc')->findAll(),
+            'groups' => $allGroups,
         ];
+
+        foreach ($allGroups as $group) {
+            $groupPermissions[$group->id][] = $groups->getPermissionsForGroup($group->id);
+        }
+        $data['groupPermissions'] = $groupPermissions;
 
         if ($this->request->getMethod() === 'post') {
             //
@@ -185,16 +191,12 @@ class GroupController extends BaseController
         if (!$groups->update($id, $data)) return redirect()->back()->withInput()->with('errors', $groups->errors());
 
         //
-        // Save the permissions given to this group
+        // Save the permissions given to this group.
+        // First, delete all permissions, then add each selected one.
         //
+        $groups->removeAllPermissionsFromGroup((int)$id);
         if (array_key_exists('sel_permissions', $this->request->getPost())) {
-            //
-            // Delete all existing permissions for this role first.
-            //
-            $groups->removeAllPermissionsFromGroup((int)$id);
-
             foreach ($this->request->getPost('sel_permissions') as $perm) {
-
                 $groups->addPermissionToGroup($perm, $id);
             }
         }

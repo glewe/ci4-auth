@@ -27,7 +27,7 @@ if (!function_exists('bs5_alert')) {
         $subject       = $data['subject'];
         $text          = $data['text'];
         $help          = $data['help'];
-        $dismissable   = $data['dismissable'];
+        $dismissible   = $data['dismissible'];
 
         $alert_icon = '';
         switch ($icon) {
@@ -42,8 +42,8 @@ if (!function_exists('bs5_alert')) {
                 break;
         }
 
-        $alert_dismissable = '';
-        if ($dismissable) $alert_dismissable = 'alert-dismissable fade show ';
+        $alert_dismissible = '';
+        if ($dismissible) $alert_dismissible = 'alert-dismissible fade show ';
 
         $asubject = "";
         if (strlen($subject)) $asubject = "<p><strong>" . $subject . "</strong><br>";
@@ -60,11 +60,11 @@ if (!function_exists('bs5_alert')) {
                 <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
             </symbol>
         </svg>
-        <div class="alert ' . $alert_dismissable . ' alert-' . $type . '" role="alert">';
+        <div class="alert ' . $alert_dismissible . ' alert-' . $type . '" role="alert">';
 
         $html .= "\n" . $alert_icon;
 
-        if ($dismissable) {
+        if ($dismissible) {
             $html .= '
             <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" title="' . lang('Auth.btn.close') . '"></button>';
         }
