@@ -229,35 +229,13 @@ Then run the following command:
 
 All users created by the seed will have the password `Qwer!1234`.
 
-### Run Application
-
-Start your browser and navigate to your public directory. Use the menu to check out the views that come with
-CI4-Auth.
-
-### 2FA
-
-You can configure two settings in **lewe/ci4-auth/src/Config/Auth.php**
-
-The following setting determines whether users will be forced to setup 2FA.
-```
-public $require2FA = false;
-```
-The next setting specifies the title of the application as it appears in the authenticator App.
-```
-public $authenticatorTitle = 'CI4Auth';
-```
-The authenticator title will be suffixed the the user's email so that it will read:
-
-_**CI4Auth: admin@mydomain.com**_
-
-#### Removing Secret Keys
-
-Users with 'Manage Users' permission can delete the secret key of user accounts from the user list page. 
-This might become necessary when a user has a new device on which he must setup the authenticator App again.
-
-### Languages
+### Language
 
 CI4-Auth provides language files for English, German and Spanish. You can change the language in your **app/Config/App.php** file:
 ```
 public string $defaultLocale = 'en';
 ```
+### Run Application
+
+Start your browser and navigate to your public directory. Use the menu to check out the views that come with
+CI4-Auth.

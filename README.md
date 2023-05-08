@@ -36,11 +36,13 @@ quite large. I decided to build CI4-Auth based on Myth-Auth, changing and adding
 ## Documentation
 
 - [Installation](docs/installation.cmd)
+- [2FA](docs/2fa.cmd)
 - [Helpers](docs/helpers.cmd)
 
 ## Disclaimer
 
-The CI4-Auth library is not perfect. It may very well contain bugs or things that can be done better. If you stumble upon such things, let me know.
+The CI4-Auth library is not perfect. It may very well contain bugs or things that can be done better. If you stumble upon such things, let me know 
+via a [GitHub issue](https://github.com/glewe/ci4-auth/issues).
 Otherwise I hope the library will help you. Feel free to change anything to meet the requirements in your environment.
 
 Enjoy,
