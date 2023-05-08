@@ -18,11 +18,12 @@ class CreateAuthTables extends Migration
         $this->forge->addField([
             'id'               => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
             'email'            => ['type' => 'varchar', 'constraint' => 255],
-            'username'         => ['type' => 'varchar', 'constraint' => 30, 'null' => true],
+            'username'         => ['type' => 'varchar', 'constraint' => 80, 'null' => true],
             'lastname'         => ['type' => 'varchar', 'constraint' => 120],
             'firstname'        => ['type' => 'varchar', 'constraint' => 120],
             'displayname'      => ['type' => 'varchar', 'constraint' => 120],
             'password_hash'    => ['type' => 'varchar', 'constraint' => 255],
+            'secret_hash'      => ['type' => 'varchar', 'constraint' => 255],
             'reset_hash'       => ['type' => 'varchar', 'constraint' => 255, 'null' => true],
             'reset_at'         => ['type' => 'datetime', 'null' => true],
             'reset_expires'    => ['type' => 'datetime', 'null' => true],
