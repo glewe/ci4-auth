@@ -7,7 +7,7 @@
 
     <div class="card">
         <?= bs5_cardheader(['icon' => 'bi-shield-shaded', 'title' => 'Welcome to CI4-Auth', 'help' => 'https://github.com/glewe/ci4-auth']) ?>
-        <div class="card-body fs-5">
+        <div class="card-body">
 
             <p>CI4-Auth is based on the great <a href="https://github.com/lonnieezell/myth-auth" target="_blank">Myth-Auth</a> library for Codeigniter 4.
                 Due credits go to its author <a href="https://github.com/lonnieezell" target="_blank">Lonnie Ezell</a> and the team for this awesome work.</p>
@@ -19,16 +19,15 @@
 
             <h3 class="my-4">Authentication</h3>
 
-            <p>The Authentication menu (<i class="bi-person-fill"></i>) in the navbar contains links to all views having to do with user authentication, e.g. log in, log out, register etc.
-            I did not make them dependent on the login status to make testing easier. Hide them accordingly later.</p>
+            <p>The Authentication menu (<i class="bi-person-fill"></i>) in the navbar contains links to views available based on the login status, e.g. log in, log out, register etc.</p>
 
             <h3 class="my-4">Authorization</h3>
 
-            <p>The Authorization menu (<i class="bi-gear-fill"></i>) holds the links to manage users, groups, roles and permissions.</p>
+            <p>The Authorization menu (<i class="bi-gear-fill"></i>) holds the links to manage users, groups, roles and permissions (dependent on the permissions of the logged in user). Use the admin login to see them all.</p>
 
             <h3 class="my-4">Enjoy and extend</h3>
 
-            <p>The views provided in CI4-Auth are considered basic. They provide access to the auth objects and also show some ways to utilize Bootstrap and Font Awesome.</p>
+            <p>The views provided in CI4-Auth are considered basic. They provide access to the auth objects and also show some ways to utilize Bootstrap and Bootstrap Icons.</p>
             <p>Feel free to change or extend them to your liking.</p>
 
             <h3 class="my-4">Report bugs</h3>
@@ -41,7 +40,7 @@
                 George Lewe</p>
 
         </div>
-        <div class="card-footer pt-3">
+        <div class="card-footer pt-3 fst-italic">
             <p>CodeIgniter <?= CodeIgniter\CodeIgniter::CI_VERSION ?><br>
             CI4-Auth <?= config('AuthInfo')->version ?><br>
             Page rendered in {elapsed_time} seconds<br>

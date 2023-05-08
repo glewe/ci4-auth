@@ -9,7 +9,9 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <a href="<?= base_url() ?>/users/create" class="btn btn-primary"><?= lang('Auth.btn.createUser') ?></a>
+                        <?php if (has_permissions('Manage Users')) { ?>
+                            <a href="<?= base_url() ?>/users/create" class="btn btn-primary"><?= lang('Auth.btn.createUser') ?></a>
+                        <?php } ?>
                     </div>
                     <div class="col">
                         <?= bs5_searchform(base_url() . '/users', (isset($search)) ? $search : false) ?>
@@ -36,7 +38,9 @@
                             <div class="col-lg-2"><?= lang('Auth.group.groups') ?></div>
                             <div class="col-lg-2"><?= lang('Auth.role.roles') ?></div>
                             <div class="col-lg-1"><?= lang('Auth.user.status') ?></div>
-                            <div class="col-lg-1 text-end"><?= lang('Auth.btn.action') ?></div>
+                            <?php if (has_permissions('Manage Users')) { ?>
+                                <div class="col-lg-1 text-end"><?= lang('Auth.btn.action') ?></div>
+                            <?php } ?>
                         </div>
 
                         <?php foreach ($users as $user) :
@@ -65,31 +69,48 @@
                                     </div>
                                     <div class="col-lg-1">
                                         <?= $user->isActivated() ?
-                                            '<a href="#" data-bs-toggle="tooltip" data-bs-title="'.lang('Auth.account.active').'" data-bs-custom-class="tooltip-success"><i class="bi-check-square-fill text-success"></i></a>' :
-                                            '<a href="#" data-bs-toggle="tooltip" data-bs-title="'.lang('Auth.account.inactive').'" data-bs-custom-class="tooltip-warning"><i class="bi-x-square-fill text-warning"></i></a>'
+                                            '<a href="#" data-bs-toggle="tooltip" data-bs-title="' . lang('Auth.account.active') . '" data-bs-custom-class="tooltip-success"><i class="bi-check-square-fill text-success"></i></a>' :
+                                            '<a href="#" data-bs-toggle="tooltip" data-bs-title="' . lang('Auth.account.inactive') . '" data-bs-custom-class="tooltip-warning"><i class="bi-x-square-fill text-warning"></i></a>'
                                         ?>
                                         <?= $user->isBanned() ?
-                                            '<a href="#" data-bs-toggle="tooltip" data-bs-title="'.lang('Auth.account.banned').'" data-bs-custom-class="tooltip-danger"><i class="bi-sign-stop-fill text-danger"></i></a>' : ''
+                                            '<a href="#" data-bs-toggle="tooltip" data-bs-title="' . lang('Auth.account.banned') . '" data-bs-custom-class="tooltip-danger"><i class="bi-sign-stop-fill text-danger"></i></a>' : ''
+                                        ?>
+                                        <?= $user->hasSecret() ?
+                                            '<a href="#" data-bs-toggle="tooltip" data-bs-title="' . lang('Auth.account.2fa') . '" data-bs-custom-class="tooltip-warning"><i class="bi-shield-fill-check text-warning"></i></a>' : ''
                                         ?>
                                     </div>
-                                    <div class="col-lg-1 text-end">
-                                        <div class="btn-user">
-                                            <button id="action-<?= $user->id ?>" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><?= lang('Auth.btn.action') ?></button>
-                                            <div class="dropdown-menu" aria-labelledby="action-<?= $user->id ?>">
-                                                <a class="dropdown-item" href="users/edit/<?= $user->id ?>"><i class="bi-pencil-square me-2"></i><?= lang('Auth.btn.edit') ?></a>
-                                                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteUser_<?= $user->id ?>"><i class="bi-trash me-2"></i><?= lang('Auth.btn.delete') ?></button>
+                                    <?php if (has_permissions('Manage Users')) { ?>
+                                        <div class="col-lg-1 text-end">
+                                            <div class="btn-user">
+                                                <button id="action-<?= $user->id ?>" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><?= lang('Auth.btn.action') ?></button>
+                                                <div class="dropdown-menu" aria-labelledby="action-<?= $user->id ?>">
+                                                    <a class="dropdown-item" href="users/edit/<?= $user->id ?>"><i class="bi-pencil-square me-2"></i><?= lang('Auth.btn.edit') ?></a>
+                                                    <?php if ($user->hasSecret()) { ?>
+                                                        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalRemoveSecret_<?= $user->id ?>"><i class="bi-shield-x me-2"></i><?= lang('Auth.btn.remove_secret') ?></button>
+                                                    <?php } ?>
+                                                    <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteUser_<?= $user->id ?>"><i class="bi-trash me-2"></i><?= lang('Auth.btn.delete') ?></button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <?php echo bs5_modal([
-                                        'id' => 'modalDeleteUser_' . $user->id,
-                                        'header' => lang('Auth.modal.confirm'),
-                                        'header_color' => 'danger',
-                                        'body' => lang('Auth.user.delete_confirm') . ":<br><br><ul><li><strong>" . $user->username . " (" . $user->email . ")</strong></li></ul>",
-                                        'btn_color' => 'danger',
-                                        'btn_name' => 'btn_delete',
-                                        'btn_text' => lang('Auth.btn.delete'),
-                                    ]); ?>
+                                        <?php echo bs5_modal([
+                                            'id' => 'modalRemoveSecret_' . $user->id,
+                                            'header' => lang('Auth.modal.confirm'),
+                                            'header_color' => 'danger',
+                                            'body' => lang('Auth.user.remove_secret_confirm') . "<br><br>" . lang('Auth.user.remove_secret_confirm_desc'),
+                                            'btn_color' => 'danger',
+                                            'btn_name' => 'btn_remove_secret',
+                                            'btn_text' => lang('Auth.btn.remove_secret'),
+                                        ]); ?>
+                                        <?php echo bs5_modal([
+                                            'id' => 'modalDeleteUser_' . $user->id,
+                                            'header' => lang('Auth.modal.confirm'),
+                                            'header_color' => 'danger',
+                                            'body' => lang('Auth.user.delete_confirm') . ":<br><br><ul><li><strong>" . $user->username . " (" . $user->email . ")</strong></li></ul>",
+                                            'btn_color' => 'danger',
+                                            'btn_name' => 'btn_delete',
+                                            'btn_text' => lang('Auth.btn.delete'),
+                                        ]); ?>
+                                    <?php } ?>
                                 </div>
                             </form>
 

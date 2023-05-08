@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-sm-6 offset-sm-3">
 
-                <div class="card">
+                <div class="card mt-5">
 
                     <div class="card-header">
                         <i class="bi-box-arrow-in-right me-2"></i><strong><?= lang('Auth.login.title') ?></strong></i>

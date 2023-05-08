@@ -7,7 +7,7 @@
         'subject' => '',
         'text' => session('message'),
         'help' => '',
-        'dismissable' => true,
+        'dismissible' => true,
     ]);
 endif ?>
 
@@ -20,7 +20,7 @@ endif ?>
         'subject' => '',
         'text' => session('success'),
         'help' => '',
-        'dismissable' => true,
+        'dismissible' => true,
     ]);
 endif ?>
 
@@ -33,7 +33,7 @@ endif ?>
         'subject' => '',
         'text' => session('warning'),
         'help' => '',
-        'dismissable' => true,
+        'dismissible' => true,
     ]);
 endif ?>
 
@@ -46,7 +46,7 @@ endif ?>
         'subject' => '',
         'text' => session('error'),
         'help' => '',
-        'dismissable' => true,
+        'dismissible' => true,
     ]);
 endif ?>
 
@@ -68,6 +68,6 @@ endif ?>
         'subject' => lang('Auth.alert.error'),
         'text' => $text,
         'help' => '',
-        'dismissable' => true,
+        'dismissible' => true,
     ]);
 endif ?>

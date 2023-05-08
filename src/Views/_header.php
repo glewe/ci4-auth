@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel=icon href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/svgs/solid/shield-halved.svg>
+    <link rel="icon" href="icon-32.png">
 
     <title>CI4-Auth</title>
 
@@ -28,8 +28,8 @@
         body {
             font-family: "Open Sans", "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, system-ui, -apple-system, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
             /*font-family: Roboto, "Segoe UI", "OpenSans", "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, system-ui, -apple-system, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";*/
-            font-weight: 300;
-            line-height: 1.5;
+            /*font-weight: 300;*/
+            /*line-height: 1.5;*/
         }
         .menu-icon {
             margin-right: 10px;
