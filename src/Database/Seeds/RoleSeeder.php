@@ -16,7 +16,7 @@ class RoleSeeder extends Seeder
             ['name' => 'Administrator', 'description' => 'Administrators with all permissions'],
             ['name' => 'Manager',       'description' => 'Logged in users with extended permissions'],
             ['name' => 'User',          'description' => 'Logged in users'],
-            ['name' => 'Public',        'description' => 'Not logged in users'],
+            ['name' => 'Public',        'description' => 'Public users that are not logged in'],
         );
 
         //

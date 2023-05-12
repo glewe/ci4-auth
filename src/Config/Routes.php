@@ -38,30 +38,30 @@ $routes->group('', ['namespace' => 'CI4\Auth\Controllers'], function ($routes) {
     $routes->get('whoami', 'AuthController::whoami');
 
     // Groups
-    $routes->match(['get', 'post'], 'groups', 'GroupController::groups', ['as' => 'groups', 'filter' => 'permission:View Groups']);
-    $routes->get('groups/create', 'GroupController::groupsCreate', ['as' => 'groupsCreate', 'filter' => 'permission:Manage Groups']);
-    $routes->post('groups/create', 'GroupController::groupsCreateDo', ['filter' => 'permission:Manage Groups']);
-    $routes->get('groups/edit/(:num)', 'GroupController::groupsEdit/$1', ['as' => 'groupsEdit', 'filter' => 'permission:Manage Groups']);
-    $routes->post('groups/edit/(:num)', 'GroupController::groupsEditDo/$1', ['filter' => 'permission:Manage Groups']);
+    $routes->match(['get', 'post'], 'groups', 'GroupController::groups', ['as' => 'groups', 'filter' => 'permission:groups.view']);
+    $routes->get('groups/create', 'GroupController::groupsCreate', ['as' => 'groupsCreate', 'filter' => 'permission:groups.create']);
+    $routes->post('groups/create', 'GroupController::groupsCreateDo', ['filter' => 'permission:groups.create']);
+    $routes->get('groups/edit/(:num)', 'GroupController::groupsEdit/$1', ['as' => 'groupsEdit', 'filter' => 'permission:groups.edit']);
+    $routes->post('groups/edit/(:num)', 'GroupController::groupsEditDo/$1', ['filter' => 'permission:groups.edit']);
 
     // Permissions
-    $routes->match(['get', 'post'], 'permissions', 'PermissionController::permissions', ['as' => 'permissions', 'filter' => 'permission:View Permissions']);
-    $routes->get('permissions/create', 'PermissionController::permissionsCreate', ['as' => 'permissionsCreate', 'filter' => 'permission:Manage Permissions']);
-    $routes->post('permissions/create', 'PermissionController::permissionsCreateDo', ['filter' => 'permission:Manage Permissions']);
-    $routes->get('permissions/edit/(:num)', 'PermissionController::permissionsEdit/$1', ['as' => 'permissionsEdit', 'filter' => 'permission:Manage Permissions']);
-    $routes->post('permissions/edit/(:num)', 'PermissionController::permissionsEditDo/$1', ['filter' => 'permission:Manage Permissions']);
+    $routes->match(['get', 'post'], 'permissions', 'PermissionController::permissions', ['as' => 'permissions', 'filter' => 'permission:permissions.view']);
+    $routes->get('permissions/create', 'PermissionController::permissionsCreate', ['as' => 'permissionsCreate', 'filter' => 'permission:permissions.create']);
+    $routes->post('permissions/create', 'PermissionController::permissionsCreateDo', ['filter' => 'permission:permissions.create']);
+    $routes->get('permissions/edit/(:num)', 'PermissionController::permissionsEdit/$1', ['as' => 'permissionsEdit', 'filter' => 'permission:permissions.edit']);
+    $routes->post('permissions/edit/(:num)', 'PermissionController::permissionsEditDo/$1', ['filter' => 'permission:permissions.edit']);
 
     // Roles
-    $routes->match(['get', 'post'], 'roles', 'RoleController::roles', ['as' => 'roles', 'filter' => 'permission:View Roles']);
-    $routes->get('roles/create', 'RoleController::rolesCreate', ['as' => 'rolesCreate', 'filter' => 'permission:Manage Roles']);
-    $routes->post('roles/create', 'RoleController::rolesCreateDo', ['filter' => 'permission:Manage Roles']);
-    $routes->get('roles/edit/(:num)', 'RoleController::rolesEdit/$1', ['as' => 'rolesEdit', 'filter' => 'permission:Manage Roles']);
-    $routes->post('roles/edit/(:num)', 'RoleController::rolesEditDo/$1', ['filter' => 'permission:Manage Roles']);
+    $routes->match(['get', 'post'], 'roles', 'RoleController::roles', ['as' => 'roles', 'filter' => 'permission:roles.view']);
+    $routes->get('roles/create', 'RoleController::rolesCreate', ['as' => 'rolesCreate', 'filter' => 'permission:roles.create']);
+    $routes->post('roles/create', 'RoleController::rolesCreateDo', ['filter' => 'permission:roles.create']);
+    $routes->get('roles/edit/(:num)', 'RoleController::rolesEdit/$1', ['as' => 'rolesEdit', 'filter' => 'permission:roles.edit']);
+    $routes->post('roles/edit/(:num)', 'RoleController::rolesEditDo/$1', ['filter' => 'permission:roles.edit']);
 
     // Users
-    $routes->match(['get', 'post'], 'users', 'UserController::users', ['as' => 'users', 'filter' => 'permission:View Users']);
-    $routes->get('users/create', 'UserController::usersCreate', ['as' => 'usersCreate', 'filter' => 'permission:Manage Users']);
-    $routes->post('users/create', 'UserController::usersCreateDo', ['filter' => 'permission:Manage Users']);
-    $routes->get('users/edit/(:num)', 'UserController::usersEdit/$1', ['as' => 'usersEdit', 'filter' => 'permission:Manage Users']);
-    $routes->post('users/edit/(:num)', 'UserController::usersEditDo/$1', ['filter' => 'permission:Manage Users']);
+    $routes->match(['get', 'post'], 'users', 'UserController::users', ['as' => 'users', 'filter' => 'permission:users.view']);
+    $routes->get('users/create', 'UserController::usersCreate', ['as' => 'usersCreate', 'filter' => 'permission:users.create']);
+    $routes->post('users/create', 'UserController::usersCreateDo', ['filter' => 'permission:users.create']);
+    $routes->get('users/edit/(:num)', 'UserController::usersEdit/$1', ['as' => 'usersEdit', 'filter' => 'permission:users.edit']);
+    $routes->post('users/edit/(:num)', 'UserController::usersEditDo/$1', ['filter' => 'permission:users.edit']);
 });

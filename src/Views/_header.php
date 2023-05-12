@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="icon-32.png">
+    <link rel="icon" href="favicon.ico">
 
-    <title>CI4-Auth</title>
+    <title><?= config('AuthInfo')->name ?></title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

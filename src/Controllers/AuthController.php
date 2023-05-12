@@ -149,7 +149,7 @@ class AuthController extends BaseController
     //-------------------------------------------------------------------------
 
     /**
-     * Displays the Lewe Auth error page.
+     * Displays the CI4-Auth error page.
      */
     public function error()
     {
@@ -209,9 +209,8 @@ class AuthController extends BaseController
     //-------------------------------------------------------------------------
 
     /**
-     * Displays the login form, or redirects
-     * the user to their destination/home if
-     * they are already logged in.
+     * Displays the login form, or redirects the user to their destination/home
+     * if they are already logged in.
      */
     public function login()
     {
@@ -630,12 +629,16 @@ class AuthController extends BaseController
             return redirect()->back()->with('error', lang('Auth.forgot.no_user'));
         }
 
+        //
         // Reset token still valid?
+        //
         if (!empty($user->reset_expires) && time() > $user->reset_expires->getTimestamp()) {
             return redirect()->back()->withInput()->with('error', lang('Auth.password.reset_token_expired'));
         }
 
+        //
         // Success! Save the new password, and cleanup the reset hash.
+        //
         $user->password = $this->request->getPost('password');
         $user->reset_hash = null;
         $user->reset_at = date('Y-m-d H:i:s');
@@ -791,7 +794,7 @@ class AuthController extends BaseController
     //-------------------------------------------------------------------------
 
     /**
-     * Displays the Lewe Auth welcome page.
+     * Displays the Welcome page.
      */
     public function welcome()
     {
@@ -801,7 +804,7 @@ class AuthController extends BaseController
     //-------------------------------------------------------------------------
 
     /**
-     * Displays the whoami page.
+     * Displays the Whoami page.
      */
     public function whoami()
     {

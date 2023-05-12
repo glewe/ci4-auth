@@ -23,28 +23,30 @@
             </div>
         </div>
 
-        <div class="card mb-3">
-            <div class="card-header cursor-pointer">
-                <a class="text-dark" data-bs-toggle="collapse" href="#credits" role="button" aria-expanded="false" aria-controls="credits">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <i class="bi-hand-thumbs-up-fill me-3"></i><?= lang('Auth.about.credits') ?>
+        <?php if (config('Auth')->showCredits) { ?>
+            <div class="card mb-3">
+                <div class="card-header cursor-pointer">
+                    <a class="text-dark" data-bs-toggle="collapse" href="#credits" role="button" aria-expanded="false" aria-controls="credits">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <i class="bi-hand-thumbs-up-fill me-3"></i><?= lang('Auth.about.credits') ?>
+                            </div>
                         </div>
+                    </a>
+                </div>
+                <div class="collapse" id="credits">
+                    <div class="card-body">
+                        <ul>
+                            <li>CodeIgniter Team <?= lang('Auth.for') ?> <a href="https://codeigniter.com/" target="_blank">CodeIgniter</a></li>
+                            <li>Lonnie Ezell <?= lang('Auth.for') ?> <a href="https://github.com/lonnieezell/myth-auth" target="_blank">Myth:Auth</a></li>
+                            <li>RobThree <?= lang('Auth.for') ?> <a href="https://github.com/RobThree/TwoFactorAuth" target="_blank">TwoFactorAuth</a></li>
+                            <li>Bootstrap Team <?= lang('Auth.for') ?> <a href="http://getbootstrap.com/" target="_blank">Bootstrap Framework and Bootstrap Icons</a></li>
+                            <li>Google Team <?= lang('Auth.for') ?> <a href="https://www.google.com/fonts/" target="_blank">Google Fonts</a></li>
+                        </ul>
                     </div>
-                </a>
-            </div>
-            <div class="collapse" id="credits">
-                <div class="card-body">
-                    <ul>
-                        <li>CodeIgniter Team <?= lang('Auth.for') ?> <a href="https://codeigniter.com/" target="_blank">CodeIgniter</a></li>
-                        <li>Lonnie Ezell <?= lang('Auth.for') ?> <a href="https://github.com/lonnieezell/myth-auth" target="_blank">Myth:Auth</a></li>
-                        <li>RobThree <?= lang('Auth.for') ?> <a href="https://github.com/RobThree/TwoFactorAuth" target="_blank">TwoFactorAuth</a></li>
-                        <li>Bootstrap Team <?= lang('Auth.for') ?> <a href="http://getbootstrap.com/" target="_blank">Bootstrap Framework and Bootstrap Icons</a></li>
-                        <li>Google Team <?= lang('Auth.for') ?> <a href="https://www.google.com/fonts/" target="_blank">Google Fonts</a></li>
-                    </ul>
                 </div>
             </div>
-        </div>
+        <?php } ?>
 
         <?php if (config('Auth')->showReleaseInfo) { ?>
             <div class="card mb-3">

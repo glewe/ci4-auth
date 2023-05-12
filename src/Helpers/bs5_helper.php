@@ -315,7 +315,6 @@ if (!function_exists('bs5_formrow')) {
                     </label>
                     <div class="col">
                         <div class="form-check form-switch">
-                        <div class="form-check form-switch">
                             <input 
                                 type="checkbox" 
                                 class="form-check-input" 
@@ -325,7 +324,6 @@ if (!function_exists('bs5_formrow')) {
                                 ((intval($data['value'])) ? " checked" : "") .
                                 ($data['disabled'] ? ' disabled' : '') . '
                             >
-                            <div class="invalid-feedback">' . $data['errors'] . '</div>
                             <div class="invalid-feedback">' . $data['errors'] . '</div>
                         </div>
                     </div>

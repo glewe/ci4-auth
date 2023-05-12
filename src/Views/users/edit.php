@@ -17,30 +17,27 @@
                     <div class="card">
 
                         <div class="card-header">
-                            <ul class="nav nav-tabs card-header-tabs" id="tabTabs" role="tablist">
+                            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="account-tab" data-bs-toggle="tab" data-bs-target="#tab-account" type="button" role="tab" aria-controls="account" aria-selected="true"><?= lang('Auth.user.tab_account') ?></button>
+                                    <button class="nav-link active" id="account-tab" data-bs-toggle="tab" data-bs-target="#account-tab-pane" type="button" role="tab" aria-controls="account-tab-pane" aria-selected="true"><?= lang('Auth.user.tab_account') ?></button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="groups-tab" data-bs-toggle="tab" data-bs-target="#tab-groups" type="button" role="tab" aria-controls="groups" aria-selected="false"><?= lang('Auth.user.tab_groups') ?></button>
+                                    <button class="nav-link" id="groups-tab" data-bs-toggle="tab" data-bs-target="#groups-tab-pane" type="button" role="tab" aria-controls="groups-tab-pane" aria-selected="false"><?= lang('Auth.user.tab_groups') ?></button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="roles-tab" data-bs-toggle="tab" data-bs-target="#tab-roles" type="button" role="tab" aria-controls="roles" aria-selected="false"><?= lang('Auth.user.tab_roles') ?></button>
+                                    <button class="nav-link" id="roles-tab" data-bs-toggle="tab" data-bs-target="#roles-tab-pane" type="button" role="tab" aria-controls="roles-tab-pane" aria-selected="false"><?= lang('Auth.user.tab_roles') ?></button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="permissions-tab" data-bs-toggle="tab" data-bs-target="#tab-permissions" type="button" role="tab" aria-controls="permissions" aria-selected="false"><?= lang('Auth.user.tab_permissions') ?></button>
+                                    <button class="nav-link" id="permissions-tab" data-bs-toggle="tab" data-bs-target="#permissions-tab-pane" type="button" role="tab" aria-controls="permissions-tab-pane" aria-selected="false"><?= lang('Auth.user.tab_permissions') ?></button>
                                 </li>
                             </ul>
                         </div>
 
                         <div class="card-body">
-                            <div class="tab-content" id="tabContent">
-
-                                <!-- Tab: Account -->
-                                <div class="tab-pane fade show active" id="tab-account" role="tabpanel" aria-labelledby="account-tab">
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="account-tab-pane" role="tabpanel" aria-labelledby="account-tab" tabindex="0">
                                     <div class="card">
                                         <div class="card-body">
-
                                             <?php
                                             echo bs5_formrow([
                                                 'type' => 'email',
@@ -118,7 +115,7 @@
                                                 'desc' => lang('Auth.user.active_desc'),
                                                 'errors' => session('errors.active'),
                                                 'value' => $user->active,
-                                                'disabled' => ($user->id==1) ? true : false
+                                                'disabled' => ($user->id == 1) ? true : false
                                             ]);
 
                                             echo bs5_formrow([
@@ -129,17 +126,13 @@
                                                 'desc' => lang('Auth.user.banned_desc'),
                                                 'errors' => session('errors.banned'),
                                                 'value' => $user->banned,
-                                                'disabled' => ($user->id==1) ? true : false
+                                                'disabled' => ($user->id == 1) ? true : false
                                             ]);
-
                                             ?>
-
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Tab: Groups -->
-                                <div class="tab-pane fade" id="tab-groups" role="tabpanel" aria-labelledby="groups-tab">
+                                <div class="tab-pane fade" id="groups-tab-pane" role="tabpanel" aria-labelledby="groups-tab" tabindex="0">
                                     <div class="card">
                                         <div class="card-body">
                                             <?php
@@ -165,9 +158,7 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Tab: Roles -->
-                                <div class="tab-pane fade" id="tab-roles" role="tabpanel" aria-labelledby="roles-tab">
+                                <div class="tab-pane fade" id="roles-tab-pane" role="tabpanel" aria-labelledby="roles-tab" tabindex="0">
                                     <div class="card">
                                         <div class="card-body">
                                             <?php
@@ -193,9 +184,7 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Tab: Permissions -->
-                                <div class="tab-pane fade" id="tab-permissions" role="tabpanel" aria-labelledby="permissions-tab">
+                                <div class="tab-pane fade" id="permissions-tab-pane" role="tabpanel" aria-labelledby="permissions-tab" tabindex="0">
                                     <div class="card">
                                         <div class="card-body">
                                             <?php
@@ -244,9 +233,9 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
+
                     </div>
 
                     <div class="card mt-4">

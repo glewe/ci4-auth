@@ -9,7 +9,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <?php if (has_permissions('Manage Users')) { ?>
+                        <?php if (has_permissions('users.create')) { ?>
                             <a href="<?= base_url() ?>/groups/create" class="btn btn-primary"><?= lang('Auth.btn.createGroup') ?></a>
                         <?php } ?>
                     </div>
@@ -36,7 +36,7 @@
                             <div class="col col-lg-3"><?= lang('Auth.name') ?></div>
                             <div class="col col-lg-4"><?= lang('Auth.description') ?></div>
                             <div class="col-lg-3"><?= lang('Auth.permission.permissions') ?></div>
-                            <?php if (has_permissions('Manage Users')) { ?>
+                            <?php if (has_permissions(['users.edit', 'users.delete'])) { ?>
                                 <div class="col col-lg-1 text-end"><?= lang('Auth.btn.action') ?></div>
                             <?php } ?>
                         </div>
@@ -58,25 +58,33 @@
                                             echo $perm->name . '<br>';
                                         endforeach; ?>
                                     </div>
-                                    <?php if (has_permissions('Manage Users')) { ?>
+                                    <?php if (has_permissions(['users.edit', 'users.delete'])) { ?>
                                         <div class="col col-lg-1 text-end">
                                             <div>
                                                 <button id="action-<?= $group->id ?>" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><?= lang('Auth.btn.action') ?></button>
                                                 <div class="dropdown-menu" aria-labelledby="action-<?= $group->id ?>">
-                                                    <a class="dropdown-item" href="groups/edit/<?= $group->id ?>"><i class="bi-pencil-square me-2"></i><?= lang('Auth.btn.edit') ?></a>
-                                                    <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteGroup_<?= $group->id ?>"><i class="bi-trash me-2"></i><?= lang('Auth.btn.delete') ?></button>
+                                                    <?php if (has_permissions('users.edit')) { ?>
+                                                        <a class="dropdown-item" href="groups/edit/<?= $group->id ?>"><i class="bi-pencil-square me-2"></i><?= lang('Auth.btn.edit') ?></a>
+                                                    <?php } ?>
+                                                    <?php if (has_permissions('users.delete')) { ?>
+                                                        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteGroup_<?= $group->id ?>"><i class="bi-trash me-2"></i><?= lang('Auth.btn.delete') ?></button>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                         </div>
-                                        <?php echo bs5_modal([
-                                            'id' => 'modalDeleteGroup_' . $group->id,
-                                            'header' => lang('Auth.modal.confirm'),
-                                            'header_color' => 'danger',
-                                            'body' => lang('Auth.group.delete_confirm') . ":<br><br><ul><li><strong>" . $group->name . "</strong></li></ul>",
-                                            'btn_color' => 'danger',
-                                            'btn_name' => 'btn_delete',
-                                            'btn_text' => lang('Auth.btn.delete'),
-                                        ]); ?>
+                                        <?php
+                                        if (has_permissions('users.delete')) {
+                                            echo bs5_modal([
+                                                'id' => 'modalDeleteGroup_' . $group->id,
+                                                'header' => lang('Auth.modal.confirm'),
+                                                'header_color' => 'danger',
+                                                'body' => lang('Auth.group.delete_confirm') . ":<br><br><ul><li><strong>" . $group->name . "</strong></li></ul>",
+                                                'btn_color' => 'danger',
+                                                'btn_name' => 'btn_delete',
+                                                'btn_text' => lang('Auth.btn.delete'),
+                                            ]);
+                                        }
+                                        ?>
                                     <?php } ?>
                                 </div>
                             </form>

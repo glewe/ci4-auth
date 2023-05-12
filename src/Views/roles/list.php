@@ -9,7 +9,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <?php if (has_permissions('Manage Roles')) { ?>
+                        <?php if (has_permissions('roles.create')) { ?>
                             <a href="<?= base_url() ?>/roles/create" class="btn btn-primary"><?= lang('Auth.btn.createRole') ?></a>
                         <?php } ?>
                     </div>
@@ -36,14 +36,12 @@
                             <div class="col-lg-3"><?= lang('Auth.name') ?></div>
                             <div class="col-lg-4"><?= lang('Auth.description') ?></div>
                             <div class="col-lg-3"><?= lang('Auth.permission.permissions') ?></div>
-                            <?php if (has_permissions('Manage Roles')) { ?>
+                            <?php if (has_permissions(['roles.edit', 'roles.delete'])) { ?>
                                 <div class="col-lg-1 text-end"><?= lang('Auth.btn.action') ?></div>
                             <?php } ?>
                         </div>
 
-                        <?php foreach ($roles as $role) :
-//                            dnd($rolePermissions[$role->id]);
-                            ?>
+                        <?php foreach ($roles as $role) : ?>
 
                             <form name="form_<?= $role->id ?>" action="<?= base_url() ?>/roles" method="post">
                                 <?= csrf_field() ?>
@@ -61,25 +59,32 @@
                                             echo $perm->name . '<br>';
                                         endforeach; ?>
                                     </div>
-                                    <?php if (has_permissions('Manage Roles')) { ?>
+                                    <?php if (has_permissions(['roles.edit', 'roles.delete'])) { ?>
                                         <div class="col-lg-1 text-end">
                                             <div>
                                                 <button id="action-<?= $role->id ?>" type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><?= lang('Auth.btn.action') ?></button>
                                                 <div class="dropdown-menu" aria-labelledby="action-<?= $role->id ?>">
-                                                    <a class="dropdown-item" href="roles/edit/<?= $role->id ?>"><i class="bi-pencil-square me-2"></i><?= lang('Auth.btn.edit') ?></a>
-                                                    <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteRole_<?= $role->id ?>"><i class="bi-trash me-2"></i><?= lang('Auth.btn.delete') ?></button>
+                                                    <?php if (has_permissions('roles.edit')) { ?>
+                                                        <a class="dropdown-item" href="roles/edit/<?= $role->id ?>"><i class="bi-pencil-square me-2"></i><?= lang('Auth.btn.edit') ?></a>
+                                                    <?php } ?>
+                                                    <?php if (has_permissions('roles.delete')) { ?>
+                                                        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDeleteRole_<?= $role->id ?>"><i class="bi-trash me-2"></i><?= lang('Auth.btn.delete') ?></button>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                         </div>
-                                        <?php echo bs5_modal([
-                                            'id' => 'modalDeleteRole_' . $role->id,
-                                            'header' => lang('Auth.modal.confirm'),
-                                            'header_color' => 'danger',
-                                            'body' => lang('Auth.role.delete_confirm') . ":<br><br><ul><li><strong>" . $role->name . "</strong></li></ul>",
-                                            'btn_color' => 'danger',
-                                            'btn_name' => 'btn_delete',
-                                            'btn_text' => lang('Auth.btn.delete'),
-                                        ]); ?>
+                                        <?php
+                                        if (has_permissions('roles.delete')) {
+                                            echo bs5_modal([
+                                                'id' => 'modalDeleteRole_' . $role->id,
+                                                'header' => lang('Auth.modal.confirm'),
+                                                'header_color' => 'danger',
+                                                'body' => lang('Auth.role.delete_confirm') . ":<br><br><ul><li><strong>" . $role->name . "</strong></li></ul>",
+                                                'btn_color' => 'danger',
+                                                'btn_name' => 'btn_delete',
+                                                'btn_text' => lang('Auth.btn.delete'),
+                                            ]);
+                                        } ?>
                                     <?php } ?>
                                 </div>
                             </form>

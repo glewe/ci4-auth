@@ -1057,10 +1057,10 @@ class FlatAuthorization implements AuthorizeInterface
     public function usersInGroup($group)
     {
         if (is_numeric($group)) {
-            return $this->groupModel->getUsersForRole($group);
+            return $this->groupModel->getUsersForGroup($group);
         } else {
             $g = $this->groupModel->where('name', $group)->first();
-            return $this->groupModel->getUsersForRole($g->id);
+            return $this->groupModel->getUsersForGroup($g->id);
         }
     }
 

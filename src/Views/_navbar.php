@@ -14,26 +14,27 @@
                 </li>
             </ul>
             <ul class="navbar-nav">
+                <?php if (has_permissions(['groups.view', 'permissions.view', 'roles.view', 'users.view'])) { ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-gear-fill menu-icon"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authDropdown">
+                            <?php if (has_permissions('groups.view')) { ?>
+                                <li><a class="dropdown-item" href="<?= base_url() ?>/groups"><i class="bi-people-fill menu-icon"></i><?= lang('Auth.nav.authorization.groups') ?></a></li>
+                            <?php } ?>
+                            <?php if (has_permissions('permissions.view')) { ?>
+                                <li><a class="dropdown-item" href="<?= base_url() ?>/permissions"><i class="bi-key-fill menu-icon"></i><?= lang('Auth.nav.authorization.permissions') ?></a></li>
+                            <?php } ?>
+                            <?php if (has_permissions('roles.view')) { ?>
+                                <li><a class="dropdown-item" href="<?= base_url() ?>/roles"><i class="bi-person-circle menu-icon"></i><?= lang('Auth.nav.authorization.roles') ?></a></li>
+                            <?php } ?>
+                            <?php if (has_permissions('users.view')) { ?>
+                                <li><a class="dropdown-item" href="<?= base_url() ?>/users"><i class="bi-person-fill menu-icon"></i><?= lang('Auth.nav.authorization.users') ?></a></li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                <?php } ?>
+
                 <li class="nav-item dropdown">
-                    <!--                    <a class="nav-link dropdown-toggle" href="#" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">--><?php //= lang('Auth.nav.settings') ?><!--</a>-->
-                    <a class="nav-link dropdown-toggle" href="#" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-gear-fill menu-icon"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authDropdown">
-                        <?php if (has_permissions('View Groups')) { ?>
-                            <li><a class="dropdown-item" href="<?= base_url() ?>/groups"><i class="bi-people-fill menu-icon"></i><?= lang('Auth.nav.authorization.groups') ?></a></li>
-                        <?php } ?>
-                        <?php if (has_permissions('View Permissions')) { ?>
-                            <li><a class="dropdown-item" href="<?= base_url() ?>/permissions"><i class="bi-key-fill menu-icon"></i><?= lang('Auth.nav.authorization.permissions') ?></a></li>
-                        <?php } ?>
-                        <?php if (has_permissions('View Roles')) { ?>
-                            <li><a class="dropdown-item" href="<?= base_url() ?>/roles"><i class="bi-person-circle menu-icon"></i><?= lang('Auth.nav.authorization.roles') ?></a></li>
-                        <?php } ?>
-                        <?php if (has_permissions('View Users')) { ?>
-                            <li><a class="dropdown-item" href="<?= base_url() ?>/users"><i class="bi-person-fill menu-icon"></i><?= lang('Auth.nav.authorization.users') ?></a></li>
-                        <?php } ?>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <!--                    <a class="nav-link dropdown-toggle" href="#" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">--><?php //= lang('Auth.nav.authentication.self') ?><!--</a>-->
                     <a class="nav-link dropdown-toggle" href="#" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-person-fill menu-icon"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authDropdown">
                         <?php if (!logged_in()) { ?>

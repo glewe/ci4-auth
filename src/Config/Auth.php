@@ -236,7 +236,7 @@ class Auth extends BaseConfig
      *
      * @var bool
      */
-    public $require2FA = true;
+    public $require2FA = false;
 
     /**
      * ------------------------------------------------------------------------
@@ -395,6 +395,18 @@ class Auth extends BaseConfig
      * @var int
      */
     public $resetTime = 3600;
+
+    /**
+     * ------------------------------------------------------------------------
+     * Show Credits on About page
+     * ------------------------------------------------------------------------
+     *
+     * Set to true to display an expandable section with credits on the
+     * About page.
+     *
+     * @var bool
+     */
+    public $showCredits = true;
 
     /**
      * ------------------------------------------------------------------------
