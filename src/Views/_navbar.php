@@ -3,11 +3,11 @@
     <div class="container">
 
         <a class="navbar-brand" href="#"><i class="bi-shield-shaded text-warning"></i></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarLeweCI4Auth" aria-controls="navbarLeweCI4Auth" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarLeft">
+        <div class="collapse navbar-collapse" id="navbarTop">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="<?= base_url() ?>/"><i class="bi-house-fill menu-icon"></i><?= lang('Auth.nav.home') ?></a>
