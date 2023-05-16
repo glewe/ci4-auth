@@ -84,7 +84,7 @@ class UserController extends BaseController
                     if (!$users->update($recId, $user)) {
                         return redirect()->back()->withInput()->with('errors', $users->errors());
                     } else {
-//                        return redirect()->route('users');
+                        //                        return redirect()->route('users');
                         return redirect()->route('users')->with('success', lang('Auth.user.remove_secret_success', [$user->username, $user->email]));
                     }
                 }
@@ -331,7 +331,7 @@ class UserController extends BaseController
         // Get the Banned switch.
         //
         if ($this->request->getPost('swi_banned')) $user->setAttribute('status', 'banned');
-        else $user->setAttribute('banned', 0);
+        else $user->setAttribute('status', null);
         $users->update($id, $user);
 
         //
