@@ -14,20 +14,20 @@ if (!function_exists('bs5_alert')) {
     /**
      * Creates a Bootstrap 5 alert box.
      *
-     * @param    array    $data    The data for the alert box
-     * 
+     * @param array $data The data for the alert box
+     *
      * @return   string
      */
     function bs5_alert($data)
     {
 
-        $type          = $data['type'];
-        $icon          = $data['icon'];
-        $title         = $data['title'];
-        $subject       = $data['subject'];
-        $text          = $data['text'];
-        $help          = $data['help'];
-        $dismissible   = $data['dismissible'];
+        $type = $data['type'];
+        $icon = $data['icon'];
+        $title = $data['title'];
+        $subject = $data['subject'];
+        $text = $data['text'];
+        $help = $data['help'];
+        $dismissible = $data['dismissible'];
 
         $alert_icon = '';
         switch ($icon) {
@@ -98,7 +98,7 @@ if (!function_exists('bs5_cardheader')) {
     /**
      * Creates a card header for the main card on a page.
      *
-     * @param    array   $data    The data for the card header
+     * @param array $data The data for the card header
      *
      * @return   string
      */
@@ -120,7 +120,7 @@ if (!function_exists('bs5_formrow')) {
     /**
      * Creates a form row.
      *
-     * @param    array   $data    The data for the form row
+     * @param array $data The data for the form row
      *
      * @return   string
      */
@@ -293,7 +293,7 @@ if (!function_exists('bs5_formrow')) {
                             readonly 
                             onfocus="this.removeAttribute(\'readonly\');" 
                             onblur="this.setAttribute(\'readonly\',\'\');"' .
-                            ($data['disabled'] ? ' disabled' : '') . '
+                    ($data['disabled'] ? ' disabled' : '') . '
                         >
                         <div class="invalid-feedback">' . $data['errors'] . '</div>
                     </div>
@@ -321,8 +321,8 @@ if (!function_exists('bs5_formrow')) {
                                 id="' . $data['name'] . '" 
                                 name="swi_' . $data['name'] . '" 
                                 value="swi_' . $data['name'] . '"' .
-                                ((intval($data['value'])) ? " checked" : "") .
-                                ($data['disabled'] ? ' disabled' : '') . '
+                    ((intval($data['value'])) ? " checked" : "") .
+                    ($data['disabled'] ? ' disabled' : '') . '
                             >
                             <div class="invalid-feedback">' . $data['errors'] . '</div>
                         </div>
@@ -342,19 +342,19 @@ if (!function_exists('bs5_modal')) {
     /**
      * Creates a modal dialog
      *
-     * @param    array   $data    The data for the modal dialog
+     * @param array $data The data for the modal dialog
      *
      * @return   string
      */
     function bs5_modal($data)
     {
-        $id            = $data['id'];
-        $header        = $data['header'];
-        $headerColor   = $data['header_color'];
-        $body          = $data['body'];
-        $btnColor      = $data['btn_color'];
-        $btnName       = $data['btn_name'];
-        $btnText       = $data['btn_text'];
+        $id = $data['id'];
+        $header = $data['header'];
+        $headerColor = $data['header_color'];
+        $body = $data['body'];
+        $btnColor = $data['btn_color'];
+        $btnName = $data['btn_name'];
+        $btnText = $data['btn_text'];
 
         if ($headerColor == 'default') $headerColor = '';
         else $headerColor = 'btn-' . $headerColor;
@@ -389,8 +389,8 @@ if (!function_exists('bs5_searchform')) {
     /**
      * Creates a search form to ber used on list pages.
      *
-     * @param    string   $action    Form action
-     * @param    string   $search    Search string
+     * @param string $action Form action
+     * @param string $search Search string
      *
      * @return   string
      */
@@ -406,11 +406,11 @@ if (!function_exists('bs5_searchform')) {
 
         $html = '
         <!-- Search Form -->
-        <form class="input-group" name="form_search" action="' . $action . '" method="post">
+        ' . form_open($action, ['csrf_id' => 'csrfForm', 'id' => 'data-form', 'class' => 'input-group form-validate', 'name' => 'form_search']) . '
             <input type="text" class="form-control" name="search" placeholder="' . lang('Auth.btn.search') . '..." aria-label="search" aria-describedby="btn_search" value="' . $value . '">
             <button class="btn btn-outline-secondary" type="submit" name="btn_reset" id="btn_reset" title="' . lang('Auth.btn.reset') . '..."' . $disabled . '><i class="bi-backspace-fill text-danger"></i></button>
-            <button class="btn btn-outline-secondary" type="submit" name="btn_search" id="btn_search" title="' . lang('Auth.btn.search') . '..."><i class="bi-search text-primary"></i></button>
-        </form>';
+            <button class="btn btn-outline-secondary" type="submit" name="btn_search" id="btn_search" title="' . lang('Auth.btn.search') . '..."><i class="bi-search text-primary"></i></button>' .
+            form_close();
 
         return $html;
     }
@@ -432,18 +432,18 @@ if (!function_exists('bs5_toast')) {
      *    customStyle   Allows to define a custom style
      * ]
      *
-     * @param array $data   The data for the toast
+     * @param array $data The data for the toast
      *
      * @return   string                 HTML snippet
      */
     function bs5_toast($data)
     {
-        $title         = $data['title'];
-        $time          = $data['time'];
-        $body          = $data['body'];
-        $style         = $data['style'];
-        $delay         = $data['delay'];
-        $customStyle   = $data['custom_style'];
+        $title = $data['title'];
+        $time = $data['time'];
+        $body = $data['body'];
+        $style = $data['style'];
+        $delay = $data['delay'];
+        $customStyle = $data['custom_style'];
 
         $bgcolor = "bg-" . $style;
         $txtcolor = "text-light";
