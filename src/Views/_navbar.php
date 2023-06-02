@@ -10,7 +10,7 @@
         <div class="collapse navbar-collapse" id="navbarTop">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="<?= base_url() ?>/"><i class="bi-house-fill menu-icon"></i><?= lang('Auth.nav.home') ?></a>
+                    <a class="nav-link" aria-current="page" href="<?= base_url() ?>"><i class="bi-house-fill menu-icon"></i><?= lang('Auth.nav.home') ?></a>
                 </li>
             </ul>
             <ul class="navbar-nav">
@@ -19,16 +19,16 @@
                         <a class="nav-link dropdown-toggle" href="#" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-gear-fill menu-icon"></i></a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authDropdown">
                             <?php if (has_permissions('groups.view')) { ?>
-                                <li><a class="dropdown-item" href="<?= base_url() ?>/groups"><i class="bi-people-fill menu-icon"></i><?= lang('Auth.nav.authorization.groups') ?></a></li>
+                                <li><a class="dropdown-item" href="<?= base_url() ?>groups"><i class="bi-people-fill menu-icon"></i><?= lang('Auth.nav.authorization.groups') ?></a></li>
                             <?php } ?>
                             <?php if (has_permissions('permissions.view')) { ?>
-                                <li><a class="dropdown-item" href="<?= base_url() ?>/permissions"><i class="bi-key-fill menu-icon"></i><?= lang('Auth.nav.authorization.permissions') ?></a></li>
+                                <li><a class="dropdown-item" href="<?= base_url() ?>permissions"><i class="bi-key-fill menu-icon"></i><?= lang('Auth.nav.authorization.permissions') ?></a></li>
                             <?php } ?>
                             <?php if (has_permissions('roles.view')) { ?>
-                                <li><a class="dropdown-item" href="<?= base_url() ?>/roles"><i class="bi-person-circle menu-icon"></i><?= lang('Auth.nav.authorization.roles') ?></a></li>
+                                <li><a class="dropdown-item" href="<?= base_url() ?>roles"><i class="bi-person-circle menu-icon"></i><?= lang('Auth.nav.authorization.roles') ?></a></li>
                             <?php } ?>
                             <?php if (has_permissions('users.view')) { ?>
-                                <li><a class="dropdown-item" href="<?= base_url() ?>/users"><i class="bi-person-fill menu-icon"></i><?= lang('Auth.nav.authorization.users') ?></a></li>
+                                <li><a class="dropdown-item" href="<?= base_url() ?>users"><i class="bi-person-fill menu-icon"></i><?= lang('Auth.nav.authorization.users') ?></a></li>
                             <?php } ?>
                         </ul>
                     </li>
@@ -38,23 +38,23 @@
                     <a class="nav-link dropdown-toggle" href="#" id="authDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-person-fill menu-icon"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="authDropdown">
                         <?php if (!logged_in()) { ?>
-                            <li><a class="dropdown-item" href="<?= base_url() ?>/login"><i class="bi-box-arrow-in-right menu-icon"></i><?= lang('Auth.nav.authentication.login') ?></a></li>
+                            <li><a class="dropdown-item" href="<?= base_url() ?>login"><i class="bi-box-arrow-in-right menu-icon"></i><?= lang('Auth.nav.authentication.login') ?></a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="<?= base_url() ?>/register"><i class="bi-person-fill-add menu-icon"></i><?= lang('Auth.nav.authentication.register') ?></a></li>
+                            <li><a class="dropdown-item" href="<?= base_url() ?>register"><i class="bi-person-fill-add menu-icon"></i><?= lang('Auth.nav.authentication.register') ?></a></li>
                         <?php } else { ?>
-                            <li><a class="dropdown-item" href="<?= base_url() ?>/logout"><i class="bi-box-arrow-left menu-icon"></i><?= lang('Auth.nav.authentication.logout') ?></a></li>
+                            <li><a class="dropdown-item" href="<?= base_url() ?>logout"><i class="bi-box-arrow-left menu-icon"></i><?= lang('Auth.nav.authentication.logout') ?></a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li><a class="dropdown-item" href="<?= base_url() ?>/setup2fa"><i class="bi-unlock-fill menu-icon"></i><?= lang('Auth.nav.authentication.setup2fa') ?></a></li>
-                            <li><a class="dropdown-item" href="<?= base_url() ?>/whoami"><i class="bi-question-circle-fill menu-icon"></i><?= lang('Auth.nav.authentication.whoami') ?></a></li>
+                            <li><a class="dropdown-item" href="<?= base_url() ?>setup2fa"><i class="bi-unlock-fill menu-icon"></i><?= lang('Auth.nav.authentication.setup2fa') ?></a></li>
+                            <li><a class="dropdown-item" href="<?= base_url() ?>whoami"><i class="bi-question-circle-fill menu-icon"></i><?= lang('Auth.nav.authentication.whoami') ?></a></li>
                         <?php } ?>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="<?= base_url() ?>/about"><i class="bi-shield-shaded menu-icon"></i><?= lang('Auth.about.about') . ' ' . config('AuthInfo')->name ?></a></li>
+                        <li><a class="dropdown-item" href="<?= base_url() ?>about"><i class="bi-shield-shaded menu-icon"></i><?= lang('Auth.about.about') . ' ' . config('AuthInfo')->name ?></a></li>
                     </ul>
                 </li>
             </ul>
