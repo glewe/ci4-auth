@@ -55,6 +55,28 @@ class ValidationRules
     }
 
     /**
+     * Specific validator for permission names.
+     * Only lower case alpha characters and dots.
+     *
+     * @param string $str - Field value
+     * @param string $error - Error that will be returned (for call without validation data array)
+     * @return bool
+     */
+    public function lower_alpha_dash_dot($str, ?string &$error = null): bool
+    {
+        if ($str === null) {
+            return false;
+        }
+
+        if (!preg_match('/\A[a-z.]+\z/', $str)) {
+            $error = lang('Auth.permission.error_name');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Builds a new user instance from the global request.
      *
      * @return User

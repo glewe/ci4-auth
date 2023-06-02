@@ -255,6 +255,7 @@ return [
         'delete_success'              => 'Permission deleted: {0}',
         'description'                 => 'Permission Description',
         'description_desc'            => 'Enter a description for this permission.',
+        'error_name'                  => 'Permission names can only have lower case alpha characters and dots, e.g. "permission.create".',
         'name'                        => 'Permission Name',
         'name_desc'                   => 'Enter a name for this permission.',
         'none_found'                  => 'No permissions found.',
