@@ -49,7 +49,7 @@ class PermissionController extends BaseController
     /**
      * Shows all permission records.
      *
-     * @return \CodeIgniter\HTTP\RedirectResponse | \CI4\Auth\Controllers\view
+     * @return \CodeIgniter\HTTP\RedirectResponse | string
      */
     public function permissions()
     {
@@ -60,7 +60,7 @@ class PermissionController extends BaseController
             'permissions' => $permissions->orderBy('name', 'asc')->findAll(),
         ];
 
-        if ($this->request->getMethod() === 'post') {
+        if ($this->request->withMethod('post')) {
             //
             // A form was submitted. Let's see what it was...
             //
@@ -279,7 +279,7 @@ class PermissionController extends BaseController
      * @param string $view
      * @param array $data
      *
-     * @return view
+     * @return string
      */
     protected function _render(string $view, array $data = [])
     {

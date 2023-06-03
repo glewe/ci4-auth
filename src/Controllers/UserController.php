@@ -2,7 +2,6 @@
 
 namespace CI4\Auth\Controllers;
 
-use CodeIgniter\Controller;
 use CodeIgniter\Session\Session;
 
 use CI4\Auth\Config\Auth as AuthConfig;
@@ -10,6 +9,7 @@ use CI4\Auth\Entities\User;
 use CI4\Auth\Models\UserModel;
 
 use App\Controllers\BaseController;
+use Config\Validation;
 
 class UserController extends BaseController
 {
@@ -25,6 +25,11 @@ class UserController extends BaseController
      */
     protected $session;
 
+    /**
+     * @var Validation
+     */
+    protected $validation;
+
     //------------------------------------------------------------------------
     /**
      */
@@ -34,9 +39,9 @@ class UserController extends BaseController
         // Most services in this controller require the session to be started
         //
         $this->session = service('session');
-
         $this->config = config('Auth');
         $this->authorize = service('authorization');
+        $this->validation = service('validation');
     }
 
     // ------------------------------------------------------------------------
@@ -54,7 +59,7 @@ class UserController extends BaseController
             'users'  => $users->orderBy('username', 'asc')->findAll(),
         ];
 
-        if ($this->request->getMethod() === 'post') {
+        if ($this->request->withMethod('post')) {
             //
             // A form was submitted. Let's see what it was...
             //

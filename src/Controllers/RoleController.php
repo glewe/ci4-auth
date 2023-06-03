@@ -278,7 +278,7 @@ class RoleController extends BaseController
      * @param string $view
      * @param array $data
      *
-     * @return view
+     * @return string
      */
     protected function _render(string $view, array $data = [])
     {

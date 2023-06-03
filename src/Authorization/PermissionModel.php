@@ -20,7 +20,7 @@ class PermissionModel extends Model
      * @param int $permissionId
      * @param int $userId
      *
-     * @return BaseResult|Query|false
+     * @return bool
      */
     public function addPermissionToUser(int $permissionId, int $userId)
     {
@@ -291,8 +291,6 @@ class PermissionModel extends Model
      *
      * @param int $permissionId
      * @param int $userId
-     *
-     * @return mixed
      */
     public function removePermissionFromUser(int $permissionId, int $userId)
     {
@@ -306,8 +304,6 @@ class PermissionModel extends Model
      * Removes all permissions from a user.
      *
      * @param int $userId
-     *
-     * @return mixed
      */
     public function removeAllPermissionsFromUser(int $userId)
     {
