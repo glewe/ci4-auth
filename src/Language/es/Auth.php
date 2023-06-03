@@ -149,6 +149,7 @@ return [
         'name_desc'                   => 'Introduce un nombre para este grupo.',
         'none_found'                  => 'No hay grupos.',
         'not_found'                   => 'No se encuentra el grupo: {0}.',
+        'not_unique'                  => 'Este nombre de grupo "{0}" ya existe. Los nombres de grupo deben ser únicos.',
         'permissions'                 => 'Permisos de Grupo',
         'permissions_desc'            => 'Selecciona uno o más permisos que se le darán a los usuarios de este grupo.',
         'update_success'              => 'Grupo "{0}" actualizado correctamente.',

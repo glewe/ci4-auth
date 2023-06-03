@@ -149,6 +149,7 @@ return [
         'name_desc'                   => 'Gib einen Namen f&uuml;r diese Gruppe ein.',
         'none_found'                  => 'Keine Gruppen gefunden.',
         'not_found'                   => 'Die Gruppe konnte nicht gefunden werden: {0}.',
+        'not_unique'                  => 'Dieser Gruppenname "{0}" existiert bereits. Gruppennamen m&uuml;ssen eindeutig sein.',
         'permissions'                 => 'Gruppenrechte',
         'permissions_desc'            => 'W&auml;hle eine oder mehrere Berechtigungen aus, die dieser Gruppe erlaubt sind.',
         'update_success'              => 'Gruppe "{0}" wurde erfolgreich aktualisiert.',

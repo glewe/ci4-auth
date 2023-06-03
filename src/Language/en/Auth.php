@@ -149,6 +149,7 @@ return [
         'name_desc'                   => 'Enter a name for this group.',
         'none_found'                  => 'No groups found.',
         'not_found'                   => 'Unable to find group: {0}.',
+        'not_unique'                  => 'This group name "{0}" already exists. Group names must be unique.',
         'permissions'                 => 'Group Permissions',
         'permissions_desc'            => 'Select one or more permissions that users from this group will be granted.',
         'update_success'              => 'Group "{0}" was successfully updated.',
