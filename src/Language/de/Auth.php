@@ -296,6 +296,7 @@ return [
         'name_desc'                   => 'Gib einen Namen f&uuml;r diese Rolle ein.',
         'none_found'                  => 'Keine Rollen gefunden.',
         'not_found'                   => 'Die Rolle wurde nicht gefunden: {0}.',
+        'not_unique'                  => 'Der Rollenname "{0}" existiert bereits. Rollennamen m&uuml;ssen eindeutig sein.',
         'permissions'                 => 'Rollenberechtigungen',
         'permissions_desc'            => 'W&auml;hle eine oder mehrere Berechtigungen aus, die dieser Rolle erlaubt sind.',
         'update_success'              => 'Rolle "{0}" wurde erfolgreich aktualisiert.',

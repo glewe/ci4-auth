@@ -296,6 +296,7 @@ return [
         'name_desc'                   => 'Introduce un nombre para este rol.',
         'none_found'                  => 'No hay roles.',
         'not_found'                   => 'No se encuentra el rol: {0}.',
+        'not_unique'                  => 'El nombre del rol "{0}" ya existe. Los nombres de rol deben ser únicos.',
         'permissions'                 => 'permisos de Rol',
         'permissions_desc'            => 'Selecciona uno o más permisos que se otorgarán a los usuarios de este rol.',
         'update_success'              => 'Role "{0}" actualizado correctamente.',

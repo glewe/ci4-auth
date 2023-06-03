@@ -297,6 +297,7 @@ return [
         'name_desc'                   => 'Enter a name for this role.',
         'none_found'                  => 'No roles found.',
         'not_found'                   => 'Unable to find role: {0}.',
+        'not_unique'                  => 'The role name "{0}" already exists. Role names must be unique.',
         'permissions'                 => 'Role Permissions',
         'permissions_desc'            => 'Select one or more permissions that users from this role will be granted.',
         'update_success'              => 'Role "{0}" was successfully updated.',
