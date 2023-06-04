@@ -194,14 +194,14 @@ public $views = [
 In ***app/Controllers/BaseController.php** add 'auth', 'bs5' and 'session' to the $helpers array:
 
 ```php
-    /**
-     * An array of helpers to be loaded automatically upon class instantiation.
-     * These helpers will be available to all other controllers that extend 
-     * BaseController.
-     *
-     * @var array
-     */
-    protected $helpers = ['auth', 'bs5', 'session'];
+ /**
+  * An array of helpers to be loaded automatically upon class instantiation.
+  * These helpers will be available to all other controllers that extend 
+  * BaseController.
+  *
+  * @var array
+  */
+ protected $helpers = ['auth', 'bs5', 'session'];
 ```
 
 ### Passing custom config to Views
@@ -234,6 +234,23 @@ All users created by the seed will have the password `Qwer!1234`.
 CI4-Auth provides language files for English, German and Spanish. You can change the language in your **app/Config/App.php** file:
 ```
 public string $defaultLocale = 'en';
+```
+### Toolbar Collector
+
+You can add CI4-Auth information to the CodeIgniter toolbar shown in development mode.
+
+Edit your **app/Config/Toolbar.php** file:
+
+```php
+<?php
+...
+use CI4\Auth\Collectors\Auth;
+...
+    public array $collectors = [
+        ...
+        Auth::class,
+    ];
+...
 ```
 ### Run Application
 
