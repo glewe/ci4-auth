@@ -330,13 +330,22 @@ class UserController extends BaseController
         //
         if ($this->request->getPost('swi_active')) $user->setAttribute('active', 1);
         else $user->setAttribute('active', 0);
-        $users->update($id, $user);
 
         //
         // Get the Banned switch.
         //
         if ($this->request->getPost('swi_banned')) $user->setAttribute('status', 'banned');
         else $user->setAttribute('status', null);
+
+        //
+        // Make sure that user with ID 1 (admin) is never deactivated or banned.
+        // Disable this if statement if you want that to be allowed.
+        //
+        if ($id == 1) {
+            $user->setAttribute('active', 1);
+            $user->setAttribute('status', null);
+        }
+
         $users->update($id, $user);
 
         //
