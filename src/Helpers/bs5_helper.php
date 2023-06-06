@@ -396,6 +396,8 @@ if (!function_exists('bs5_searchform')) {
      */
     function bs5_searchform($action, $search)
     {
+        helper('form');
+        
         $value = '';
         $disabled = ' disabled';
 
