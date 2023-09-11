@@ -37,7 +37,7 @@
                 <div class="collapse" id="credits">
                     <div class="card-body">
                         <ul>
-                            <li>CodeIgniter Team <?= lang('Auth.for') ?> <a href="https://codeigniter.com/" target="_blank">CodeIgniter</a></li>
+                            <li>CodeIgniter Team <?= lang('Auth.for') ?> <a href="https://codeigniter.com/" target="_blank">CodeIgniter</a> <?= CodeIgniter\CodeIgniter::CI_VERSION ?></li>
                             <li>Lonnie Ezell <?= lang('Auth.for') ?> <a href="https://github.com/lonnieezell/myth-auth" target="_blank">Myth:Auth</a></li>
                             <li>RobThree <?= lang('Auth.for') ?> <a href="https://github.com/RobThree/TwoFactorAuth" target="_blank">TwoFactorAuth</a></li>
                             <li>Bootstrap Team <?= lang('Auth.for') ?> <a href="http://getbootstrap.com/" target="_blank">Bootstrap Framework and Bootstrap Icons</a></li>

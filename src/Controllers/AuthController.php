@@ -814,30 +814,6 @@ class AuthController extends BaseController
     //-------------------------------------------------------------------------
 
     /**
-     * Render View.
-     *
-     * @param string $view
-     * @param array $data
-     *
-     * @return string
-     */
-    protected function _render(string $view, array $data = [])
-    {
-        //
-        // In case you have a custom configuration that you want to pass to
-        // your views (e.g. theme settings), it is added here.
-        //
-        // It is assumed that have declared and set the variable $myConfig in
-        // your BaseController.
-        //
-        if (isset($this->myConfig)) $data['myConfig'] = $this->myConfig;
-
-        return view($view, $data);
-    }
-
-    //-------------------------------------------------------------------------
-
-    /**
      * Encrypts (but does not authenticate) a string.
      *
      * @param string $plaintext - String to encrypt
@@ -898,5 +874,29 @@ class AuthController extends BaseController
         );
 
         return $plaintext;
+    }
+
+    //-------------------------------------------------------------------------
+
+    /**
+     * Render View.
+     *
+     * @param string $view
+     * @param array $data
+     *
+     * @return string
+     */
+    protected function _render(string $view, array $data = [])
+    {
+        //
+        // In case you have a custom configuration that you want to pass to
+        // your views (e.g. theme settings), it is added here.
+        //
+        // It is assumed that have declared and set the variable $myConfig in
+        // your BaseController.
+        //
+        if (isset($this->myConfig)) $data['myConfig'] = $this->myConfig;
+
+        return view($view, $data);
     }
 }
