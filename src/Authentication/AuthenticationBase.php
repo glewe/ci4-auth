@@ -285,7 +285,7 @@ class AuthenticationBase
         //
         // Save it to the user's browser in a cookie.
         //
-        $appConfig = config('App');
+        $cookieConfig = config('Cookie');
         $response = service('response');
 
         //
@@ -295,10 +295,10 @@ class AuthenticationBase
             'remember',                      // Cookie Name
             $token,                          // Value
             $this->config->rememberLength,   // # Seconds until it expires
-            $appConfig->cookieDomain,
-            $appConfig->cookiePath,
-            $appConfig->cookiePrefix,
-            $appConfig->cookieSecure,        // Only send over HTTPS?
+            $cookieConfig->domain,
+            $cookieConfig->path,
+            $cookieConfig->prefix,
+            $cookieConfig->secure,        // Only send over HTTPS?
             true                             // Hide from Javascript?
         );
     }
@@ -336,7 +336,7 @@ class AuthenticationBase
         //
         helper('cookie');
 
-        $appConfig = config('App');
+        $cookieConfig = config('Cookie');
 
         //
         // Create the cookie
@@ -345,10 +345,10 @@ class AuthenticationBase
             'remember',                         // Cookie Name
             $selector . ':' . $validator,       // Value
             (string)$this->config->rememberLength,   // # Seconds until it expires
-            $appConfig->cookieDomain,
-            $appConfig->cookiePath,
-            $appConfig->cookiePrefix,
-            $appConfig->cookieSecure,                // Only send over HTTPS?
+            $cookieConfig->domain,
+            $cookieConfig->path,
+            $cookieConfig->prefix,
+            $cookieConfig->secure,                // Only send over HTTPS?
             true                             // Hide from Javascript?
         );
     }
