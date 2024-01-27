@@ -22,9 +22,11 @@ Download the CI4-Auth archive from this repo here.
 
 ### Copy CI4-Auth to your ThirdParty folder
 
-_Note: CI4-Auth is not available as a Composer package yet. It works from your ThirdParty folder._
+_Note: CI4-Auth is not available as a Composer package. It works from your ThirdParty folder._
 
-Unzip the CI4-Auth archive and copy the 'lewe' directory to your **\app\ThirdParty** folder in your Codeigniter project.
+Create a sub-directory **lewe** in your **app\ThirdParty** folder. In there, create a folder named **ci4-auth**.
+
+Unzip the CI4-Auth archive and copy the files and folders from it into **\app\ThirdParty\lewe\ci4-auth**.
 You should see this tree section then:
 
 ```
@@ -33,7 +35,9 @@ project-root
   - ThirdParty
     - lewe
       - ci4-auth
+        - docs
         - src
+        ...
 ```
 
 ### Configuration
