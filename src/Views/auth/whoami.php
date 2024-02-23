@@ -1,11 +1,11 @@
 <?= $this->extend(config('Auth')->viewLayout) ?>
 <?= $this->section('main') ?>
 
-    <div class="container">
+  <div class="container">
 
-        <?= view('CI4\Auth\Views\_alert') ?>
-        <?= auth_display() ?>
+    <?= view('CI4\Auth\Views\_alert') ?>
+    <?= auth_display() ?>
 
-    </div>
+  </div>
 
 <?= $this->endSection() ?>

@@ -8,6 +8,5 @@ namespace CI4\Auth\Exceptions;
  *
  * @package CI4\Auth\Exceptions
  */
-interface ExceptionInterface
-{
+interface ExceptionInterface {
 }

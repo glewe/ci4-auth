@@ -6,7 +6,7 @@
 
 CI4-Auth is a user, group, role and permission management library for Codeigniter 4.
 
-CI4-Auth is based on the great [Myth-Auth](https://github.com/lonnieezell/myth-auth) library for Codeigniter 4. Due credits go to its author [Lonnie Ezell](https://github.com/lonnieezell) and the
+CI4-Auth is based on the great [Myth-Auth](https://github.com/lonnieezell/myth-auth) library for Codeigniter 4 Due credits go to its author [Lonnie Ezell](https://github.com/lonnieezell) and the
 team for this awesome work.
 
 I started customizing Myth-Auth to meet my specific requirements but after a while I noticed that my changes got
@@ -15,7 +15,7 @@ quite large. I decided to build CI4-Auth based on Myth-Auth, changing and adding
 ## Requirements
 
 - PHP 8.1+
-- CodeIgniter 4.0+
+- CodeIgniter 4.4+
 - [RobThree TwoFactorAuth](http://github.com/RobThree/TwoFactorAuth)
 
 ## Features

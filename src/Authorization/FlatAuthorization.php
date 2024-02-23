@@ -11,1107 +11,1061 @@ use CI4\Auth\Authorization\PermissionModel;
 use CI4\Auth\Entities\User;
 use CI4\Auth\Models\UserModel;
 
-class FlatAuthorization implements AuthorizeInterface
-{
-    /**
-     * @var array|string|null
-     */
-    public $error;
+class FlatAuthorization implements AuthorizeInterface {
+  /**
+   * @var array|string|null
+   */
+  public $error;
 
-    /**
-     * The group model to use. Usually the class noted below (or an extension 
-     * thereof) but can be any compatible CodeIgniter Model.
-     *
-     * @var GroupModel
-     */
-    protected $groupModel;
+  /**
+   * The group model to use. Usually the class noted below (or an extension
+   * thereof) but can be any compatible CodeIgniter Model.
+   *
+   * @var GroupModel
+   */
+  protected $groupModel;
 
-    /**
-     * The role model to use. Usually the class noted below (or an extension 
-     * thereof) but can be any compatible CodeIgniter Model.
-     *
-     * @var RoleModel
-     */
-    protected $roleModel;
+  /**
+   * The role model to use. Usually the class noted below (or an extension
+   * thereof) but can be any compatible CodeIgniter Model.
+   *
+   * @var RoleModel
+   */
+  protected $roleModel;
 
-    /**
-     * The permission model to use. Usually the class noted below (or an 
-     * extension thereof) but can be any compatible CodeIgniter Model.
-     *
-     * @var PermissionModel
-     */
-    protected $permissionModel;
+  /**
+   * The permission model to use. Usually the class noted below (or an
+   * extension thereof) but can be any compatible CodeIgniter Model.
+   *
+   * @var PermissionModel
+   */
+  protected $permissionModel;
 
-    /**
-     * The user model to use. Usually the class noted below (or an extension
-     * thereof) but can be any compatible CodeIgniter Model.
-     *
-     * @var UserModel
-     */
-    protected $userModel = null;
+  /**
+   * The user model to use. Usually the class noted below (or an extension
+   * thereof) but can be any compatible CodeIgniter Model.
+   *
+   * @var UserModel
+   */
+  protected $userModel = null;
 
-    //-------------------------------------------------------------------------
-    /**
-     * Stores the models.
-     *
-     * @param GroupModel       $groupModel
-     * @param RoleModel        $roleModel
-     * @param PermissionModel  $permissionModel
-     */
-    public function __construct(Model $groupModel, Model $roleModel, Model $permissionModel)
-    {
-        $this->groupModel      = $groupModel;
-        $this->roleModel       = $roleModel;
-        $this->permissionModel = $permissionModel;
+  //-------------------------------------------------------------------------
+  /**
+   * Stores the models.
+   *
+   * @param GroupModel $groupModel
+   * @param RoleModel $roleModel
+   * @param PermissionModel $permissionModel
+   */
+  public function __construct(Model $groupModel, Model $roleModel, Model $permissionModel) {
+    $this->groupModel = $groupModel;
+    $this->roleModel = $roleModel;
+    $this->permissionModel = $permissionModel;
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Adds a single permission to a single group.
+   *
+   * @param int|string $permission
+   * @param int|string $group
+   *
+   * @return mixed
+   */
+  public function addPermissionToGroup($permission, $group) {
+    $permissionId = $this->getPermissionID($permission);
+    $groupId = $this->getGroupID($group);
+
+    if (!is_numeric($permissionId)) return false;
+
+    if (!is_numeric($groupId)) return false;
+
+    if (!$this->groupModel->addPermissionToRole($permissionId, $groupId)) {
+      $this->error = $this->groupModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Adds a single permission to a single group.
-     *
-     * @param int|string $permission
-     * @param int|string $group
-     *
-     * @return mixed
-     */
-    public function addPermissionToGroup($permission, $group)
-    {
-        $permissionId = $this->getPermissionID($permission);
-        $groupId = $this->getGroupID($group);
+    return true;
+  }
 
-        if (!is_numeric($permissionId)) return false;
+  //-------------------------------------------------------------------------
+  /**
+   * Adds a single permission to a single role.
+   *
+   * @param int|string $permission
+   * @param int|string $role
+   *
+   * @return mixed
+   */
+  public function addPermissionToRole($permission, $role) {
+    $permissionId = $this->getPermissionID($permission);
+    $roleId = $this->getRoleID($role);
 
-        if (!is_numeric($groupId)) return false;
+    if (!is_numeric($permissionId)) return false;
 
-        if (!$this->groupModel->addPermissionToRole($permissionId, $groupId)) {
-            $this->error = $this->groupModel->errors();
-            return false;
-        }
+    if (!is_numeric($roleId)) return false;
 
-        return true;
+    if (!$this->roleModel->addPermissionToRole($permissionId, $roleId)) {
+      $this->error = $this->roleModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Adds a single permission to a single role.
-     *
-     * @param int|string $permission
-     * @param int|string $role
-     *
-     * @return mixed
-     */
-    public function addPermissionToRole($permission, $role)
-    {
-        $permissionId = $this->getPermissionID($permission);
-        $roleId = $this->getRoleID($role);
+    return true;
+  }
 
-        if (!is_numeric($permissionId)) return false;
+  //-------------------------------------------------------------------------
+  /**
+   * Assigns a single permission to a user, irregardless of permissions
+   * assigned by roles. This is saved to the user's meta information.
+   *
+   * @param int|string $permission
+   * @param int $userId
+   *
+   * @return bool|null
+   */
+  public function addPermissionToUser($permission, int $userId) {
+    $permissionId = $this->getPermissionID($permission);
 
-        if (!is_numeric($roleId)) return false;
+    if (!is_numeric($permissionId)) return null;
 
-        if (!$this->roleModel->addPermissionToRole($permissionId, $roleId)) {
-            $this->error = $this->roleModel->errors();
-            return false;
-        }
+    if (!Events::trigger('beforeAddPermissionToUser', $userId, $permissionId)) return false;
 
-        return true;
+    $user = $this->userModel->find($userId);
+
+    if (!$user) {
+      $this->error = lang('Auth.user.not_found', [ $userId ]);
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Assigns a single permission to a user, irregardless of permissions
-     * assigned by roles. This is saved to the user's meta information.
-     *
-     * @param int|string $permission
-     * @param int      $userId
-     *
-     * @return bool|null
-     */
-    public function addPermissionToUser($permission, int $userId)
-    {
-        $permissionId = $this->getPermissionID($permission);
+    /** @var User $user */
+    $permissions = $user->getPermissions();
 
-        if (!is_numeric($permissionId)) return null;
-
-        if (!Events::trigger('beforeAddPermissionToUser', $userId, $permissionId)) return false;
-
-        $user = $this->userModel->find($userId);
-
-        if (!$user) {
-            $this->error = lang('Auth.user.not_found', [$userId]);
-            return false;
-        }
-
-        /** @var User $user */
-        $permissions = $user->getPermissions();
-
-        if (!in_array($permissionId, $permissions)) {
-            $res = $this->permissionModel->addPermissionToUser($permissionId, $user->id);
-        }
-
-        Events::trigger('didAddPermissionToUser', $userId, $permissionId);
-
-        return true;
+    if (!in_array($permissionId, $permissions)) {
+      $res = $this->permissionModel->addPermissionToUser($permissionId, $user->id);
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Adds a user to group.
-     *
-     * @param int     $userid
-     * @param mixed   $group    Either ID or name, fails on anything else
-     *
-     * @return bool|null
-     */
-    public function addUserToGroup(int $userid, $group)
-    {
-        if (empty($userid) || !is_numeric($userid)) return null;
+    Events::trigger('didAddPermissionToUser', $userId, $permissionId);
 
-        if (empty($group) || (!is_numeric($group) && !is_string($group))) return null;
+    return true;
+  }
 
-        $groupId = $this->getGroupID($group);
+  //-------------------------------------------------------------------------
+  /**
+   * Adds a user to group.
+   *
+   * @param int $userid
+   * @param mixed $group Either ID or name, fails on anything else
+   *
+   * @return bool|null
+   */
+  public function addUserToGroup(int $userid, $group) {
+    if (empty($userid) || !is_numeric($userid)) return null;
 
-        if (!Events::trigger('beforeAddUserToGroup', $userid, $groupId)) return false;
+    if (empty($group) || (!is_numeric($group) && !is_string($group))) return null;
 
-        if (!is_numeric($groupId)) return null;
+    $groupId = $this->getGroupID($group);
 
-        if (!$this->groupModel->addUserToGroup($userid, (int) $groupId)) {
-            $this->error = $this->groupModel->errors();
-            return false;
-        }
+    if (!Events::trigger('beforeAddUserToGroup', $userid, $groupId)) return false;
 
-        Events::trigger('didAddUserToGroup', $userid, $groupId);
+    if (!is_numeric($groupId)) return null;
 
-        return true;
+    if (!$this->groupModel->addUserToGroup($userid, (int)$groupId)) {
+      $this->error = $this->groupModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Adds a user to role.
-     *
-     * @param int $userid
-     * @param mixed $role Either ID or name, fails on anything else
-     *
-     * @return bool|null
-     */
-    public function addUserToRole(int $userid, $role)
-    {
-        if (empty($userid) || !is_numeric($userid)) return null;
+    Events::trigger('didAddUserToGroup', $userid, $groupId);
 
-        if (empty($role) || (!is_numeric($role) && !is_string($role))) return null;
+    return true;
+  }
 
-        $roleId = $this->getRoleID($role);
+  //-------------------------------------------------------------------------
+  /**
+   * Adds a user to role.
+   *
+   * @param int $userid
+   * @param mixed $role Either ID or name, fails on anything else
+   *
+   * @return bool|null
+   */
+  public function addUserToRole(int $userid, $role) {
+    if (empty($userid) || !is_numeric($userid)) return null;
 
-        if (!Events::trigger('beforeAddUserToRole', $userid, $roleId)) return false;
+    if (empty($role) || (!is_numeric($role) && !is_string($role))) return null;
 
-        if (!is_numeric($roleId)) return null;
+    $roleId = $this->getRoleID($role);
 
-        if (!$this->roleModel->addUserToRole($userid, (int) $roleId)) {
-            $this->error = $this->roleModel->errors();
-            return false;
-        }
+    if (!Events::trigger('beforeAddUserToRole', $userid, $roleId)) return false;
 
-        Events::trigger('didAddUserToRole', $userid, $roleId);
+    if (!is_numeric($roleId)) return null;
 
-        return true;
+    if (!$this->roleModel->addUserToRole($userid, (int)$roleId)) {
+      $this->error = $this->roleModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Creates a single permission.
-     *
-     * @param string $name
-     * @param string $description
-     *
-     * @return mixed
-     */
-    public function createPermission(string $name, string $description = '')
-    {
-        $data = [
-            'name'      => $name,
-            'description' => $description,
-        ];
+    Events::trigger('didAddUserToRole', $userid, $roleId);
 
-        $validation = service('validation', null, false);
-        $validation->setRules([
-            'name'      => 'required|max_length[255]|is_unique[auth_permissions.name]',
-            'description' => 'max_length[255]',
-        ]);
+    return true;
+  }
 
-        if (!$validation->run($data)) {
-            $this->error = $validation->getErrors();
-            return false;
-        }
+  //-------------------------------------------------------------------------
+  /**
+   * Creates a single permission.
+   *
+   * @param string $name
+   * @param string $description
+   *
+   * @return mixed
+   */
+  public function createPermission(string $name, string $description = '') {
+    $data = [
+      'name' => $name,
+      'description' => $description,
+    ];
 
-        $id = $this->permissionModel->skipValidation()->insert($data);
+    $validation = service('validation', null, false);
+    $validation->setRules([
+      'name' => 'required|max_length[255]|is_unique[auth_permissions.name]',
+      'description' => 'max_length[255]',
+    ]);
 
-        if (is_numeric($id)) return (int)$id;
-
-        $this->error = $this->permissionModel->errors();
-
-        return false;
+    if (!$validation->run($data)) {
+      $this->error = $validation->getErrors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * @param string $name
-     * @param string $description
-     *
-     * @return mixed
-     */
-    public function createGroup(string $name, string $description = '')
-    {
-        $data = [
-            'name'      => $name,
-            'description' => $description,
-        ];
+    $id = $this->permissionModel->skipValidation()->insert($data);
 
-        $validation = service('validation', null, false);
-        $validation->setRules(
-            [
-                'name'      => 'required|max_length[255]|is_unique[auth_groups.name]',
-                'description' => 'max_length[255]',
-            ],
-            [
-                'name' => [
-                    'required' => 'You must enter a group name.',
-                    'max_length[255]' => 'The group name cannot be longer than 255 characters.',
-                    'is_unique[auth_groups.name]' => 'The group name already exists.',
-                ],
-                'description' => [
-                    'max_length[255]' => 'The description cannot be longer than 255 characters.',
-                ],
-            ]
-        );
+    if (is_numeric($id)) return (int)$id;
 
-        if (!$validation->run($data)) {
-            $this->error = $validation->getErrors();
-            return false;
-        }
+    $this->error = $this->permissionModel->errors();
 
-        $id = $this->groupModel->skipValidation()->insert($data);
+    return false;
+  }
 
-        if (is_numeric($id)) return (int)$id;
+  //-------------------------------------------------------------------------
+  /**
+   * @param string $name
+   * @param string $description
+   *
+   * @return mixed
+   */
+  public function createGroup(string $name, string $description = '') {
+    $data = [
+      'name' => $name,
+      'description' => $description,
+    ];
 
-        $this->error = $this->groupModel->errors();
+    $validation = service('validation', null, false);
+    $validation->setRules(
+      [
+        'name' => 'required|max_length[255]|is_unique[auth_groups.name]',
+        'description' => 'max_length[255]',
+      ],
+      [
+        'name' => [
+          'required' => 'You must enter a group name.',
+          'max_length[255]' => 'The group name cannot be longer than 255 characters.',
+          'is_unique[auth_groups.name]' => 'The group name already exists.',
+        ],
+        'description' => [
+          'max_length[255]' => 'The description cannot be longer than 255 characters.',
+        ],
+      ]
+    );
 
-        return false;
+    if (!$validation->run($data)) {
+      $this->error = $validation->getErrors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * @param string $name
-     * @param string $description
-     *
-     * @return mixed
-     */
-    public function createRole(string $name, string $description = '')
-    {
-        $data = [
-            'name'      => $name,
-            'description' => $description,
-        ];
+    $id = $this->groupModel->skipValidation()->insert($data);
 
-        $validation = service('validation', null, false);
-        $validation->setRules(
-            [
-                'name'      => 'required|max_length[255]|is_unique[auth_roles.name]',
-                'description' => 'max_length[255]',
-            ],
-            [
-                'name' => [
-                    'required' => 'You must enter a role name.',
-                    'max_length[255]' => 'The role name cannot be longer than 255 characters.',
-                    'is_unique[auth_roles.name]' => 'The role name already exists.',
-                ],
-                'description' => [
-                    'max_length[255]' => 'The description cannot be longer than 255 characters.',
-                ],
-            ]
-        );
+    if (is_numeric($id)) return (int)$id;
 
-        if (!$validation->run($data)) {
-            $this->error = $validation->getErrors();
-            return false;
-        }
+    $this->error = $this->groupModel->errors();
 
-        $id = $this->roleModel->skipValidation()->insert($data);
+    return false;
+  }
 
-        if (is_numeric($id)) return (int)$id;
+  //-------------------------------------------------------------------------
+  /**
+   * @param string $name
+   * @param string $description
+   *
+   * @return mixed
+   */
+  public function createRole(string $name, string $description = '') {
+    $data = [
+      'name' => $name,
+      'description' => $description,
+    ];
 
-        $this->error = $this->roleModel->errors();
+    $validation = service('validation', null, false);
+    $validation->setRules(
+      [
+        'name' => 'required|max_length[255]|is_unique[auth_roles.name]',
+        'description' => 'max_length[255]',
+      ],
+      [
+        'name' => [
+          'required' => 'You must enter a role name.',
+          'max_length[255]' => 'The role name cannot be longer than 255 characters.',
+          'is_unique[auth_roles.name]' => 'The role name already exists.',
+        ],
+        'description' => [
+          'max_length[255]' => 'The description cannot be longer than 255 characters.',
+        ],
+      ]
+    );
 
-        return false;
+    if (!$validation->run($data)) {
+      $this->error = $validation->getErrors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Deletes a single group.
-     *
-     * @param int $groupId
-     *
-     * @return bool
-     */
-    public function deleteGroup(int $groupId)
-    {
-        if (!$this->groupModel->delete($groupId)) {
-            $this->error = $this->groupModel->errors();
-            return false;
-        }
+    $id = $this->roleModel->skipValidation()->insert($data);
 
-        return true;
+    if (is_numeric($id)) return (int)$id;
+
+    $this->error = $this->roleModel->errors();
+
+    return false;
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Deletes a single group.
+   *
+   * @param int $groupId
+   *
+   * @return bool
+   */
+  public function deleteGroup(int $groupId) {
+    if (!$this->groupModel->delete($groupId)) {
+      $this->error = $this->groupModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Deletes a single permission and removes that permission from all roles.
-     *
-     * @param int $permissionIdId
-     *
-     * @return mixed
-     */
-    public function deletePermission(int $permissionIdId)
-    {
-        if (!$this->permissionModel->delete($permissionIdId)) {
-            $this->error = $this->permissionModel->errors();
-            return false;
-        }
+    return true;
+  }
 
-        // Remove the permission from all roles and groups
-        $this->roleModel->removePermissionFromAllRoles($permissionIdId);
-        $this->groupModel->removePermissionFromAllGroups($permissionIdId);
-
-        return true;
+  //-------------------------------------------------------------------------
+  /**
+   * Deletes a single permission and removes that permission from all roles.
+   *
+   * @param int $permissionIdId
+   *
+   * @return mixed
+   */
+  public function deletePermission(int $permissionIdId) {
+    if (!$this->permissionModel->delete($permissionIdId)) {
+      $this->error = $this->permissionModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Deletes a single role.
-     *
-     * @param int $roleId
-     *
-     * @return bool
-     */
-    public function deleteRole(int $roleId)
-    {
-        if (!$this->roleModel->delete($roleId)) {
-            $this->error = $this->roleModel->errors();
-            return false;
-        }
+    // Remove the permission from all roles and groups
+    $this->roleModel->removePermissionFromAllRoles($permissionIdId);
+    $this->groupModel->removePermissionFromAllGroups($permissionIdId);
 
-        return true;
+    return true;
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Deletes a single role.
+   *
+   * @param int $roleId
+   *
+   * @return bool
+   */
+  public function deleteRole(int $roleId) {
+    if (!$this->roleModel->delete($roleId)) {
+      $this->error = $this->roleModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Checks to see if a user has personal permission assigned to it (not via
-     * a group or role).
-     *
-     * @param int|string $userId
-     * @param int|string $permission
-     *
-     * @return bool|null
-     */
-    public function doesUserHavePermission($userId, $permission)
-    {
-        $permissionId = $this->getPermissionID($permission);
+    return true;
+  }
 
-        if (!is_numeric($permissionId)) return false;
+  //-------------------------------------------------------------------------
+  /**
+   * Checks to see if a user has personal permission assigned to it (not via
+   * a group or role).
+   *
+   * @param int|string $userId
+   * @param int|string $permission
+   *
+   * @return bool|null
+   */
+  public function doesUserHavePermission($userId, $permission) {
+    $permissionId = $this->getPermissionID($permission);
 
-        if (empty($userId) || !is_numeric($userId)) return null;
+    if (!is_numeric($permissionId)) return false;
 
-        return $this->permissionModel->doesUserHavePermission($userId, $permissionId);
+    if (empty($userId) || !is_numeric($userId)) return null;
+
+    return $this->permissionModel->doesUserHavePermission($userId, $permissionId);
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Returns any error(s) from the last call.
+   *
+   * @return array|string|null
+   */
+  public function error() {
+    return $this->error;
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Given a group, will return the group ID. The group can be either
+   * the ID or the name of the group.
+   *
+   * @param int|string $group
+   *
+   * @return int|false
+   */
+  protected function getGroupID($group) {
+    if (is_numeric($group)) return (int)$group;
+
+    $g = $this->groupModel->where('name', $group)->first();
+
+    if (!$g) {
+      $this->error = lang('Auth.group.not_found', [ $group ]);
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Returns any error(s) from the last call.
-     *
-     * @return array|string|null
-     */
-    public function error()
-    {
-        return $this->error;
+    return (int)$g->id;
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Verifies that a permission (either ID or the name) exists and returns
+   * the permission ID.
+   *
+   * @param int|string $permission
+   *
+   * @return int|false
+   */
+  protected function getPermissionID($permission) {
+    // If it's a number, we're done here.
+    if (is_numeric($permission)) return (int)$permission;
+
+    // Otherwise, pull it from the database.
+    $p = $this->permissionModel->asObject()->where('name', $permission)->first();
+
+    if (!$p) {
+      $this->error = lang('Auth.permission.not_found', [ $permission ]);
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Given a group, will return the group ID. The group can be either
-     * the ID or the name of the group.
-     *
-     * @param int|string $group
-     *
-     * @return int|false
-     */
-    protected function getGroupID($group)
-    {
-        if (is_numeric($group)) return (int)$group;
+    return (int)$p->id;
+  }
 
-        $g = $this->groupModel->where('name', $group)->first();
+  //-------------------------------------------------------------------------
+  /**
+   * Given a role, will return the role ID. The role can be either
+   * the ID or the name of the role.
+   *
+   * @param int|string $role
+   *
+   * @return int|false
+   */
+  protected function getRoleID($role) {
+    if (is_numeric($role)) return (int)$role;
 
-        if (!$g) {
-            $this->error = lang('Auth.group.not_found', [$group]);
-            return false;
-        }
+    $r = $this->roleModel->where('name', $role)->first();
 
-        return (int)$g->id;
+    if (!$r) {
+      $this->error = lang('Auth.role.not_found', [ $role ]);
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Verifies that a permission (either ID or the name) exists and returns
-     * the permission ID.
-     *
-     * @param int|string $permission
-     *
-     * @return int|false
-     */
-    protected function getPermissionID($permission)
-    {
-        // If it's a number, we're done here.
-        if (is_numeric($permission)) return (int) $permission;
+    return (int)$r->id;
+  }
 
-        // Otherwise, pull it from the database.
-        $p = $this->permissionModel->asObject()->where('name', $permission)->first();
+  //-------------------------------------------------------------------------
+  /**
+   * Grabs the details about a single group.
+   *
+   * @param int|string $group
+   *
+   * @return object|null
+   */
+  public function group($group) {
+    if (is_numeric($group)) return $this->groupModel->find((int)$group);
 
-        if (!$p) {
-            $this->error = lang('Auth.permission.not_found', [$permission]);
-            return false;
-        }
+    return $this->groupModel->where('name', $group)->first();
+  }
 
-        return (int) $p->id;
+  //-------------------------------------------------------------------------
+  /**
+   * Grabs an array of all groups.
+   *
+   * @return array of objects
+   */
+  public function groups() {
+    return $this->groupModel->orderBy('name', 'asc')->findAll();
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Returns an array of all permissions in the system for a group.
+   * The group can be either the ID or the name of the group.
+   *
+   * @param int|string $group
+   *
+   * @return mixed
+   */
+  public function groupPermissions($group) {
+    if (is_numeric($group)) {
+      return $this->groupModel->getPermissionsForGroup($group);
+    } else {
+      $g = $this->groupModel->where('name', $group)->first();
+      return $this->groupModel->getPermissionsForGroup($g->id);
+    }
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Checks whether a user has a given permission.
+   *
+   * @param int|string $permission Permission ID or name
+   * @param int $userId
+   *
+   * @return mixed
+   */
+  public function hasPermission($permission, int $userId) {
+    if (empty($permission) || (!is_string($permission) && !is_numeric($permission))) return null;
+
+    if (empty($userId) || !is_numeric($userId)) return null;
+
+    // Get the Permission ID
+    $permissionId = $this->getPermissionID($permission);
+
+    if (!is_numeric($permissionId)) return false;
+
+    // First check the permission model. If that exists, then we're golden.
+    if ($this->permissionModel->doesUserHavePermission($userId, (int)$permissionId)) return true;
+
+    // Still here? Then we have one last check to make - any user private permissions.
+    return $this->doesUserHavePermission($userId, (int)$permissionId);
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Checks whether a user has any of the given permissions.
+   *
+   * Permissions can be either a string, with the name of the permission, an
+   * INT with the ID of the permission, or an array of strings/ids of
+   * permissions that the user must have ONE of.
+   * (It's an OR check not an AND check)
+   *
+   * @param mixed $permissions Permission ID or name (or array of)
+   * @param int $userId
+   *
+   * @return bool
+   */
+  public function hasPermissions($permissions, int $userId) {
+    if (empty($userId) || !is_numeric($userId)) return null;
+
+    if (!is_array($permissions)) $permissions = [ $permissions ];
+    if (empty($permissions)) return false;
+
+    foreach ($permissions as $permission) {
+      // Get the Permission ID
+      $permissionId = $this->getPermissionID($permission);
+      if (!is_numeric($permissionId)) return false;
+      // First check the permission model. If that exists, then we're golden.
+      if ($this->permissionModel->doesUserHavePermission($userId, (int)$permissionId)) return true;
+      // Still here? Then we have one last check to make - any user private permissions.
+      return $this->doesUserHavePermission($userId, (int)$permissionId);
+    }
+    return false;
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Checks to see if a user is in a group.
+   *
+   * Groups can be either a string, with the name of the group, an INT with the
+   * ID of the group, or an array of strings/ids that the user must belong to
+   * ONE of. (It's an OR check not an AND check)
+   *
+   * @param mixed $groups
+   * @param int $userId
+   *
+   * @return bool
+   */
+  public function inGroup($groups, int $userId) {
+    if ($userId === 0) return false;
+
+    if (!is_array($groups)) $groups = [ $groups ];
+
+    $userGroups = $this->groupModel->getGroupsForUser((int)$userId);
+
+    if (empty($userGroups)) return false;
+
+    foreach ($groups as $group) {
+      if (is_numeric($group)) {
+        $ids = array_column($userGroups, 'group_id');
+        if (in_array($group, $ids)) return true;
+      } else if (is_string($group)) {
+        $names = array_column($userGroups, 'name');
+        if (in_array($group, $names)) return true;
+      }
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Given a role, will return the role ID. The role can be either
-     * the ID or the name of the role.
-     *
-     * @param int|string $role
-     *
-     * @return int|false
-     */
-    protected function getRoleID($role)
-    {
-        if (is_numeric($role)) return (int)$role;
+    return false;
+  }
 
-        $r = $this->roleModel->where('name', $role)->first();
+  //-------------------------------------------------------------------------
+  /**
+   * Checks to see if a user is in a role.
+   *
+   * Roles can be either a string, with the name of the role, an INT
+   * with the ID of the role, or an array of strings/ids that the
+   * user must belong to ONE of. (It's an OR check not an AND check)
+   *
+   * @param mixed $roles
+   * @param int $userId
+   *
+   * @return bool
+   */
+  public function inRole($roles, int $userId) {
+    if ($userId === 0) return false;
 
-        if (!$r) {
-            $this->error = lang('Auth.role.not_found', [$role]);
-            return false;
-        }
+    if (!is_array($roles)) $roles = [ $roles ];
 
-        return (int)$r->id;
+    $userRoles = $this->roleModel->getRolesForUser((int)$userId);
+
+    if (empty($userRoles)) return false;
+
+    foreach ($roles as $role) {
+      if (is_numeric($role)) {
+        $ids = array_column($userRoles, 'role_id');
+        if (in_array($role, $ids)) return true;
+      } else if (is_string($role)) {
+        $names = array_column($userRoles, 'name');
+        if (in_array($role, $names)) return true;
+      }
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Grabs the details about a single group.
-     *
-     * @param int|string $group
-     *
-     * @return object|null
-     */
-    public function group($group)
-    {
-        if (is_numeric($group)) return $this->groupModel->find((int) $group);
+    return false;
+  }
 
-        return $this->groupModel->where('name', $group)->first();
+  //-------------------------------------------------------------------------
+  /**
+   * Returns the details about a single permission.
+   *
+   * @param int|string $permission
+   *
+   * @return object|null
+   */
+  public function permission($permission) {
+    if (is_numeric($permission)) return $this->permissionModel->find((int)$permission);
+
+    return $this->permissionModel->like('name', $permission, 'none', null, true)->first();
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Returns an array of all permissions in the system.
+   *
+   * @return mixed
+   */
+  public function permissions() {
+    return $this->permissionModel->orderBy('name', 'asc')->findAll();
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Removes a single permission from a group.
+   *
+   * @param int|string $permission
+   * @param int|string $group
+   *
+   * @return mixed
+   */
+  public function removePermissionFromGroup($permission, $group) {
+    $permissionId = $this->getPermissionID($permission);
+    $groupId = $this->getRoleID($group);
+
+    if (!is_numeric($permissionId)) return false;
+
+    if (!is_numeric($groupId)) return false;
+
+    if (!$this->groupModel->removePermissionFromGroup($permissionId, $groupId)) {
+      $this->error = $this->groupModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Grabs an array of all groups.
-     *
-     * @return array of objects
-     */
-    public function groups()
-    {
-        return $this->groupModel->orderBy('name', 'asc')->findAll();
+    return true;
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Removes a single permission from a role.
+   *
+   * @param int|string $permission
+   * @param int|string $role
+   *
+   * @return mixed
+   */
+  public function removePermissionFromRole($permission, $role) {
+    $permissionId = $this->getPermissionID($permission);
+    $roleId = $this->getRoleID($role);
+
+    if (!is_numeric($permissionId)) return false;
+
+    if (!is_numeric($roleId)) return false;
+
+    if (!$this->roleModel->removePermissionFromRole($permissionId, $roleId)) {
+      $this->error = $this->roleModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Returns an array of all permissions in the system for a group.
-     * The group can be either the ID or the name of the group.
-     *
-     * @param int|string $group
-     *
-     * @return mixed
-     */
-    public function groupPermissions($group)
-    {
-        if (is_numeric($group)) {
-            return $this->groupModel->getPermissionsForGroup($group);
-        } else {
-            $g = $this->groupModel->where('name', $group)->first();
-            return $this->groupModel->getPermissionsForGroup($g->id);
-        }
+    return true;
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Removes all individual permissions from a user.
+   *
+   * @param int $userId
+   *
+   * @return bool|mixed|null
+   */
+  public function removeAllPermissionsFromUser(int $userId) {
+    if (empty($userId) || !is_numeric($userId)) return null;
+
+    $userId = (int)$userId;
+
+    if (!Events::trigger('beforeRemoveAllPermissionsFromUser', $userId)) return false;
+
+    return $this->permissionModel->removeAllPermissionsFromUser($userId);
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Removes a single permission from a user. Only applies to permissions
+   * that have been assigned with addPermissionToUser, not to permissions
+   * inherited based on roles they belong to.
+   *
+   * @param int|string $permission
+   * @param int $userId
+   *
+   * @return bool|mixed|null
+   */
+  public function removePermissionFromUser($permission, int $userId) {
+    $permissionId = $this->getPermissionID($permission);
+
+    if (!is_numeric($permissionId)) return false;
+
+    if (empty($userId) || !is_numeric($userId)) return null;
+
+    $userId = (int)$userId;
+
+    if (!Events::trigger('beforeRemovePermissionFromUser', $userId, $permissionId)) return false;
+
+    return $this->permissionModel->removePermissionFromUser($permissionId, $userId);
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Removes a single user from a group.
+   *
+   * @param int $userId
+   * @param mixed $group
+   *
+   * @return mixed
+   */
+  public function removeUserFromGroup(int $userId, $group) {
+    if (empty($userId) || !is_numeric($userId)) return null;
+
+    if (empty($group) || (!is_numeric($group) && !is_string($group))) return null;
+
+    $groupId = $this->getGroupID($group);
+
+    if (!Events::trigger('beforeRemoveUserFromGroup', $userId, $groupId)) return false;
+
+    // Role ID
+    if (!is_numeric($groupId)) return false;
+
+    if (!$this->groupModel->removeUserFromGroup($userId, $groupId)) {
+      $this->error = $this->groupModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Checks whether a user has a given permission.
-     *
-     * @param int|string $permission Permission ID or name
-     * @param int $userId
-     *
-     * @return mixed
-     */
-    public function hasPermission($permission, int $userId)
-    {
-        if (empty($permission) || (!is_string($permission) && !is_numeric($permission))) return null;
+    Events::trigger('didRemoveUserFromGroup', $userId, $groupId);
 
-        if (empty($userId) || !is_numeric($userId)) return null;
+    return true;
+  }
 
-        // Get the Permission ID
-        $permissionId = $this->getPermissionID($permission);
+  //-------------------------------------------------------------------------
+  /**
+   * Removes a single user from a role.
+   *
+   * @param int $userId
+   * @param mixed $role
+   *
+   * @return mixed
+   */
+  public function removeUserFromRole(int $userId, $role) {
+    if (empty($userId) || !is_numeric($userId)) return null;
 
-        if (!is_numeric($permissionId)) return false;
+    if (empty($role) || (!is_numeric($role) && !is_string($role))) return null;
 
-        // First check the permission model. If that exists, then we're golden.
-        if ($this->permissionModel->doesUserHavePermission($userId, (int)$permissionId)) return true;
+    $roleId = $this->getRoleID($role);
 
-        // Still here? Then we have one last check to make - any user private permissions.
-        return $this->doesUserHavePermission($userId, (int)$permissionId);
+    if (!Events::trigger('beforeRemoveUserFromRole', $userId, $roleId)) return false;
+
+    // Role ID
+    if (!is_numeric($roleId)) return false;
+
+    if (!$this->roleModel->removeUserFromRole($userId, $roleId)) {
+      $this->error = $this->roleModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Checks whether a user has any of the given permissions.
-     *
-     * Permissions can be either a string, with the name of the permission, an
-     * INT with the ID of the permission, or an array of strings/ids of
-     * permissions that the user must have ONE of.
-     * (It's an OR check not an AND check)
-     *
-     * @param mixed $permissions Permission ID or name (or array of)
-     * @param int $userId
-     *
-     * @return bool
-     */
-    public function hasPermissions($permissions, int $userId)
-    {
-        if (empty($userId) || !is_numeric($userId)) return null;
+    Events::trigger('didRemoveUserFromRole', $userId, $roleId);
 
-        if (!is_array($permissions)) $permissions = [$permissions];
-        if (empty($permissions)) return false;
+    return true;
+  }
 
-        foreach ($permissions as $permission) {
-            // Get the Permission ID
-            $permissionId = $this->getPermissionID($permission);
-            if (!is_numeric($permissionId)) return false;
-            // First check the permission model. If that exists, then we're golden.
-            if ($this->permissionModel->doesUserHavePermission($userId, (int)$permissionId)) return true;
-            // Still here? Then we have one last check to make - any user private permissions.
-            return $this->doesUserHavePermission($userId, (int)$permissionId);
-        }
-        return false;
+  //-------------------------------------------------------------------------
+  /**
+   * Removes a user from all groups.
+   *
+   * @param int $userId
+   *
+   * @return bool|mixed|null
+   */
+  public function removeUserFromAllGroups(int $userId) {
+    if (empty($userId) || !is_numeric($userId)) return null;
+
+    $userId = (int)$userId;
+
+    if (!Events::trigger('beforeRemoveUserFromAllGroups', $userId)) return false;
+
+    return $this->groupModel->removeUserFromAllGroups($userId);
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Removes a user from all roles.
+   *
+   * @param int $userId
+   *
+   * @return bool|mixed|null
+   */
+  public function removeUserFromAllRoles(int $userId) {
+    if (empty($userId) || !is_numeric($userId)) return null;
+
+    $userId = (int)$userId;
+
+    if (!Events::trigger('beforeRemoveUserFromAllRoles', $userId)) return false;
+
+    return $this->roleModel->removeUserFromAllRoles($userId);
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Grabs the details about a single role.
+   *
+   * @param int|string $role
+   *
+   * @return object|null
+   */
+  public function role($role) {
+    if (is_numeric($role)) return $this->roleModel->find((int)$role);
+
+    return $this->roleModel->where('name', $role)->first();
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Grabs an array of all roles.
+   *
+   * @return array of objects
+   */
+  public function roles() {
+    return $this->roleModel->orderBy('name', 'asc')->findAll();
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Returns an array of all permissions in the system for a role
+   * The role can be either the ID or the name of the role.
+   *
+   * @param int|string $role
+   *
+   * @return mixed
+   */
+  public function rolePermissions($role) {
+    if (is_numeric($role)) {
+      return $this->roleModel->getPermissionsForRole($role);
+    } else {
+      $r = $this->roleModel->where('name', $role)->first();
+      return $this->roleModel->getPermissionsForRole($r->id);
+    }
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Allows the consuming application to pass in a reference to the
+   * model that should be used.
+   *
+   * @param UserModel $model
+   *
+   * @return mixed
+   */
+  public function setUserModel(Model $model) {
+    $this->userModel = $model;
+    return $this;
+  }
+
+  //-------------------------------------------------------------------------
+  /**
+   * Updates a single group's information.
+   *
+   * @param int $id
+   * @param string $name
+   * @param string $description
+   *
+   * @return mixed
+   */
+  public function updateGroup(int $id, string $name, string $description = '') {
+    $data = [
+      'name' => $name,
+    ];
+
+    if (!empty($description)) $data[ 'description' ] = $description;
+
+    if (!$this->groupModel->update($id, $data)) {
+      $this->error = $this->groupModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Checks to see if a user is in a group.
-     *
-     * Groups can be either a string, with the name of the group, an INT with the
-     * ID of the group, or an array of strings/ids that the user must belong to 
-     * ONE of. (It's an OR check not an AND check)
-     *
-     * @param mixed   $groups
-     * @param int     $userId
-     *
-     * @return bool
-     */
-    public function inGroup($groups, int $userId)
-    {
-        if ($userId === 0) return false;
+    return true;
+  }
 
-        if (!is_array($groups)) $groups = [$groups];
+  //-------------------------------------------------------------------------
+  /**
+   * Updates the details for a single permission.
+   *
+   * @param int $id
+   * @param string $name
+   * @param string $description
+   *
+   * @return bool
+   */
+  public function updatePermission(int $id, string $name, string $description = '') {
+    $data = [
+      'name' => $name,
+    ];
 
-        $userGroups = $this->groupModel->getGroupsForUser((int) $userId);
+    if (!empty($description)) $data[ 'description' ] = $description;
 
-        if (empty($userGroups)) return false;
-
-        foreach ($groups as $group) {
-            if (is_numeric($group)) {
-                $ids = array_column($userGroups, 'group_id');
-                if (in_array($group, $ids)) return true;
-            } else if (is_string($group)) {
-                $names = array_column($userGroups, 'name');
-                if (in_array($group, $names)) return true;
-            }
-        }
-
-        return false;
+    if (!$this->permissionModel->update((int)$id, $data)) {
+      $this->error = $this->permissionModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Checks to see if a user is in a role.
-     *
-     * Roles can be either a string, with the name of the role, an INT
-     * with the ID of the role, or an array of strings/ids that the
-     * user must belong to ONE of. (It's an OR check not an AND check)
-     *
-     * @param mixed $roles
-     * @param int $userId
-     *
-     * @return bool
-     */
-    public function inRole($roles, int $userId)
-    {
-        if ($userId === 0) return false;
+    return true;
+  }
 
-        if (!is_array($roles)) $roles = [$roles];
+  //-------------------------------------------------------------------------
+  /**
+   * Updates a single role's information.
+   *
+   * @param int $id
+   * @param string $name
+   * @param string $description
+   *
+   * @return mixed
+   */
+  public function updateRole(int $id, string $name, string $description = '') {
+    $data = [
+      'name' => $name,
+    ];
 
-        $userRoles = $this->roleModel->getRolesForUser((int) $userId);
+    if (!empty($description)) $data[ 'description' ] = $description;
 
-        if (empty($userRoles)) return false;
-
-        foreach ($roles as $role) {
-            if (is_numeric($role)) {
-                $ids = array_column($userRoles, 'role_id');
-                if (in_array($role, $ids)) return true;
-            } else if (is_string($role)) {
-                $names = array_column($userRoles, 'name');
-                if (in_array($role, $names)) return true;
-            }
-        }
-
-        return false;
+    if (!$this->roleModel->update($id, $data)) {
+      $this->error = $this->roleModel->errors();
+      return false;
     }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Returns the details about a single permission.
-     *
-     * @param int|string $permission
-     *
-     * @return object|null
-     */
-    public function permission($permission)
-    {
-        if (is_numeric($permission)) return $this->permissionModel->find((int)$permission);
+    return true;
+  }
 
-        return $this->permissionModel->like('name', $permission, 'none', null, true)->first();
+  //-------------------------------------------------------------------------
+  /**
+   * Returns an array of all users in a group.
+   * The group can be either the ID or the name of the group.
+   *
+   * @param int|string $group
+   *
+   * @return mixed
+   */
+  public function usersInGroup($group) {
+    if (is_numeric($group)) {
+      return $this->groupModel->getUsersForGroup($group);
+    } else {
+      $g = $this->groupModel->where('name', $group)->first();
+      return $this->groupModel->getUsersForGroup($g->id);
     }
+  }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Returns an array of all permissions in the system.
-     *
-     * @return mixed
-     */
-    public function permissions()
-    {
-        return $this->permissionModel->orderBy('name', 'asc')->findAll();
+  //-------------------------------------------------------------------------
+  /**
+   * Returns an array of all users in a role.
+   * The role can be either the ID or the name of the role.
+   *
+   * @param int|string $role
+   *
+   * @return mixed
+   */
+  public function usersInRole($role) {
+    if (is_numeric($role)) {
+      return $this->roleModel->getUsersForRole($role);
+    } else {
+      $g = $this->roleModel->where('name', $role)->first();
+      return $this->roleModel->getUsersForRole($g->id);
     }
+  }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Removes a single permission from a group.
-     *
-     * @param int|string $permission
-     * @param int|string $group
-     *
-     * @return mixed
-     */
-    public function removePermissionFromGroup($permission, $group)
-    {
-        $permissionId = $this->getPermissionID($permission);
-        $groupId = $this->getRoleID($group);
-
-        if (!is_numeric($permissionId)) return false;
-
-        if (!is_numeric($groupId)) return false;
-
-        if (!$this->groupModel->removePermissionFromGroup($permissionId, $groupId)) {
-            $this->error = $this->groupModel->errors();
-            return false;
-        }
-
-        return true;
+  //-------------------------------------------------------------------------
+  /**
+   * Returns an array of all groups of a user.
+   *
+   * @param int $userId
+   *
+   * @return mixed
+   */
+  public function userGroups($userId) {
+    if (is_numeric($userId)) {
+      return $this->groupModel->getGroupsForUser($userId);
     }
+    return false;
+  }
 
-    //-------------------------------------------------------------------------
-    /**
-     * Removes a single permission from a role.
-     *
-     * @param int|string $permission
-     * @param int|string $role
-     *
-     * @return mixed
-     */
-    public function removePermissionFromRole($permission, $role)
-    {
-        $permissionId = $this->getPermissionID($permission);
-        $roleId = $this->getRoleID($role);
-
-        if (!is_numeric($permissionId)) return false;
-
-        if (!is_numeric($roleId)) return false;
-
-        if (!$this->roleModel->removePermissionFromRole($permissionId, $roleId)) {
-            $this->error = $this->roleModel->errors();
-            return false;
-        }
-
-        return true;
+  //-------------------------------------------------------------------------
+  /**
+   * Returns an array of all roles of a user.
+   *
+   * @param int $userId
+   *
+   * @return mixed
+   */
+  public function userRoles($userId) {
+    if (is_numeric($userId)) {
+      return $this->roleModel->getRolesForUser($userId);
     }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Removes all individual permissions from a user.
-     *
-     * @param int $userId
-     *
-     * @return bool|mixed|null
-     */
-    public function removeAllPermissionsFromUser(int $userId)
-    {
-        if (empty($userId) || !is_numeric($userId)) return null;
-
-        $userId = (int)$userId;
-
-        if (!Events::trigger('beforeRemoveAllPermissionsFromUser', $userId)) return false;
-
-        return $this->permissionModel->removeAllPermissionsFromUser($userId);
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Removes a single permission from a user. Only applies to permissions
-     * that have been assigned with addPermissionToUser, not to permissions
-     * inherited based on roles they belong to.
-     *
-     * @param int|string $permission
-     * @param int $userId
-     *
-     * @return bool|mixed|null
-     */
-    public function removePermissionFromUser($permission, int $userId)
-    {
-        $permissionId = $this->getPermissionID($permission);
-
-        if (!is_numeric($permissionId)) return false;
-
-        if (empty($userId) || !is_numeric($userId)) return null;
-
-        $userId = (int)$userId;
-
-        if (!Events::trigger('beforeRemovePermissionFromUser', $userId, $permissionId)) return false;
-
-        return $this->permissionModel->removePermissionFromUser($permissionId, $userId);
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Removes a single user from a group.
-     *
-     * @param int $userId
-     * @param mixed $group
-     *
-     * @return mixed
-     */
-    public function removeUserFromGroup(int $userId, $group)
-    {
-        if (empty($userId) || !is_numeric($userId)) return null;
-
-        if (empty($group) || (!is_numeric($group) && !is_string($group))) return null;
-
-        $groupId = $this->getGroupID($group);
-
-        if (!Events::trigger('beforeRemoveUserFromGroup', $userId, $groupId)) return false;
-
-        // Role ID
-        if (!is_numeric($groupId)) return false;
-
-        if (!$this->groupModel->removeUserFromGroup($userId, $groupId)) {
-            $this->error = $this->groupModel->errors();
-            return false;
-        }
-
-        Events::trigger('didRemoveUserFromGroup', $userId, $groupId);
-
-        return true;
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Removes a single user from a role.
-     *
-     * @param int $userId
-     * @param mixed $role
-     *
-     * @return mixed
-     */
-    public function removeUserFromRole(int $userId, $role)
-    {
-        if (empty($userId) || !is_numeric($userId)) return null;
-
-        if (empty($role) || (!is_numeric($role) && !is_string($role))) return null;
-
-        $roleId = $this->getRoleID($role);
-
-        if (!Events::trigger('beforeRemoveUserFromRole', $userId, $roleId)) return false;
-
-        // Role ID
-        if (!is_numeric($roleId)) return false;
-
-        if (!$this->roleModel->removeUserFromRole($userId, $roleId)) {
-            $this->error = $this->roleModel->errors();
-            return false;
-        }
-
-        Events::trigger('didRemoveUserFromRole', $userId, $roleId);
-
-        return true;
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Removes a user from all groups.
-     *
-     * @param int $userId
-     *
-     * @return bool|mixed|null
-     */
-    public function removeUserFromAllGroups(int $userId)
-    {
-        if (empty($userId) || !is_numeric($userId)) return null;
-
-        $userId = (int)$userId;
-
-        if (!Events::trigger('beforeRemoveUserFromAllGroups', $userId)) return false;
-
-        return $this->groupModel->removeUserFromAllGroups($userId);
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Removes a user from all roles.
-     *
-     * @param int $userId
-     *
-     * @return bool|mixed|null
-     */
-    public function removeUserFromAllRoles(int $userId)
-    {
-        if (empty($userId) || !is_numeric($userId)) return null;
-
-        $userId = (int)$userId;
-
-        if (!Events::trigger('beforeRemoveUserFromAllRoles', $userId)) return false;
-
-        return $this->roleModel->removeUserFromAllRoles($userId);
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Grabs the details about a single role.
-     *
-     * @param int|string $role
-     *
-     * @return object|null
-     */
-    public function role($role)
-    {
-        if (is_numeric($role)) return $this->roleModel->find((int) $role);
-
-        return $this->roleModel->where('name', $role)->first();
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Grabs an array of all roles.
-     *
-     * @return array of objects
-     */
-    public function roles()
-    {
-        return $this->roleModel->orderBy('name', 'asc')->findAll();
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Returns an array of all permissions in the system for a role
-     * The role can be either the ID or the name of the role.
-     *
-     * @param int|string $role
-     *
-     * @return mixed
-     */
-    public function rolePermissions($role)
-    {
-        if (is_numeric($role)) {
-            return $this->roleModel->getPermissionsForRole($role);
-        } else {
-            $r = $this->roleModel->where('name', $role)->first();
-            return $this->roleModel->getPermissionsForRole($r->id);
-        }
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Allows the consuming application to pass in a reference to the
-     * model that should be used.
-     *
-     * @param UserModel $model
-     *
-     * @return mixed
-     */
-    public function setUserModel(Model $model)
-    {
-        $this->userModel = $model;
-        return $this;
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Updates a single group's information.
-     *
-     * @param int $id
-     * @param string $name
-     * @param string $description
-     *
-     * @return mixed
-     */
-    public function updateGroup(int $id, string $name, string $description = '')
-    {
-        $data = [
-            'name' => $name,
-        ];
-
-        if (!empty($description)) $data['description'] = $description;
-
-        if (!$this->groupModel->update($id, $data)) {
-            $this->error = $this->groupModel->errors();
-            return false;
-        }
-
-        return true;
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Updates the details for a single permission.
-     *
-     * @param int $id
-     * @param string $name
-     * @param string $description
-     *
-     * @return bool
-     */
-    public function updatePermission(int $id, string $name, string $description = '')
-    {
-        $data = [
-            'name' => $name,
-        ];
-
-        if (!empty($description)) $data['description'] = $description;
-
-        if (!$this->permissionModel->update((int)$id, $data)) {
-            $this->error = $this->permissionModel->errors();
-            return false;
-        }
-
-        return true;
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Updates a single role's information.
-     *
-     * @param int $id
-     * @param string $name
-     * @param string $description
-     *
-     * @return mixed
-     */
-    public function updateRole(int $id, string $name, string $description = '')
-    {
-        $data = [
-            'name' => $name,
-        ];
-
-        if (!empty($description)) $data['description'] = $description;
-
-        if (!$this->roleModel->update($id, $data)) {
-            $this->error = $this->roleModel->errors();
-            return false;
-        }
-
-        return true;
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Returns an array of all users in a group.
-     * The group can be either the ID or the name of the group.
-     *
-     * @param int|string $group
-     *
-     * @return mixed
-     */
-    public function usersInGroup($group)
-    {
-        if (is_numeric($group)) {
-            return $this->groupModel->getUsersForGroup($group);
-        } else {
-            $g = $this->groupModel->where('name', $group)->first();
-            return $this->groupModel->getUsersForGroup($g->id);
-        }
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Returns an array of all users in a role.
-     * The role can be either the ID or the name of the role.
-     *
-     * @param int|string $role
-     *
-     * @return mixed
-     */
-    public function usersInRole($role)
-    {
-        if (is_numeric($role)) {
-            return $this->roleModel->getUsersForRole($role);
-        } else {
-            $g = $this->roleModel->where('name', $role)->first();
-            return $this->roleModel->getUsersForRole($g->id);
-        }
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Returns an array of all groups of a user.
-     *
-     * @param int  $userId
-     *
-     * @return mixed
-     */
-    public function userGroups($userId)
-    {
-        if (is_numeric($userId)) {
-            return $this->groupModel->getGroupsForUser($userId);
-        }
-        return false;
-    }
-
-    //-------------------------------------------------------------------------
-    /**
-     * Returns an array of all roles of a user.
-     *
-     * @param int  $userId
-     *
-     * @return mixed
-     */
-    public function userRoles($userId)
-    {
-        if (is_numeric($userId)) {
-            return $this->roleModel->getRolesForUser($userId);
-        }
-        return false;
-    }
+    return false;
+  }
 }

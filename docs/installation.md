@@ -77,29 +77,29 @@ The CI4-Auth routes are defined in **lewe/ci4-auth/src/Config/Routes.php**. Copy
 
 ```php
 /*
-* --------------------------------------------------------------------
-* Route Definitions
-* --------------------------------------------------------------------
-*/
+ * --------------------------------------------------------------------
+ * Route Definitions
+ * --------------------------------------------------------------------
+ */
 //
 // CI4-Auth Routes
 //
 $routes->group('', ['namespace' => 'CI4\Auth\Controllers'], function ($routes) {
 
-    // If you want to use group, login, permission or role filters in your route
-    // definitions, you need to add the filter aliases to your Config/Filters.php file.
-    // (see CI4-Auth readme).
-    //
-    // Sample routes with filters:
-    // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'group:Disney']);
-    // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'login']);
-    // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'permission:View Roles']);
-    // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'role:Administrator']);
+  // If you want to use group, login, permission or role filters in your route
+  // definitions, you need to add the filter aliases to your Config/Filters.php file.
+  // (see CI4-Auth readme).
+  //
+  // Sample routes with filters:
+  // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'group:Disney']);
+  // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'login']);
+  // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'permission:View Roles']);
+  // $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'role:Administrator']);
+   
+  $routes->get('/', 'AuthController::welcome');
+  $routes->get('/error_auth', 'AuthController::error');
 
-    $routes->get('/', 'AuthController::welcome');
-    $routes->get('/error_auth', 'AuthController::error');
-
-    ...
+   ...
 
 });
 ```
@@ -119,7 +119,7 @@ You can also add several filters like so:
 ```php
 $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'role:Administrator', 'filter' => 'group:Admins']);
 ```
-You must register the aliases for those filters in your **app/Config/Filter.php** file:
+You must register the aliases for those filters in your **app/Config/Filters.php** file:
 
 ```php
 ...
@@ -128,19 +128,18 @@ use CI4\Auth\Filters\LoginFilter;
 use CI4\Auth\Filters\PermissionFilter;
 use CI4\Auth\Filters\RoleFilter;
 
-class Filters extends BaseConfig
-{
-    /**
-     * Configures aliases for Filter classes to
-     * make reading things nicer and simpler.
-     */
-    public array $aliases = [
-        ...
-        'group'         => GroupFilter::class,
-        'login'         => LoginFilter::class,
-        'permission'    => PermissionFilter::class,
-        'role'          => RoleFilter::class,
-    ];
+class Filters extends BaseConfig {
+  /**
+   * Configures aliases for Filter classes to
+   * make reading things nicer and simpler.
+   */
+  public array $aliases = [
+    ...
+    'group'         => GroupFilter::class,
+    'login'         => LoginFilter::class,
+    'permission'    => PermissionFilter::class,
+    'role'          => RoleFilter::class,
+  ];
 ```
 ### Views
 
@@ -152,44 +151,47 @@ If you like to use your own view you can override them editing the `$views` arra
 ```php
 public $views = [
 
-    // Welcome page
-    'welcome'            => 'CI4\Auth\Views\welcome',
+  // Welcome page
+  'welcome' => 'CI4\Auth\Views\welcome',
 
-    // Error page
-    'error_auth'         => 'CI4\Auth\Views\error_auth',
+  // Error page
+  'error_auth' => 'CI4\Auth\Views\error_auth',
 
-    // Auth
-    'login'              => 'CI4\Auth\Views\auth\login',
-    'register'           => 'CI4\Auth\Views\auth\register',
-    'forgot'             => 'CI4\Auth\Views\auth\forgot',
-    'reset'              => 'CI4\Auth\Views\auth\reset',
-    'setup2fa'           => 'CI4\Auth\Views\auth\setup2fa',
-    'login2fa'           => 'CI4\Auth\Views\auth\login2fa',
-    'whoami'             => 'CI4\Auth\Views\auth\whoami',
+  // About page
+  'about' => 'CI4\Auth\Views\about',
 
-    // Groups
-    'groups'             => 'CI4\Auth\Views\groups\list',
-    'groupsCreate'       => 'CI4\Auth\Views\groups\create',
-    'groupsEdit'         => 'CI4\Auth\Views\groups\edit',
+  // Auth
+  'login' => 'CI4\Auth\Views\auth\login',
+  'register' => 'CI4\Auth\Views\auth\register',
+  'forgot' => 'CI4\Auth\Views\auth\forgot',
+  'reset' => 'CI4\Auth\Views\auth\reset',
+  'setup2fa' => 'CI4\Auth\Views\auth\setup2fa',
+  'login2fa' => 'CI4\Auth\Views\auth\login2fa',
+  'whoami' => 'CI4\Auth\Views\auth\whoami',
 
-    // Permissions
-    'permissions'        => 'CI4\Auth\Views\permissions\list',
-    'permissionsCreate'  => 'CI4\Auth\Views\permissions\create',
-    'permissionsEdit'    => 'CI4\Auth\Views\permissions\edit',
+  // Groups
+  'groups' => 'CI4\Auth\Views\groups\list',
+  'groupsCreate' => 'CI4\Auth\Views\groups\create',
+  'groupsEdit' => 'CI4\Auth\Views\groups\edit',
 
-    // Roles
-    'roles'              => 'CI4\Auth\Views\roles\list',
-    'rolesCreate'        => 'CI4\Auth\Views\roles\create',
-    'rolesEdit'          => 'CI4\Auth\Views\roles\edit',
+  // Permissions
+  'permissions' => 'CI4\Auth\Views\permissions\list',
+  'permissionsCreate' => 'CI4\Auth\Views\permissions\create',
+  'permissionsEdit' => 'CI4\Auth\Views\permissions\edit',
 
-    // Users
-    'users'              => 'CI4\Auth\Views\users\list',
-    'usersCreate'        => 'CI4\Auth\Views\users\create',
-    'usersEdit'          => 'CI4\Auth\Views\users\edit',
+  // Roles
+  'roles' => 'CI4\Auth\Views\roles\list',
+  'rolesCreate' => 'CI4\Auth\Views\roles\create',
+  'rolesEdit' => 'CI4\Auth\Views\roles\edit',
 
-    // Emails
-    'emailForgot'        => 'CI4\Auth\Views\emails\forgot',
-    'emailActivation'    => 'CI4\Auth\Views\emails\activation',
+  // Users
+  'users' => 'CI4\Auth\Views\users\list',
+  'usersCreate' => 'CI4\Auth\Views\users\create',
+  'usersEdit' => 'CI4\Auth\Views\users\edit',
+
+  // Emails
+  'emailForgot' => 'CI4\Auth\Views\emails\forgot',
+  'emailActivation' => 'CI4\Auth\Views\emails\activation',
 ];
 ```
 
@@ -239,6 +241,9 @@ CI4-Auth provides language files for English, German and Spanish. You can change
 ```
 public string $defaultLocale = 'en';
 ```
+In case you are looking for a way to let the user switch the language via the UI, here is a solution I found that works pretty well:
+https://onlinewebtutorblog.com/create-multilingual-website-in-codeigniter-4/
+
 ### Toolbar Collector
 
 You can add CI4-Auth information to the CodeIgniter toolbar shown in development mode.
