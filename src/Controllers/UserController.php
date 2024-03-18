@@ -326,13 +326,13 @@ class UserController extends BaseController {
     //
     // Get the Active switch.
     //
-    if ($this->request->getPost('swi_active')) $user->setAttribute('active', 1);
+    if ($this->request->getPost('active')) $user->setAttribute('active', 1);
     else $user->setAttribute('active', 0);
 
     //
     // Get the Banned switch.
     //
-    if ($this->request->getPost('swi_banned')) $user->setAttribute('status', 'banned');
+    if ($this->request->getPost('banned')) $user->setAttribute('status', 'banned');
     else $user->setAttribute('status', null);
 
     //
