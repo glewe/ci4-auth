@@ -29,6 +29,7 @@
 
         <p>The views provided in CI4-Auth are considered basic. They provide access to the auth objects and also show some ways to utilize Bootstrap and Bootstrap Icons.</p>
         <p>Feel free to change or extend them to your liking.</p>
+        <p>Once you have got to this page you should be able to log in as <i>admin</i> with password <i>Qwer!1234</i>.</p>
 
         <h3 class="my-4">Report bugs</h3>
 

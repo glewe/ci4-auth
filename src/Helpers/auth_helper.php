@@ -30,8 +30,7 @@ if (!function_exists('auth_display')) {
       }
 
       $html = '
-        <div class="alert alert-dismissible fade show alert-info" role="alert">
-          <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" title="Close"></button>
+        <div class="alert fade show alert-info" role="alert">
           <h4 class="alert-heading">' . lang('Auth.current_user') . '</h4>
           <hr>
           <div>
@@ -54,8 +53,7 @@ if (!function_exists('auth_display')) {
         </div>';
     } else {
       $html = '
-        <div class="alert alert-dismissible fade show alert-warning" role="alert">
-          <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" title="Close"></button>
+        <div class="alert fade show alert-warning" role="alert">
           <h4 class="alert-heading">' . lang('Auth.current_user') . '</h4>
           <hr>
           <div>
