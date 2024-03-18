@@ -16,7 +16,7 @@ class PermissionController extends BaseController {
   /**
    * @var AuthConfig
    */
-  protected $config;
+  protected $authConfig;
 
   /**
    * @var Session
@@ -37,7 +37,7 @@ class PermissionController extends BaseController {
     // Most services in this controller require the session to be started
     //
     $this->session = service('session');
-    $this->config = config('Auth');
+    $this->authConfig = config('Auth');
     $this->auth = service('authorization');
     $this->validation = service('validation');
   }
@@ -52,7 +52,7 @@ class PermissionController extends BaseController {
     $permissions = model(PermissionModel::class);
 
     $data = [
-      'config' => $this->config,
+      'config' => $this->authConfig,
       'permissions' => $permissions->orderBy('name', 'asc')->findAll(),
     ];
 
@@ -70,7 +70,7 @@ class PermissionController extends BaseController {
         } else {
           if (!$permissions->deletePermission($recId)) {
             $this->session->set('errors', $permissions->errors());
-            return $this->_render($this->config->views[ 'permissions' ], $data);
+            return $this->_render($this->authConfig->views[ 'permissions' ], $data);
           }
           return redirect()->route('permissions')->with('success', lang('Auth.permission.delete_success', [ $permission->name ]));
         }
@@ -88,7 +88,7 @@ class PermissionController extends BaseController {
     //
     // Show the list view
     //
-    return $this->_render($this->config->views[ 'permissions' ], $data);
+    return $this->_render($this->authConfig->views[ 'permissions' ], $data);
   }
 
   //---------------------------------------------------------------------------
@@ -96,7 +96,7 @@ class PermissionController extends BaseController {
    * Displays the user create page.
    */
   public function permissionsCreate($id = null) {
-    return $this->_render($this->config->views[ 'permissionsCreate' ], [ 'config' => $this->config ]);
+    return $this->_render($this->authConfig->views[ 'permissionsCreate' ], [ 'config' => $this->authConfig ]);
   }
 
   //---------------------------------------------------------------------------
@@ -169,8 +169,8 @@ class PermissionController extends BaseController {
     $permRoles = $permissions->getRolesForPermission($id);
     $permUsers = $permissions->getUsersForPermission($id);
 
-    return $this->_render($this->config->views[ 'permissionsEdit' ], [
-      'config' => $this->config,
+    return $this->_render($this->authConfig->views[ 'permissionsEdit' ], [
+      'config' => $this->authConfig,
       'permission' => $permission,
       'permGroups' => $permGroups,
       'permRoles' => $permRoles,

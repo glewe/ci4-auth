@@ -16,7 +16,7 @@ class GroupController extends BaseController {
   /**
    * @var AuthConfig
    */
-  protected $config;
+  protected $authConfig;
 
   /**
    * @var Session
@@ -37,7 +37,7 @@ class GroupController extends BaseController {
     // Most services in this controller require the session to be started
     //
     $this->session = service('session');
-    $this->config = config('Auth');
+    $this->authConfig = config('Auth');
     $this->auth = service('authorization');
     $this->validation = service('validation');
   }
@@ -53,7 +53,7 @@ class GroupController extends BaseController {
     $allGroups = $groups->orderBy('name', 'asc')->findAll();
 
     $data = [
-      'config' => $this->config,
+      'config' => $this->authConfig,
       'groups' => $allGroups,
     ];
 
@@ -79,7 +79,7 @@ class GroupController extends BaseController {
           if (!$groups->deleteGroup($recId)) {
 
             $this->session->set('errors', $groups->errors());
-            return $this->_render($this->config->views[ 'groups' ], $data);
+            return $this->_render($this->authConfig->views[ 'groups' ], $data);
           }
           return redirect()->route('groups')->with('success', lang('Auth.group.delete_success', [ $group->name ]));
         }
@@ -94,7 +94,7 @@ class GroupController extends BaseController {
       }
     }
 
-    return $this->_render($this->config->views[ 'groups' ], $data);
+    return $this->_render($this->authConfig->views[ 'groups' ], $data);
   }
 
   //---------------------------------------------------------------------------
@@ -104,7 +104,7 @@ class GroupController extends BaseController {
    * @return string
    */
   public function groupsCreate($id = null): string {
-    return $this->_render($this->config->views[ 'groupsCreate' ], [ 'config' => $this->config ]);
+    return $this->_render($this->authConfig->views[ 'groupsCreate' ], [ 'config' => $this->authConfig ]);
   }
 
   //---------------------------------------------------------------------------
@@ -179,8 +179,8 @@ class GroupController extends BaseController {
     $permissions = $this->auth->permissions();
     $groupPermissions = $groups->getPermissionsForGroup($id);
 
-    return $this->_render($this->config->views[ 'groupsEdit' ], [
-      'config' => $this->config,
+    return $this->_render($this->authConfig->views[ 'groupsEdit' ], [
+      'config' => $this->authConfig,
       'group' => $group,
       'permissions' => $permissions,
       'groupPermissions' => $groupPermissions,

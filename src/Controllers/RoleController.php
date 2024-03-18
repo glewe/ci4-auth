@@ -16,7 +16,7 @@ class RoleController extends BaseController {
   /**
    * @var AuthConfig
    */
-  protected $config;
+  protected $authConfig;
 
   /**
    * @var Session
@@ -37,7 +37,7 @@ class RoleController extends BaseController {
     // Most services in this controller require the session to be started
     //
     $this->session = service('session');
-    $this->config = config('Auth');
+    $this->authConfig = config('Auth');
     $this->auth = service('authorization');
     $this->validation = service('validation');
   }
@@ -53,7 +53,7 @@ class RoleController extends BaseController {
     $allRoles = $roles->orderBy('name', 'asc')->findAll();
 
     $data = [
-      'config' => $this->config,
+      'config' => $this->authConfig,
       'roles' => $allRoles,
     ];
 
@@ -76,7 +76,7 @@ class RoleController extends BaseController {
         } else {
           if (!$roles->deleteRole($recId)) {
             $this->session->set('errors', $roles->errors());
-            return $this->_render($this->config->views[ 'roles' ], $data);
+            return $this->_render($this->authConfig->views[ 'roles' ], $data);
           }
           return redirect()->route('roles')->with('success', lang('Auth.role.delete_success', [ $role->name ]));
         }
@@ -91,7 +91,7 @@ class RoleController extends BaseController {
       }
     }
 
-    return $this->_render($this->config->views[ 'roles' ], $data);
+    return $this->_render($this->authConfig->views[ 'roles' ], $data);
   }
 
   //---------------------------------------------------------------------------
@@ -99,7 +99,7 @@ class RoleController extends BaseController {
    * Displays the user create page.
    */
   public function rolesCreate($id = null) {
-    return $this->_render($this->config->views[ 'rolesCreate' ], [ 'config' => $this->config ]);
+    return $this->_render($this->authConfig->views[ 'rolesCreate' ], [ 'config' => $this->authConfig ]);
   }
 
   //---------------------------------------------------------------------------
@@ -172,8 +172,8 @@ class RoleController extends BaseController {
     $permissions = $this->auth->permissions();
     $rolePermissions = $roles->getPermissionsForRole($id);
 
-    return $this->_render($this->config->views[ 'rolesEdit' ], [
-      'config' => $this->config,
+    return $this->_render($this->authConfig->views[ 'rolesEdit' ], [
+      'config' => $this->authConfig,
       'role' => $role,
       'permissions' => $permissions,
       'rolePermissions' => $rolePermissions,

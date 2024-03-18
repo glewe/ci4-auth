@@ -21,7 +21,7 @@ class AuthInfo extends BaseConfig {
    *
    * @var string
    */
-  public $version = '3.4.0';
+  public $version = '3.5.0';
 
   /**
    * --------------------------------------------------------------------------

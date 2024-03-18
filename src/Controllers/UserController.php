@@ -17,7 +17,7 @@ class UserController extends BaseController {
   /**
    * @var AuthConfig
    */
-  protected $config;
+  protected $authConfig;
 
   /**
    * @var Session
@@ -38,7 +38,7 @@ class UserController extends BaseController {
     // Most services in this controller require the session to be started
     //
     $this->session = service('session');
-    $this->config = config('Auth');
+    $this->authConfig = config('Auth');
     $this->authorize = service('authorization');
     $this->validation = service('validation');
   }
@@ -53,7 +53,7 @@ class UserController extends BaseController {
     $users = model(UserModel::class);
 
     $data = [
-      'config' => $this->config,
+      'config' => $this->authConfig,
       'users' => $users->orderBy('username', 'asc')->findAll(),
     ];
 
@@ -71,7 +71,7 @@ class UserController extends BaseController {
         } else {
           if (!$users->deleteUser($recId)) {
             $this->session->set('errors', $users->errors());
-            return $this->_render($this->config->views[ 'users' ], $data);
+            return $this->_render($this->authConfig->views[ 'users' ], $data);
           }
           return redirect()->route('users')->with('success', lang('Auth.user.delete_success', [ $user->username, $user->email ]));
         }
@@ -102,7 +102,7 @@ class UserController extends BaseController {
       }
     }
 
-    return $this->_render($this->config->views[ 'users' ], $data);
+    return $this->_render($this->authConfig->views[ 'users' ], $data);
   }
 
   //---------------------------------------------------------------------------
@@ -110,7 +110,7 @@ class UserController extends BaseController {
    * Displays the user create page.
    */
   public function usersCreate($id = null) {
-    return $this->_render($this->config->views[ 'usersCreate' ], [ 'config' => $this->config ]);
+    return $this->_render($this->authConfig->views[ 'usersCreate' ], [ 'config' => $this->authConfig ]);
   }
 
   //---------------------------------------------------------------------------
@@ -147,14 +147,14 @@ class UserController extends BaseController {
     //
     // Save the user and activate
     //
-    $allowedPostFields = array_merge([ 'password' ], $this->config->validFields, $this->config->personalFields);
+    $allowedPostFields = array_merge([ 'password' ], $this->authConfig->validFields, $this->authConfig->personalFields);
     $user = new User($this->request->getPost($allowedPostFields));
     $user->activate();
 
     //
     // Assign default role if set
     //
-    if (!empty($this->config->defaultUserRole)) $users = $users->withRole($this->config->defaultUserRole);
+    if (!empty($this->authConfig->defaultUserRole)) $users = $users->withRole($this->authConfig->defaultUserRole);
 
     //
     // Generate password reset hash
@@ -206,9 +206,9 @@ class UserController extends BaseController {
     $userPersonalPermissions = $user->getPersonalPermissions();
     $userRoles = $this->authorize->userRoles($id);
 
-    return $this->_render($this->config->views[ 'usersEdit' ], [
+    return $this->_render($this->authConfig->views[ 'usersEdit' ], [
       'auth' => $this->authorize,
-      'config' => $this->config,
+      'config' => $this->authConfig,
       'user' => $user,
       'groups' => $groups,
       'permissions' => $permissions,
@@ -308,13 +308,13 @@ class UserController extends BaseController {
 
         if (!$this->validate($rules)) return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 
-        $allowedPostFields = array_merge([ 'password' ], $this->config->validFields, $this->config->personalFields);
+        $allowedPostFields = array_merge([ 'password' ], $this->authConfig->validFields, $this->authConfig->personalFields);
         $user->setPassword($this->request->getPost('password'));
       } else {
         //
         // Do not add Password to the post fields
         //
-        $allowedPostFields = array_merge($this->config->validFields, $this->config->personalFields);
+        $allowedPostFields = array_merge($this->authConfig->validFields, $this->authConfig->personalFields);
       }
 
       //

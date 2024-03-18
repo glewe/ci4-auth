@@ -18,7 +18,7 @@ class AuthController extends BaseController {
   /**
    * @var AuthConfig
    */
-  protected $config;
+  protected $authConfig;
 
   /**
    * @var Session
@@ -57,10 +57,10 @@ class AuthController extends BaseController {
     // Most services in this controller require the session to be started
     //
     $this->session = service('session');
-    $this->config = config('Auth');
+    $this->authConfig = config('Auth');
     $this->auth = service('authentication');
     $this->authorize = service('authorization');
-    $this->tfa = new TwoFactorAuth($this->config->authenticatorTitle);
+    $this->tfa = new TwoFactorAuth($this->authConfig->authenticatorTitle);
     $this->passphrase = hex2bin('8849523a8e0e1ff45f440da048428b2554d2660c80957fcedbeb9575c079d7eb');
   }
 
@@ -105,7 +105,7 @@ class AuthController extends BaseController {
    * @return mixed
    */
   public function activateAccountResend() {
-    if ($this->config->requireActivation === null) {
+    if ($this->authConfig->requireActivation === null) {
       return redirect()->route('login');
     }
 
@@ -144,7 +144,7 @@ class AuthController extends BaseController {
    * Displays the CI4-Auth error page.
    */
   public function error() {
-    return $this->_render($this->config->views[ 'error_auth' ], [ 'config' => $this->config ]);
+    return $this->_render($this->authConfig->views[ 'error_auth' ], [ 'config' => $this->authConfig ]);
   }
 
   //---------------------------------------------------------------------------
@@ -152,11 +152,11 @@ class AuthController extends BaseController {
    * Displays the forgot password form.
    */
   public function forgotPassword() {
-    if ($this->config->activeResetter === null) {
+    if ($this->authConfig->activeResetter === null) {
       return redirect()->route('login')->with('error', lang('Auth.forgot.disabled'));
     }
 
-    return $this->_render($this->config->views[ 'forgot' ], [ 'config' => $this->config ]);
+    return $this->_render($this->authConfig->views[ 'forgot' ], [ 'config' => $this->authConfig ]);
   }
 
   //---------------------------------------------------------------------------
@@ -165,7 +165,7 @@ class AuthController extends BaseController {
    * password reset instructions to them.
    */
   public function forgotPasswordDo() {
-    if ($this->config->activeResetter === null) {
+    if ($this->authConfig->activeResetter === null) {
       return redirect()->route('login')->with('error', lang('Auth.forgot.disabled'));
     }
 
@@ -213,7 +213,7 @@ class AuthController extends BaseController {
     //
     $_SESSION[ 'redirect_url' ] = session('redirect_url') ?? previous_url() ?? site_url('/');
 
-    return $this->_render($this->config->views[ 'login' ], [ 'config' => $this->config ]);
+    return $this->_render($this->authConfig->views[ 'login' ], [ 'config' => $this->authConfig ]);
   }
 
   //---------------------------------------------------------------------------
@@ -226,7 +226,7 @@ class AuthController extends BaseController {
       'password' => 'required',
     ];
 
-    if ($this->config->validFields == [ 'email' ]) {
+    if ($this->authConfig->validFields == [ 'email' ]) {
       $rules[ 'login' ] .= '|valid_email';
     }
 
@@ -277,7 +277,7 @@ class AuthController extends BaseController {
       //
       // User has not setup 2FA.
       //
-      if ($this->config->require2FA) {
+      if ($this->authConfig->require2FA) {
         //
         // 2FA is required. Login the user and redirect to 2FA Setup.
         //
@@ -329,9 +329,9 @@ class AuthController extends BaseController {
     $user = $users->where('email', session('2fa_in_progress'))->first();
 
     return $this->_render(
-      $this->config->views[ 'login2fa' ],
+      $this->authConfig->views[ 'login2fa' ],
       [
-        'config' => $this->config,
+        'config' => $this->authConfig,
         'user' => $user,
         'remember' => session('ci4auth-remember'),
       ]
@@ -393,9 +393,9 @@ class AuthController extends BaseController {
         $qrcode = $this->tfa->getQRCodeImageAsDataUri($user->email, $secret);
         session()->setFlashdata('error', lang('Auth.2fa.setup.mismatch'));
         return $this->_render(
-          $this->config->views[ 'login2fa' ],
+          $this->authConfig->views[ 'login2fa' ],
           [
-            'config' => $this->config,
+            'config' => $this->authConfig,
             'user' => $user,
             'remember' => session('ci4auth-remember'),
           ]
@@ -431,9 +431,9 @@ class AuthController extends BaseController {
     //
     // Redirect back with error if registration is not allowed
     //
-    if (!$this->config->allowRegistration) return redirect()->back()->withInput()->with('error', lang('Auth.register.disabled'));
+    if (!$this->authConfig->allowRegistration) return redirect()->back()->withInput()->with('error', lang('Auth.register.disabled'));
 
-    return $this->_render($this->config->views[ 'register' ], [ 'config' => $this->config ]);
+    return $this->_render($this->authConfig->views[ 'register' ], [ 'config' => $this->authConfig ]);
   }
 
   //---------------------------------------------------------------------------
@@ -444,7 +444,7 @@ class AuthController extends BaseController {
     //
     // Check if registration is allowed
     //
-    if (!$this->config->allowRegistration) return redirect()->back()->withInput()->with('error', lang('Auth.register.disabled'));
+    if (!$this->authConfig->allowRegistration) return redirect()->back()->withInput()->with('error', lang('Auth.register.disabled'));
 
     $users = model(UserModel::class);
 
@@ -474,19 +474,19 @@ class AuthController extends BaseController {
     //
     // Save the user
     //
-    $allowedPostFields = array_merge([ 'password' ], $this->config->validFields, $this->config->personalFields);
+    $allowedPostFields = array_merge([ 'password' ], $this->authConfig->validFields, $this->authConfig->personalFields);
     $user = new User($this->request->getPost($allowedPostFields));
 
-    $this->config->requireActivation === null ? $user->activate() : $user->generateActivateHash();
+    $this->authConfig->requireActivation === null ? $user->activate() : $user->generateActivateHash();
 
     //
     // Ensure default role gets assigned if set
     //
-    if (!empty($this->config->defaultUserRole)) $users = $users->withRole($this->config->defaultUserRole);
+    if (!empty($this->authConfig->defaultUserRole)) $users = $users->withRole($this->authConfig->defaultUserRole);
 
     if (!$users->save($user)) return redirect()->back()->withInput()->with('errors', $users->errors());
 
-    if ($this->config->requireActivation !== null) {
+    if ($this->authConfig->requireActivation !== null) {
       $activator = service('activator');
       $sent = $activator->send($user);
       if (!$sent) return redirect()->back()->withInput()->with('error', $activator->error() ?? lang('Auth.exception.unknown_error'));
@@ -507,14 +507,14 @@ class AuthController extends BaseController {
    * Displays the Reset Password form.
    */
   public function resetPassword() {
-    if ($this->config->activeResetter === null) {
+    if ($this->authConfig->activeResetter === null) {
       return redirect()->route('login')->with('error', lang('Auth.forgot.disabled'));
     }
 
     $token = $this->request->getGet('token');
 
-    return $this->_render($this->config->views[ 'reset' ], [
-      'config' => $this->config,
+    return $this->_render($this->authConfig->views[ 'reset' ], [
+      'config' => $this->authConfig,
       'token' => $token,
     ]);
   }
@@ -527,7 +527,7 @@ class AuthController extends BaseController {
    * @return mixed
    */
   public function resetPasswordDo() {
-    if ($this->config->activeResetter === null) {
+    if ($this->authConfig->activeResetter === null) {
       return redirect()->route('login')->with('error', lang('Auth.forgot.disabled'));
     }
 
@@ -660,9 +660,9 @@ class AuthController extends BaseController {
     // Render the page
     //
     return $this->_render(
-      $this->config->views[ 'setup2fa' ],
+      $this->authConfig->views[ 'setup2fa' ],
       [
-        'config' => $this->config,
+        'config' => $this->authConfig,
         'qrcode' => $qrcode,
         'secret' => $secret,
         'user' => $user,
@@ -728,9 +728,9 @@ class AuthController extends BaseController {
         $qrcode = $this->tfa->getQRCodeImageAsDataUri($user->email, $secret);
         session()->setFlashdata('error', lang('Auth.2fa.setup.mismatch'));
         return $this->_render(
-          $this->config->views[ 'setup2fa' ],
+          $this->authConfig->views[ 'setup2fa' ],
           [
-            'config' => $this->config,
+            'config' => $this->authConfig,
             'qrcode' => $qrcode,
             'secret' => $secret,
             'user' => $user,
@@ -751,7 +751,7 @@ class AuthController extends BaseController {
    * Displays the About page.
    */
   public function about() {
-    return $this->_render($this->config->views[ 'about' ], [ 'config' => $this->config ]);
+    return $this->_render($this->authConfig->views[ 'about' ], [ 'config' => $this->authConfig ]);
   }
 
   //---------------------------------------------------------------------------
@@ -759,7 +759,7 @@ class AuthController extends BaseController {
    * Displays the Welcome page.
    */
   public function welcome() {
-    return $this->_render($this->config->views[ 'welcome' ], [ 'config' => $this->config ]);
+    return $this->_render($this->authConfig->views[ 'welcome' ], [ 'config' => $this->authConfig ]);
   }
 
   //---------------------------------------------------------------------------
@@ -767,7 +767,7 @@ class AuthController extends BaseController {
    * Displays the Whoami page.
    */
   public function whoami() {
-    return $this->_render($this->config->views[ 'whoami' ], [ 'config' => $this->config ]);
+    return $this->_render($this->authConfig->views[ 'whoami' ], [ 'config' => $this->authConfig ]);
   }
 
   //---------------------------------------------------------------------------
