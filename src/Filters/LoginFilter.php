@@ -22,24 +22,24 @@ class LoginFilter implements FilterInterface {
       helper('auth');
     }
 
-    $current = (string)current_url(true)
-      ->setHost('')
-      ->setScheme('')
-      ->stripQuery('token');
-
-    $config = config(App::class);
-    if ($config->forceGlobalSecureRequests) {
-      //
-      // Remove "https:/"
-      //
-      $current = substr($current, 7);
-    }
+//    $current = (string)current_url(true)
+//      ->setHost('')
+//      ->setScheme('')
+//      ->stripQuery('token');
+//
+//    $config = config(App::class);
+//    if ($config->forceGlobalSecureRequests) {
+//      //
+//      // Remove "https:/"
+//      //
+//      $current = substr($current, 7);
+//    }
 
     //
     // Make sure this isn't already a login route
     //
-    if (in_array((string)$current, [ route_to('login'), route_to('forgot'), route_to('reset-password'), route_to('register'), route_to('activate-account') ])) {
-      return;
+    if (in_array(current_url(), [ route_to('login'), route_to('forgot'), route_to('reset-password'), route_to('register'), route_to('activate-account') ])) {
+      return false;
     }
 
     //
@@ -50,6 +50,7 @@ class LoginFilter implements FilterInterface {
       session()->set('redirect_url', current_url());
       return redirect('login');
     }
+    return true;
   }
 
   //---------------------------------------------------------------------------

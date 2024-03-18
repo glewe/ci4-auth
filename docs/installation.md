@@ -117,7 +117,7 @@ $routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => '
 You can also add several filters like so:
 
 ```php
-$routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'role:Administrator', 'filter' => 'group:Admins']);
+$routes->match(['get', 'post'], 'roles', 'RoleController::index', ['filter' => 'role:Administrator, group:Admins']);
 ```
 You must register the aliases for those filters in your **app/Config/Filters.php** file:
 

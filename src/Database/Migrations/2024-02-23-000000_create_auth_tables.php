@@ -54,7 +54,7 @@ class CreateAuthTables extends Migration {
 
     $this->forge->addField($fields);
     $this->forge->addKey('id', true);
-    $this->forge->addKey([ 'user_id', 'option' ]);
+    $this->forge->addUniqueKey([ 'user_id', 'option' ]);
     $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
     $this->forge->createTable('users_options', true);
 
