@@ -256,6 +256,7 @@ return [
     'delete_success' => 'Permiso eliminado: {0}',
     'description' => 'Descripción del Permiso',
     'description_desc' => 'Introduce una descripción para este permiso.',
+    'error_name' => 'Los nombres de permisos solo pueden tener caracteres en minúscula y puntos, como "nombre.permiso".',
     'name' => 'Nombre del Permiso',
     'name_desc' => 'Introduce un nombre para este permiso.',
     'none_found' => 'No hay permisos.',
