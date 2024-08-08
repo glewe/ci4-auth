@@ -3,6 +3,7 @@
 [![PHP](https://img.shields.io/badge/Language-PHP-8892BF.svg)](https://www.php.net/)
 [![Bootstrap 5](https://img.shields.io/badge/Styles-Bootstrap%205-7952b3.svg)](https://www.getbootstrap.com/)
 [![Bootstrap Icons](https://img.shields.io/badge/Icons-Bootstrap%20Icons-7952b3.svg)](https://icons.getbootstrap.com/)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=glewe_ci4-auth&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=glewe_ci4-auth)
 
 CI4-Auth is a user, group, role and permission management library for Codeigniter 4.
 
