@@ -28,9 +28,10 @@ class GroupController extends BaseController {
    */
   protected $validation;
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
    * Constructor.
+   * --------------------------------------------------------------------------
    */
   public function __construct() {
     //
@@ -42,13 +43,16 @@ class GroupController extends BaseController {
     $this->validation = service('validation');
   }
 
-  // -------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Groups.
+   * --------------------------------------------------------------------------
+   *
    * Shows all user records.
    *
    * @return \CodeIgniter\HTTP\RedirectResponse | string
    */
-  public function groups() {
+  public function groups(): string {
     $groups = model(GroupModel::class);
     $allGroups = $groups->orderBy('name', 'asc')->findAll();
 
@@ -58,9 +62,9 @@ class GroupController extends BaseController {
     ];
 
     foreach ($allGroups as $group) {
-      $groupPermissions[ $group->id ][] = $groups->getPermissionsForGroup($group->id);
+      $groupPermissions[$group->id][] = $groups->getPermissionsForGroup($group->id);
     }
-    $data[ 'groupPermissions' ] = $groupPermissions;
+    $data['groupPermissions'] = $groupPermissions;
 
     if ($this->request->withMethod('post')) {
       //
@@ -79,7 +83,7 @@ class GroupController extends BaseController {
           if (!$groups->deleteGroup($recId)) {
 
             $this->session->set('errors', $groups->errors());
-            return $this->_render($this->authConfig->views[ 'groups' ], $data);
+            return $this->_render($this->authConfig->views['groups'], $data);
           }
           return redirect()->route('groups')->with('success', lang('Auth.group.delete_success', [ $group->name ]));
         }
@@ -89,40 +93,46 @@ class GroupController extends BaseController {
         //
         $search = $this->request->getPost('search');
         $where = '`name` LIKE "%' . $search . '%" OR `description` LIKE "%' . $search . '%"';;
-        $data[ 'groups' ] = $groups->where($where)->orderBy('name', 'asc')->findAll();
-        $data[ 'search' ] = $search;
+        $data['groups'] = $groups->where($where)->orderBy('name', 'asc')->findAll();
+        $data['search'] = $search;
       }
     }
 
-    return $this->_render($this->authConfig->views[ 'groups' ], $data);
+    return $this->_render($this->authConfig->views['groups'], $data);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Groups Create.
+   * --------------------------------------------------------------------------
+   *
    * Displays the user create page.
    *
    * @return string
    */
   public function groupsCreate($id = null): string {
-    return $this->_render($this->authConfig->views[ 'groupsCreate' ], [ 'config' => $this->authConfig ]);
+    return $this->_render($this->authConfig->views['groupsCreate'], [ 'config' => $this->authConfig ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Groups Create Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempt to create a new user.
    * To be be used by administrators. User will be activated automatically.
    *
    * @return \CodeIgniter\HTTP\RedirectResponse
    */
-  public function groupsCreateDo() {
+  public function groupsCreateDo(): \CodeIgniter\HTTP\RedirectResponse {
     $groups = model(GroupModel::class);
     $form = array();
 
     //
     // Get form fields
     //
-    $form[ 'name' ] = $this->request->getPost('name');
-    $form[ 'description' ] = $this->request->getPost('description');
+    $form['name'] = $this->request->getPost('name');
+    $form['description'] = $this->request->getPost('description');
 
     //
     // Set validation rules for adding a new group
@@ -132,7 +142,7 @@ class GroupController extends BaseController {
         'label' => lang('Auth.group.name'),
         'rules' => 'required|trim|max_length[255]|is_unique[auth_groups.name]',
         'errors' => [
-          'is_unique' => lang('Auth.group.not_unique', [ $form[ 'name' ] ])
+          'is_unique' => lang('Auth.group.not_unique', [ $form['name'] ])
         ]
       ],
       'description' => [
@@ -165,13 +175,18 @@ class GroupController extends BaseController {
     }
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Groups Edit.
+   * --------------------------------------------------------------------------
+   *
    * Displays the user edit page.
    *
    * @param int $id Group ID
+   *
+   * @return string
    */
-  public function groupsEdit($id = null) {
+  public function groupsEdit($id = null): string {
     $groups = model(GroupModel::class);
 
     if (!$group = $groups->where('id', $id)->first()) return redirect()->to('groups');
@@ -179,7 +194,7 @@ class GroupController extends BaseController {
     $permissions = $this->auth->permissions();
     $groupPermissions = $groups->getPermissionsForGroup($id);
 
-    return $this->_render($this->authConfig->views[ 'groupsEdit' ], [
+    return $this->_render($this->authConfig->views['groupsEdit'], [
       'config' => $this->authConfig,
       'group' => $group,
       'permissions' => $permissions,
@@ -187,13 +202,18 @@ class GroupController extends BaseController {
     ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Groups Edit Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempt to edit a group.
    *
    * @param int $id Group ID
+   *
+   * @return \CodeIgniter\HTTP\RedirectResponse
    */
-  public function groupsEditDo($id = null) {
+  public function groupsEditDo($id = null): \CodeIgniter\HTTP\RedirectResponse {
     $groups = model(GroupModel::class);
     $form = array();
 
@@ -219,18 +239,18 @@ class GroupController extends BaseController {
     //
     // Get form fields
     //
-    $form[ 'name' ] = $this->request->getPost('name');
-    $form[ 'description' ] = $this->request->getPost('description');
+    $form['name'] = $this->request->getPost('name');
+    $form['description'] = $this->request->getPost('description');
 
     //
     // If the group name changed, make sure the validator checks its uniqueness.
     //
-    if ($form[ 'name' ] != $group->name) {
-      $validationRules[ 'name' ] = [
+    if ($form['name'] != $group->name) {
+      $validationRules['name'] = [
         'label' => lang('Auth.group.name'),
         'rules' => 'required|trim|max_length[255]|is_unique[auth_groups.name]',
         'errors' => [
-          'is_unique' => lang('Auth.group.not_unique', [ $form[ 'name' ] ])
+          'is_unique' => lang('Auth.group.not_unique', [ $form['name'] ])
         ]
       ];
     }
@@ -266,16 +286,19 @@ class GroupController extends BaseController {
     }
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Render.
+   * --------------------------------------------------------------------------
+   *
    * Render View.
    *
    * @param string $view
-   * @param array $data
+   * @param array  $data
    *
    * @return string
    */
-  protected function _render(string $view, array $data = []) {
+  protected function _render(string $view, array $data = []): string {
     //
     // In case you have a custom configuration that you want to pass to
     // your views (e.g. theme settings), it is added here.
@@ -283,7 +306,7 @@ class GroupController extends BaseController {
     // It is assumed that have declared and set the variable $myConfig in
     // your BaseController.
     //
-    if (isset($this->myConfig)) $data[ 'myConfig' ] = $this->myConfig;
+    if (isset($this->myConfig)) $data['myConfig'] = $this->myConfig;
 
     return view($view, $data);
   }

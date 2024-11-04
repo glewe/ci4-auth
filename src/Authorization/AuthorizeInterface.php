@@ -22,7 +22,7 @@ interface AuthorizeInterface {
    * to ONE of. (It's an OR check not an AND check)
    *
    * @param mixed $groups
-   * @param int $userId
+   * @param int   $userId
    *
    * @return bool
    */
@@ -36,7 +36,7 @@ interface AuthorizeInterface {
    * ONE of. (It's an OR check not an AND check)
    *
    * @param mixed $roles
-   * @param int $userId
+   * @param int   $userId
    *
    * @return bool
    */
@@ -46,7 +46,7 @@ interface AuthorizeInterface {
    * Checks a user's roles to see if they have the specified permission.
    *
    * @param int|string $permission
-   * @param int $userId
+   * @param int        $userId
    *
    * @return mixed
    */
@@ -55,7 +55,7 @@ interface AuthorizeInterface {
   /**
    * Adds a user to a group.
    *
-   * @param int $userid
+   * @param int        $userid
    * @param int|string $group Either ID or name
    *
    * @return bool
@@ -65,7 +65,7 @@ interface AuthorizeInterface {
   /**
    * Adds a user to a role.
    *
-   * @param int $userid
+   * @param int        $userid
    * @param int|string $role Either ID or name
    *
    * @return bool
@@ -75,7 +75,7 @@ interface AuthorizeInterface {
   /**
    * Removes a single user from a group.
    *
-   * @param int $userId
+   * @param int        $userId
    * @param int|string $group
    *
    * @return mixed
@@ -85,7 +85,7 @@ interface AuthorizeInterface {
   /**
    * Removes a single user from a role.
    *
-   * @param int $userId
+   * @param int        $userId
    * @param int|string $role
    *
    * @return mixed
@@ -172,7 +172,7 @@ interface AuthorizeInterface {
   /**
    * Updates a single group's information.
    *
-   * @param int $id
+   * @param int    $id
    * @param string $name
    * @param string $description
    *
@@ -220,7 +220,7 @@ interface AuthorizeInterface {
   /**
    * Updates a single role's information.
    *
-   * @param int $id
+   * @param int    $id
    * @param string $name
    * @param string $description
    *
@@ -270,7 +270,7 @@ interface AuthorizeInterface {
   /**
    * Updates the details for a single permission.
    *
-   * @param int $id
+   * @param int    $id
    * @param string $name
    * @param string $description
    *

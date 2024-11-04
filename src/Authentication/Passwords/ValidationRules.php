@@ -23,9 +23,9 @@ class ValidationRules {
    * better security if this is done manually, since you can
    * personalize based on a specific user at that point.
    *
-   * @param string $value Field value
+   * @param string $value  Field value
    * @param string $error1 Error that will be returned (for call without validation data array)
-   * @param array $data Validation data array
+   * @param array  $data   Validation data array
    * @param string $error2 Error that will be returned (for call with validation data array)
    *
    * @return bool
@@ -56,8 +56,9 @@ class ValidationRules {
    * Specific validator for permission names.
    * Only lower case alpha characters and dots.
    *
-   * @param string $str - Field value
+   * @param string $str   - Field value
    * @param string $error - Error that will be returned (for call without validation data array)
+   *
    * @return bool
    */
   public function lower_alpha_dash_dot($str, ?string &$error = null): bool {

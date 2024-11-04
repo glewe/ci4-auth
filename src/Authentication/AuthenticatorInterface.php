@@ -9,7 +9,7 @@ interface AuthenticatorInterface {
    * Attempts to validate the credentials and log a user in.
    *
    * @param array $credentials
-   * @param bool $remember Should we remember the user (if enabled)
+   * @param bool  $remember Should we remember the user (if enabled)
    *
    * @return bool
    */
@@ -27,7 +27,7 @@ interface AuthenticatorInterface {
    * Unlike `attempt()`, will not log the user into the system.
    *
    * @param array $credentials
-   * @param bool $returnUser
+   * @param bool  $returnUser
    *
    * @return bool|User
    */

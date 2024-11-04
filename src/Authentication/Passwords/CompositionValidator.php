@@ -14,7 +14,7 @@ use CI4\Auth\Exceptions\AuthException;
  * groups that you had to include, current NIST standards prefer to simply
  * set a minimum length and a long maximum (128+ chars).
  *
- * @see https://pages.nist.gov/800-63-3/sp800-63b.html#sec5
+ * @see     https://pages.nist.gov/800-63-3/sp800-63b.html#sec5
  *
  *
  * @package CI4\Auth\Authentication\Passwords\Validators

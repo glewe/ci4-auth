@@ -37,39 +37,46 @@ class AuthenticationBase {
    */
   protected $config;
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   *  Constructor.
+   *  --------------------------------------------------------------------------
    */
   public function __construct($config) {
     $this->config = $config;
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Error.
+   * --------------------------------------------------------------------------
+   *
    * Returns the current error, if any.
    *
    * @return string
    */
-  public function error() {
+  public function error(): string {
     return $this->error;
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Silent.
+   * --------------------------------------------------------------------------
+   *
    * Whether to continue instead of throwing exceptions, as defined in config.
    *
    * @return bool
    */
-  public function silent() {
+  public function silent(): bool {
     return (bool)$this->config->silent;
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Login.
+   * --------------------------------------------------------------------------
+   *
    * Logs a user into the system.
    * NOTE: does not perform validation. All validation should be done prior to
    * using the login method, incl. 2FA.
@@ -132,9 +139,11 @@ class AuthenticationBase {
     return true;
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Is Logged In.
+   * --------------------------------------------------------------------------
+   *
    * Checks to see if the user is logged in.
    *
    * @return bool
@@ -146,7 +155,6 @@ class AuthenticationBase {
     if ($this->user instanceof User) {
       return true;
     }
-
     if ($userID = session('logged_in')) {
       //
       // Store our current user object
@@ -154,35 +162,39 @@ class AuthenticationBase {
       $this->user = $this->userModel->find($userID);
       return $this->user instanceof User;
     }
-
     return false;
   }
 
-
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Login By ID.
+   * --------------------------------------------------------------------------
+   *
    * Logs a user into the system by their ID.
    *
-   * @param int $id
+   * @param int  $id
    * @param bool $remember
+   *
+   * @return bool
    */
-  public function loginByID(int $id, bool $remember = false) {
+  public function loginByID(int $id, bool $remember = false): bool {
     $user = $this->retrieveUser([ 'id' => $id ]);
-
     if (empty($user)) {
       throw UserNotFoundException::forUserID($id);
     }
-
     return $this->login($user, $remember);
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Logout.
+   * --------------------------------------------------------------------------
+   *
    * Logs a user out of the system.
+   *
+   * @return void
    */
-  public function logout() {
+  public function logout(): void {
     helper('cookie');
 
     //
@@ -191,8 +203,8 @@ class AuthenticationBase {
     //
     if (isset($_SESSION)) {
       foreach ($_SESSION as $key => $value) {
-        $_SESSION[ $key ] = NULL;
-        unset($_SESSION[ $key ]);
+        $_SESSION[$key] = NULL;
+        unset($_SESSION[$key]);
       }
     }
 
@@ -224,20 +236,22 @@ class AuthenticationBase {
     }
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Record Login Attempt.
+   * --------------------------------------------------------------------------
+   *
    * Record a login attempt
    *
-   * @param string $email
+   * @param string      $email
    * @param string|null $ipAddress
-   * @param int|null $userID
-   * @param bool $success
-   * @param string $info
+   * @param int|null    $userID
+   * @param bool        $success
+   * @param string      $info
    *
    * @return bool|int|string
    */
-  public function recordLoginAttempt(string $email, string $ipAddress = null, int $userID = null, bool $success, string $info) {
+  public function recordLoginAttempt(string $email, string $ipAddress = null, int $userID = null, bool $success, string $info): bool|int|string {
     return $this->loginModel->insert([
       'ip_address' => $ipAddress,
       'email' => $email,
@@ -248,9 +262,11 @@ class AuthenticationBase {
     ]);
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Remember User.
+   * --------------------------------------------------------------------------
+   *
    * Generates a timing-attack safe remember me token and stores the necessary
    * info in the db and a cookie.
    *
@@ -258,9 +274,11 @@ class AuthenticationBase {
    *
    * @param int $userID
    *
+   * @return void
+   *
    * @throws \Exception
    */
-  public function rememberUser(int $userID) {
+  public function rememberUser(int $userID): void {
     $selector = bin2hex(random_bytes(12));
     $validator = bin2hex(random_bytes(20));
     $expires = date('Y-m-d H:i:s', time() + $this->config->rememberLength);
@@ -293,24 +311,28 @@ class AuthenticationBase {
     );
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Refresh Remember.
+   * --------------------------------------------------------------------------
+   *
    * Sets a new validator for this user/selector. This allows a one-time use
    * of remember-me tokens, but still allows a user to be remembered on
    * multiple browsers/devices.
    *
-   * @param int $userID
+   * @param int    $userID
    * @param string $selector
+   *
+   * @return void
    */
-  public function refreshRemember(int $userID, string $selector) {
+  public function refreshRemember(int $userID, string $selector): void {
     $existing = $this->loginModel->getRememberToken($selector);
 
     //
     // No matching record? Shouldn't happen, but remember the user now.
     //
     if (empty($existing)) {
-      return $this->rememberUser($userID);
+      $this->rememberUser($userID);
     }
 
     //
@@ -342,46 +364,48 @@ class AuthenticationBase {
     );
   }
 
-  //------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Id.
+   * --------------------------------------------------------------------------
+   *
    * Returns the User ID for the current logged in user.
    *
    * @return int|null
    */
-  public function id() {
+  public function id(): ?int {
     return $this->user->id ?? null;
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * User.
+   * --------------------------------------------------------------------------
+   *
    * Returns the User instance for the current logged in user.
    *
    * @return User|null
    */
-  public function user() {
+  public function user(): ?User {
     return $this->user;
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Retrieve User.
+   * --------------------------------------------------------------------------
+   *
    * Grabs the current user from the database.
    *
    * @param array $wheres
    *
    * @return array|null|object
    */
-  public function retrieveUser(array $wheres) {
+  public function retrieveUser(array $wheres): array|null|object {
     if (!$this->userModel instanceof Model) {
       throw AuthException::forInvalidModel('User');
     }
-
-    $user = $this->userModel
-      ->where($wheres)
-      ->first();
-
+    $user = $this->userModel->where($wheres)->first();
     return $user;
   }
 
@@ -389,22 +413,27 @@ class AuthenticationBase {
   // Model Setters
   //=========================================================================
 
-  //-------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Set User Model.
+   * --------------------------------------------------------------------------
+   *
    * Sets the model that should be used to work with user accounts.
    *
    * @param Model $model
    *
    * @return $this
    */
-  public function setUserModel(Model $model) {
+  public function setUserModel(Model $model): AuthenticationBase {
     $this->userModel = $model;
     return $this;
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Check.
+   * --------------------------------------------------------------------------
+   *
    * Sets the model that should be used to record login attempts (but failed
    * and successful).
    *
@@ -412,7 +441,7 @@ class AuthenticationBase {
    *
    * @return $this
    */
-  public function setLoginModel(Model $model) {
+  public function setLoginModel(Model $model): AuthenticationBase {
     $this->loginModel = $model;
     return $this;
   }

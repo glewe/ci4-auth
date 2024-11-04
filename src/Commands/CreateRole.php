@@ -17,8 +17,11 @@ class CreateRole extends BaseCommand {
     'description' => "Optional description 'in quotes'",
   ];
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Run.
+   * --------------------------------------------------------------------------
+   *
    * This method is responsible for creating a new role in the system.
    * It takes an array of parameters as input, which should contain the role's
    * name and description.

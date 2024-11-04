@@ -28,9 +28,10 @@ class PermissionController extends BaseController {
    */
   protected $validation;
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
    * Constructor.
+   * --------------------------------------------------------------------------
    */
   public function __construct() {
     //
@@ -42,13 +43,16 @@ class PermissionController extends BaseController {
     $this->validation = service('validation');
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Permissions.
+   * --------------------------------------------------------------------------
+   *
    * Shows all permission records.
    *
    * @return \CodeIgniter\HTTP\RedirectResponse | string
    */
-  public function permissions() {
+  public function permissions(): \CodeIgniter\HTTP\RedirectResponse|string {
     $permissions = model(PermissionModel::class);
 
     $data = [
@@ -70,7 +74,7 @@ class PermissionController extends BaseController {
         } else {
           if (!$permissions->deletePermission($recId)) {
             $this->session->set('errors', $permissions->errors());
-            return $this->_render($this->authConfig->views[ 'permissions' ], $data);
+            return $this->_render($this->authConfig->views['permissions'], $data);
           }
           return redirect()->route('permissions')->with('success', lang('Auth.permission.delete_success', [ $permission->name ]));
         }
@@ -80,39 +84,51 @@ class PermissionController extends BaseController {
         //
         $search = $this->request->getPost('search');
         $where = '`name` LIKE "%' . $search . '%" OR `description` LIKE "%' . $search . '%"';;
-        $data[ 'permissions' ] = $permissions->where($where)->orderBy('name', 'asc')->findAll();
-        $data[ 'search' ] = $search;
+        $data['permissions'] = $permissions->where($where)->orderBy('name', 'asc')->findAll();
+        $data['search'] = $search;
       }
     }
 
     //
     // Show the list view
     //
-    return $this->_render($this->authConfig->views[ 'permissions' ], $data);
+    return $this->_render($this->authConfig->views['permissions'], $data);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Permissions Create.
+   * --------------------------------------------------------------------------
+   *
    * Displays the user create page.
+   *
+   * @param int $id Permission ID
+   *
+   * @return string
    */
-  public function permissionsCreate($id = null) {
-    return $this->_render($this->authConfig->views[ 'permissionsCreate' ], [ 'config' => $this->authConfig ]);
+  public function permissionsCreate($id = null): string {
+    return $this->_render($this->authConfig->views['permissionsCreate'], [ 'config' => $this->authConfig ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Permissions Create Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempt to create a new user.
    * To be be used by administrators. User will be activated automatically.
+   *
+   * @return \CodeIgniter\HTTP\RedirectResponse
    */
-  public function permissionsCreateDo() {
+  public function permissionsCreateDo(): \CodeIgniter\HTTP\RedirectResponse {
     $permissions = model(PermissionModel::class);
     $form = array();
 
     //
     // Get form fields
     //
-    $form[ 'name' ] = $this->request->getPost('name');
-    $form[ 'description' ] = $this->request->getPost('description');
+    $form['name'] = $this->request->getPost('name');
+    $form['description'] = $this->request->getPost('description');
 
     //
     // Set validation rules for adding a new group
@@ -122,7 +138,7 @@ class PermissionController extends BaseController {
         'label' => lang('Auth.permission.name'),
         'rules' => 'required|trim|max_length[255]|lower_alpha_dash_dot|is_unique[auth_permissions.name]',
         'errors' => [
-          'is_unique' => lang('Auth.permission.not_unique', [ $form[ 'name' ] ])
+          'is_unique' => lang('Auth.permission.not_unique', [ $form['name'] ])
         ]
       ],
       'description' => [
@@ -155,13 +171,18 @@ class PermissionController extends BaseController {
     }
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Permissions Edit.
+   * --------------------------------------------------------------------------
+   *
    * Displays the user edit page.
    *
    * @param int $id Permission ID
+   *
+   * @return \CodeIgniter\HTTP\RedirectResponse|string
    */
-  public function permissionsEdit($id = null) {
+  public function permissionsEdit($id = null): \CodeIgniter\HTTP\RedirectResponse|string {
     $permissions = model(PermissionModel::class);
     if (!$permission = $permissions->where('id', $id)->first()) return redirect()->to('permissions');
 
@@ -169,7 +190,7 @@ class PermissionController extends BaseController {
     $permRoles = $permissions->getRolesForPermission($id);
     $permUsers = $permissions->getUsersForPermission($id);
 
-    return $this->_render($this->authConfig->views[ 'permissionsEdit' ], [
+    return $this->_render($this->authConfig->views['permissionsEdit'], [
       'config' => $this->authConfig,
       'permission' => $permission,
       'permGroups' => $permGroups,
@@ -178,13 +199,18 @@ class PermissionController extends BaseController {
     ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Permissions Edit Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempt to create a new permission.
    *
    * @param int $id Permission ID
+   *
+   * @return \CodeIgniter\HTTP\RedirectResponse
    */
-  public function permissionsEditDo($id = null) {
+  public function permissionsEditDo($id = null): \CodeIgniter\HTTP\RedirectResponse {
     $permissions = model(PermissionModel::class);
     $form = array();
 
@@ -210,18 +236,18 @@ class PermissionController extends BaseController {
     //
     // Get form fields
     //
-    $form[ 'name' ] = $this->request->getPost('name');
-    $form[ 'description' ] = $this->request->getPost('description');
+    $form['name'] = $this->request->getPost('name');
+    $form['description'] = $this->request->getPost('description');
 
     //
     // If the permission name changed, make sure the validator checks its uniqueness.
     //
-    if ($form[ 'name' ] != $permission->name) {
-      $validationRules[ 'name' ] = [
+    if ($form['name'] != $permission->name) {
+      $validationRules['name'] = [
         'label' => lang('Auth.permission.name'),
         'rules' => 'required|trim|max_length[255]|lower_alpha_dash_dot|is_unique[auth_permissions.name]',
         'errors' => [
-          'is_unique' => lang('Auth.permission.not_unique', [ $form[ 'name' ] ])
+          'is_unique' => lang('Auth.permission.not_unique', [ $form['name'] ])
         ]
       ];
     }
@@ -239,7 +265,7 @@ class PermissionController extends BaseController {
       //
       // Save the permission
       //
-      $id = $this->auth->updatePermission($id, strtolower($form[ 'name' ]), $form[ 'description' ]);
+      $id = $this->auth->updatePermission($id, strtolower($form['name']), $form['description']);
       if (!$id) return redirect()->back()->withInput()->with('errors', $permissions->errors());
 
       //
@@ -249,28 +275,34 @@ class PermissionController extends BaseController {
     }
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * _Format Permission.
+   * --------------------------------------------------------------------------
+   *
    * Format permission name.
    *
    * @param string $name
    *
    * @return string
    */
-  protected function _formatPermission(string $name) {
+  protected function _formatPermission(string $name): string {
     return "";
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Render.
+   * --------------------------------------------------------------------------
+   *
    * Render View.
    *
    * @param string $view
-   * @param array $data
+   * @param array  $data
    *
    * @return string
    */
-  protected function _render(string $view, array $data = []) {
+  protected function _render(string $view, array $data = []): string {
     //
     // In case you have a custom configuration that you want to pass to
     // your views (e.g. theme settings), it is added here.
@@ -278,7 +310,7 @@ class PermissionController extends BaseController {
     // It is assumed that have declared and set the variable $myConfig in
     // your BaseController.
     //
-    if (isset($this->myConfig)) $data[ 'myConfig' ] = $this->myConfig;
+    if (isset($this->myConfig)) $data['myConfig'] = $this->myConfig;
 
     return view($view, $data);
   }

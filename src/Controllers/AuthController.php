@@ -8,6 +8,7 @@ use CodeIgniter\Session\Session;
 use CI4\Auth\Config\Auth as AuthConfig;
 use CI4\Auth\Entities\User;
 use CI4\Auth\Models\UserModel;
+use Exception;
 use RobThree\Auth\TwoFactorAuth;
 
 use App\Controllers\BaseController;
@@ -48,9 +49,10 @@ class AuthController extends BaseController {
    */
   protected $passphrase;
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
    * Constructor.
+   * --------------------------------------------------------------------------
    */
   public function __construct() {
     //
@@ -64,13 +66,14 @@ class AuthController extends BaseController {
     $this->passphrase = hex2bin('8849523a8e0e1ff45f440da048428b2554d2660c80957fcedbeb9575c079d7eb');
   }
 
-  //---------------------------------------------------------------------------
   /**
-   * Activate account.
+   * --------------------------------------------------------------------------
+   * Activate Account.
+   * --------------------------------------------------------------------------
    *
    * @return mixed
    */
-  public function activateAccount() {
+  public function activateAccount(): mixed {
     $users = model(UserModel::class);
 
     //
@@ -98,13 +101,16 @@ class AuthController extends BaseController {
     return redirect()->route('login')->with('message', lang('Auth.register.success'));
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Activate Account Resend.
+   * --------------------------------------------------------------------------
+   *
    * Resend activation account.
    *
    * @return mixed
    */
-  public function activateAccountResend() {
+  public function activateAccountResend(): mixed {
     if ($this->authConfig->requireActivation === null) {
       return redirect()->route('login');
     }
@@ -139,32 +145,45 @@ class AuthController extends BaseController {
     return redirect()->route('login')->with('message', lang('Auth.activation.success'));
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Error.
+   * --------------------------------------------------------------------------
+   *
    * Displays the CI4-Auth error page.
    */
-  public function error() {
-    return $this->_render($this->authConfig->views[ 'error_auth' ], [ 'config' => $this->authConfig ]);
+  public function error(): mixed {
+    return $this->_render($this->authConfig->views['error_auth'], [ 'config' => $this->authConfig ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Forgot Password.
+   * --------------------------------------------------------------------------
+   *
    * Displays the forgot password form.
+   *
+   * @return mixed
    */
-  public function forgotPassword() {
+  public function forgotPassword(): mixed {
     if ($this->authConfig->activeResetter === null) {
       return redirect()->route('login')->with('error', lang('Auth.forgot.disabled'));
     }
 
-    return $this->_render($this->authConfig->views[ 'forgot' ], [ 'config' => $this->authConfig ]);
+    return $this->_render($this->authConfig->views['forgot'], [ 'config' => $this->authConfig ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Forgot Password Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempts to find a user account with the given email address and sends
    * password reset instructions to them.
+   *
+   * @return mixed
    */
-  public function forgotPasswordDo() {
+  public function forgotPasswordDo(): mixed {
     if ($this->authConfig->activeResetter === null) {
       return redirect()->route('login')->with('error', lang('Auth.forgot.disabled'));
     }
@@ -193,41 +212,51 @@ class AuthController extends BaseController {
     return redirect()->route('reset-password')->with('message', lang('Auth.forgot.email_sent'));
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Login.
+   * --------------------------------------------------------------------------
+   *
    * Displays the login form, or redirects the user to their destination/home
    * if they are already logged in.
+   *
+   * @return mixed
    */
-  public function login() {
+  public function login(): mixed {
     //
     // No need to show a login form if the user is already logged in.
     //
     if ($this->auth->check()) {
       $redirectURL = session('redirect_url') ?? site_url('/');
-      unset($_SESSION[ 'redirect_url' ]);
+      unset($_SESSION['redirect_url']);
       return redirect()->to($redirectURL);
     }
 
     //
     // Set a return URL if none is specified
     //
-    $_SESSION[ 'redirect_url' ] = session('redirect_url') ?? previous_url() ?? site_url('/');
+    $_SESSION['redirect_url'] = session('redirect_url') ?? previous_url() ?? site_url('/');
 
-    return $this->_render($this->authConfig->views[ 'login' ], [ 'config' => $this->authConfig ]);
+    return $this->_render($this->authConfig->views['login'], [ 'config' => $this->authConfig ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Login Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempts to verify the user's credentials through a POST request.
+   *
+   * @return mixed
    */
-  public function loginDo() {
+  public function loginDo(): mixed {
     $rules = [
       'login' => 'required',
       'password' => 'required',
     ];
 
     if ($this->authConfig->validFields == [ 'email' ]) {
-      $rules[ 'login' ] .= '|valid_email';
+      $rules['login'] .= '|valid_email';
     }
 
     if (!$this->validate($rules)) {
@@ -283,7 +312,7 @@ class AuthController extends BaseController {
         //
         session()->set('2fa_setup_required', $user->email);
         $redirectURL = site_url('/setup2fa');
-        unset($_SESSION[ 'redirect_url' ]);
+        unset($_SESSION['redirect_url']);
         return redirect()->to($redirectURL)->withCookies();
       } else {
         //
@@ -291,23 +320,28 @@ class AuthController extends BaseController {
         //
         $this->auth->login($user, $remember);
         $redirectURL = session('redirect_url') ?? site_url('/');
-        unset($_SESSION[ 'redirect_url' ]);
+        unset($_SESSION['redirect_url']);
         return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.login.success'));
       }
     }
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Login 2FA.
+   * --------------------------------------------------------------------------
+   *
    * Displays the 2FA login page.
+   *
+   * @return mixed
    */
-  public function login2fa() {
+  public function login2fa(): mixed {
     //
     // Redirect back if already logged in
     //
     if ($this->auth->check()) {
       $redirectURL = session('redirect_url') ?? site_url('/');
-      unset($_SESSION[ 'redirect_url' ]);
+      unset($_SESSION['redirect_url']);
       return redirect()->to($redirectURL);
     }
 
@@ -316,7 +350,7 @@ class AuthController extends BaseController {
     //
     if (!session('2fa_in_progress')) {
       $redirectURL = session('redirect_url') ?? site_url('/');
-      unset($_SESSION[ 'redirect_url' ]);
+      unset($_SESSION['redirect_url']);
       return redirect()->to($redirectURL);
     }
 
@@ -329,7 +363,7 @@ class AuthController extends BaseController {
     $user = $users->where('email', session('2fa_in_progress'))->first();
 
     return $this->_render(
-      $this->authConfig->views[ 'login2fa' ],
+      $this->authConfig->views['login2fa'],
       [
         'config' => $this->authConfig,
         'user' => $user,
@@ -338,11 +372,16 @@ class AuthController extends BaseController {
     );
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Login 2FA Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempts to verify the user's 2FA PIN through a POST request.
+   *
+   * @return mixed
    */
-  public function login2faDo() {
+  public function login2faDo(): mixed {
     $rules = [
       'pin' => 'required|numeric',
     ];
@@ -360,7 +399,7 @@ class AuthController extends BaseController {
     //
     if (!session('2fa_in_progress')) {
       $redirectURL = session('redirect_url') ?? site_url('/');
-      unset($_SESSION[ 'redirect_url' ]);
+      unset($_SESSION['redirect_url']);
       return redirect()->to($redirectURL)->withCookies()->with('errors', lang('Auth.2fa.login.no_2fa_in_progress'));
     }
     //
@@ -382,9 +421,9 @@ class AuthController extends BaseController {
         //
         $this->auth->login($user, session('ci4auth-remember'));
         $redirectURL = session('redirect_url') ?? site_url('/');
-        unset($_SESSION[ 'redirect_url' ]);
-        unset($_SESSION[ '2fa_in_progress' ]);
-        unset($_SESSION[ 'ci4auth-remember' ]);
+        unset($_SESSION['redirect_url']);
+        unset($_SESSION['2fa_in_progress']);
+        unset($_SESSION['ci4auth-remember']);
         return redirect()->to($redirectURL)->withCookies()->with('message', lang('Auth.login.success'));
       } else {
         //
@@ -393,7 +432,7 @@ class AuthController extends BaseController {
         $qrcode = $this->tfa->getQRCodeImageAsDataUri($user->email, $secret);
         session()->setFlashdata('error', lang('Auth.2fa.setup.mismatch'));
         return $this->_render(
-          $this->authConfig->views[ 'login2fa' ],
+          $this->authConfig->views['login2fa'],
           [
             'config' => $this->authConfig,
             'user' => $user,
@@ -409,20 +448,30 @@ class AuthController extends BaseController {
     }
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Logout.
+   * --------------------------------------------------------------------------
+   *
    * Log the user out.
+   *
+   * @return mixed
    */
-  public function logout() {
+  public function logout(): mixed {
     if ($this->auth->check()) $this->auth->logout();
     return redirect()->to(site_url('/'));
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Register.
+   * --------------------------------------------------------------------------
+   *
    * Displays the user registration page.
+   *
+   * @return mixed
    */
-  public function register() {
+  public function register(): mixed {
     //
     // Redirect back if already logged in
     //
@@ -433,14 +482,19 @@ class AuthController extends BaseController {
     //
     if (!$this->authConfig->allowRegistration) return redirect()->back()->withInput()->with('error', lang('Auth.register.disabled'));
 
-    return $this->_render($this->authConfig->views[ 'register' ], [ 'config' => $this->authConfig ]);
+    return $this->_render($this->authConfig->views['register'], [ 'config' => $this->authConfig ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Register Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempt to register a new user.
+   *
+   * @return mixed
    */
-  public function registerDo() {
+  public function registerDo(): mixed {
     //
     // Check if registration is allowed
     //
@@ -502,31 +556,39 @@ class AuthController extends BaseController {
     return redirect()->route('login')->with('message', lang('Auth.register.success'));
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Reset Password.
+   * --------------------------------------------------------------------------
+   *
    * Displays the Reset Password form.
+   *
+   * @return mixed
    */
-  public function resetPassword() {
+  public function resetPassword(): mixed {
     if ($this->authConfig->activeResetter === null) {
       return redirect()->route('login')->with('error', lang('Auth.forgot.disabled'));
     }
 
     $token = $this->request->getGet('token');
 
-    return $this->_render($this->authConfig->views[ 'reset' ], [
+    return $this->_render($this->authConfig->views['reset'], [
       'config' => $this->authConfig,
       'token' => $token,
     ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Reset Password Do.
+   * --------------------------------------------------------------------------
+   *
    * Verifies the code with the email and saves the new password,
    * if they all pass validation.
    *
    * @return mixed
    */
-  public function resetPasswordDo() {
+  public function resetPasswordDo(): mixed {
     if ($this->authConfig->activeResetter === null) {
       return redirect()->route('login')->with('error', lang('Auth.forgot.disabled'));
     }
@@ -618,13 +680,18 @@ class AuthController extends BaseController {
     return redirect()->route('login')->with('message', lang('Auth.forgot.reset_success'));
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Setup 2FA.
+   * --------------------------------------------------------------------------
+   *
    * Displays the 2FA setup page.
    *
    * @param string $secret - Optional, to show the same QR code on wrong verify
+   *
+   * @return mixed
    */
-  public function setup2fa($secret = null) {
+  public function setup2fa($secret = null): mixed {
     //
     // Redirect back if not logged in and no forced 2FA setup is in progress
     //
@@ -660,7 +727,7 @@ class AuthController extends BaseController {
     // Render the page
     //
     return $this->_render(
-      $this->authConfig->views[ 'setup2fa' ],
+      $this->authConfig->views['setup2fa'],
       [
         'config' => $this->authConfig,
         'qrcode' => $qrcode,
@@ -671,11 +738,16 @@ class AuthController extends BaseController {
     );
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Setup 2FA Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempt to setup 2FA for a user.
+   *
+   * @return mixed
    */
-  public function setup2faDo() {
+  public function setup2faDo(): mixed {
     $users = model(UserModel::class);
     $user = $users->where('email', $this->request->getPost('hidden_email'))->first();
 
@@ -715,10 +787,10 @@ class AuthController extends BaseController {
             $remember = session('ci4auth-remember');
           }
           $this->auth->login($user, $remember);
-          unset($_SESSION[ 'redirect_url' ]);
-          unset($_SESSION[ '2fa_in_progress' ]);
-          unset($_SESSION[ '2fa_setup_progress' ]);
-          unset($_SESSION[ 'ci4auth-remember' ]);
+          unset($_SESSION['redirect_url']);
+          unset($_SESSION['2fa_in_progress']);
+          unset($_SESSION['2fa_setup_progress']);
+          unset($_SESSION['ci4auth-remember']);
         }
         return redirect()->route('/')->with('message', lang('Auth.2fa.setup.success'));
       } else {
@@ -728,7 +800,7 @@ class AuthController extends BaseController {
         $qrcode = $this->tfa->getQRCodeImageAsDataUri($user->email, $secret);
         session()->setFlashdata('error', lang('Auth.2fa.setup.mismatch'));
         return $this->_render(
-          $this->authConfig->views[ 'setup2fa' ],
+          $this->authConfig->views['setup2fa'],
           [
             'config' => $this->authConfig,
             'qrcode' => $qrcode,
@@ -746,39 +818,58 @@ class AuthController extends BaseController {
     }
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * About.
+   * --------------------------------------------------------------------------
+   *
    * Displays the About page.
+   *
+   * @return mixed
    */
-  public function about() {
-    return $this->_render($this->authConfig->views[ 'about' ], [ 'config' => $this->authConfig ]);
+  public function about(): mixed {
+    return $this->_render($this->authConfig->views['about'], [ 'config' => $this->authConfig ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Welcome.
+   * --------------------------------------------------------------------------
+   *
    * Displays the Welcome page.
+   *
+   * @return mixed
    */
-  public function welcome() {
-    return $this->_render($this->authConfig->views[ 'welcome' ], [ 'config' => $this->authConfig ]);
+  public function welcome(): mixed {
+    return $this->_render($this->authConfig->views['welcome'], [ 'config' => $this->authConfig ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * WhoAmI.
+   * --------------------------------------------------------------------------
+   *
    * Displays the Whoami page.
+   *
+   * @return mixed
    */
-  public function whoami() {
-    return $this->_render($this->authConfig->views[ 'whoami' ], [ 'config' => $this->authConfig ]);
+  public function whoami(): mixed {
+    return $this->_render($this->authConfig->views['whoami'], [ 'config' => $this->authConfig ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Encrypt.
+   * --------------------------------------------------------------------------
+   *
    * Encrypts (but does not authenticate) a string.
    *
-   * @param string $plaintext - String to encrypt
-   * @param boolean $encode - Return base64-encoded or not
+   * @param string  $plaintext - String to encrypt
+   * @param boolean $encode    - Return base64-encoded or not
+   *
    * @return string
    */
-  protected function encrypt($plaintext, $encode = false) {
+  protected function encrypt($plaintext, $encode = false): string {
     $nonceSize = openssl_cipher_iv_length($this->cipher);
     $nonce = openssl_random_pseudo_bytes($nonceSize);
 
@@ -800,15 +891,19 @@ class AuthController extends BaseController {
     return $nonce . $ciphertext;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Decrypt.
+   * --------------------------------------------------------------------------
+   *
    * Decrypts (but does not verify) an encrypted string.
    *
-   * @param string $ciphertext - Encrypted string
-   * @param boolean $encoded - Is base64 encoded string submitted or not?
+   * @param string  $ciphertext - Encrypted string
+   * @param boolean $encoded    - Is base64 encoded string submitted or not?
+   *
    * @return string
    */
-  protected function decrypt($ciphertext, $encoded = false) {
+  protected function decrypt($ciphertext, $encoded = false): string {
     if ($encoded) {
       $message = base64_decode($ciphertext, true);
       if ($message === false) {
@@ -831,16 +926,19 @@ class AuthController extends BaseController {
     return $plaintext;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Render.
+   * --------------------------------------------------------------------------
+   *
    * Render View.
    *
    * @param string $view
-   * @param array $data
+   * @param array  $data
    *
    * @return string
    */
-  protected function _render(string $view, array $data = []) {
+  protected function _render(string $view, array $data = []): string {
     //
     // In case you have a custom configuration that you want to pass to
     // your views (e.g. theme settings), it is added here.
@@ -848,7 +946,7 @@ class AuthController extends BaseController {
     // It is assumed that have declared and set the variable $myConfig in
     // your BaseController.
     //
-    if (isset($this->myConfig)) $data[ 'myConfig' ] = $this->myConfig;
+    if (isset($this->myConfig)) $data['myConfig'] = $this->myConfig;
 
     return view($view, $data);
   }

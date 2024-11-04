@@ -62,6 +62,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    *
    * @param string $password
    * @param Entity $user
+   *
    * @return boolean
    */
   protected function isNotPersonal($password, $user) {
@@ -152,6 +153,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    *
    * @param string $password
    * @param Entity $user
+   *
    * @return boolean
    */
   protected function isNotSimilar($password, $user) {
@@ -183,6 +185,7 @@ class NothingPersonalValidator extends BaseValidator implements ValidatorInterfa
    * Then it explodes that result using the space for a delimiter.
    *
    * @param string $str
+   *
    * @return array
    */
   protected function strip_explode($str) {

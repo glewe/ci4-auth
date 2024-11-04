@@ -11,8 +11,11 @@ class PermissionModel extends Model {
   protected $allowedFields = [ 'name', 'description' ];
   protected $useTimestamps = false;
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Add Permission to User.
+   * --------------------------------------------------------------------------
+   *
    * Adds a single permission to a single user.
    *
    * @param int $permissionId
@@ -20,7 +23,7 @@ class PermissionModel extends Model {
    *
    * @return bool
    */
-  public function addPermissionToUser(int $permissionId, int $userId) {
+  public function addPermissionToUser(int $permissionId, int $userId): bool {
     cache()->delete("{$userId}_permissions");
 
     return $this->db->table('auth_users_permissions')->insert([
@@ -29,8 +32,11 @@ class PermissionModel extends Model {
     ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Delete Permission.
+   * --------------------------------------------------------------------------
+   *
    * Deletes a permission.
    *
    * @param int $id Permission ID
@@ -46,8 +52,11 @@ class PermissionModel extends Model {
     return true;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Does User have Permission.
+   * --------------------------------------------------------------------------
+   *
    * Checks if a user has a specific permission (personal, group, role).
    *
    * @param int $userId
@@ -87,10 +96,13 @@ class PermissionModel extends Model {
     return $count > 0;
   }
 
-  //---------------------------------------------------------------------------
   /**
-   * Gets all permissions for a user in a way that can be easily used to check
-   * against:
+   * --------------------------------------------------------------------------
+   * Get Permissions for User.
+   * --------------------------------------------------------------------------
+   *
+   * Gets all personal, group and role permissions for a user in a way that can
+   * be easily used to check against:
    *
    * [
    *   id => name,
@@ -140,7 +152,7 @@ class PermissionModel extends Model {
 
       $found = [];
       foreach ($combined as $row) {
-        $found[ $row->id ] = strtolower($row->name);
+        $found[$row->id] = strtolower($row->name);
       }
 
       cache()->save("{$userId}_permissions", $found, 300);
@@ -149,10 +161,13 @@ class PermissionModel extends Model {
     return $found;
   }
 
-  //---------------------------------------------------------------------------
   /**
-   * Gets all permissions for a user in a way that can be easily used to check
-   * against:
+   * --------------------------------------------------------------------------
+   * Get Personal Permissions for User.
+   * --------------------------------------------------------------------------
+   *
+   * Gets all personal permissions for a user in a way that can be easily used
+   * to check against:
    *
    * [
    *   id => name,
@@ -177,7 +192,7 @@ class PermissionModel extends Model {
 
       $found = [];
       foreach ($fromUser as $row) {
-        $found[ $row->id ] = strtolower($row->name);
+        $found[$row->id] = strtolower($row->name);
       }
 
       cache()->save("{$userId}_personal_permissions", $found, 300);
@@ -186,8 +201,11 @@ class PermissionModel extends Model {
     return $found;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Get Groups for Permission.
+   * --------------------------------------------------------------------------
+   *
    * Gets all groups that have a single permission assigned.
    *
    * @param int $permId Permission ID to check
@@ -208,7 +226,7 @@ class PermissionModel extends Model {
 
       $found = [];
       foreach ($permGroups as $row) {
-        $found[ $row->id ] = $row->name;
+        $found[$row->id] = $row->name;
       }
 
       cache()->save("{$permId}_permissions_groups", $found, 300);
@@ -217,8 +235,11 @@ class PermissionModel extends Model {
     return $found;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Get Roles for Permission.
+   * --------------------------------------------------------------------------
+   *
    * Gets all groups that have a single permission assigned.
    *
    * @param int $permId Permission ID to check
@@ -239,7 +260,7 @@ class PermissionModel extends Model {
 
       $found = [];
       foreach ($permRoles as $row) {
-        $found[ $row->id ] = $row->name;
+        $found[$row->id] = $row->name;
       }
 
       cache()->save("{$permId}_permissions_roles", $found, 300);
@@ -248,8 +269,11 @@ class PermissionModel extends Model {
     return $found;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Get Users for Permission.
+   * --------------------------------------------------------------------------
+   *
    * Gets all users that hold a single personal permission.
    *
    * @param int $permId Permission ID to check
@@ -270,7 +294,7 @@ class PermissionModel extends Model {
 
       $found = [];
       foreach ($permUsers as $row) {
-        $found[ $row->id ] = $row->username;
+        $found[$row->id] = $row->username;
       }
 
       cache()->save("{$permId}_permissions_users", $found, 300);
@@ -279,25 +303,31 @@ class PermissionModel extends Model {
     return $found;
   }
 
-  //-------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Remove Permission from User.
+   * --------------------------------------------------------------------------
+   *
    * Removes a permission from a user.
    *
    * @param int $permissionId
    * @param int $userId
    */
-  public function removePermissionFromUser(int $permissionId, int $userId) {
+  public function removePermissionFromUser(int $permissionId, int $userId): void {
     $this->db->table('auth_users_permissions')->where([ 'user_id' => $userId, 'permission_id' => $permissionId ])->delete();
     cache()->delete("{$userId}_permissions");
   }
 
-  //-------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Remove all Permissions from User.
+   * --------------------------------------------------------------------------
+   *
    * Removes all permissions from a user.
    *
    * @param int $userId
    */
-  public function removeAllPermissionsFromUser(int $userId) {
+  public function removeAllPermissionsFromUser(int $userId): void {
     $this->db->table('auth_users_permissions')->where([ 'user_id' => $userId ])->delete();
     cache()->delete("{$userId}_permissions");
   }

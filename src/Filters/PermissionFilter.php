@@ -10,6 +10,10 @@ use CI4\Auth\Exceptions\PermissionException;
 class PermissionFilter implements FilterInterface {
   //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Before.
+   * --------------------------------------------------------------------------
+   *
    * Do whatever processing this filter needs to do. By default it should not
    * return anything during normal execution. However, when an abnormal state
    * is found, it should return an instance of CodeIgniter\HTTP\Response. If
@@ -17,14 +21,14 @@ class PermissionFilter implements FilterInterface {
    * to the client, allowing for error pages, redirects, etc.
    *
    * @param RequestInterface $request
-   * @param array|null $params
+   * @param array|null       $arguments
    *
    * @return mixed
    */
-  public function before(RequestInterface $request, $params = null) {
+  public function before(RequestInterface $request, $arguments = null): mixed {
     if (!function_exists('logged_in')) helper('auth');
 
-    if (empty($params)) return false;
+    if (empty($arguments)) return false;
 
     $authenticate = service('authentication');
 
@@ -41,7 +45,7 @@ class PermissionFilter implements FilterInterface {
     //
     // Check each requested permission
     //
-    foreach ($params as $permission) {
+    foreach ($arguments as $permission) {
       $result = $result && $authorize->hasPermission($permission, $authenticate->id());
     }
 
@@ -49,12 +53,12 @@ class PermissionFilter implements FilterInterface {
       if ($authenticate->silent()) {
 //                $redirectURL = session('redirect_url') ?? '/';
         $redirectURL = '/error_auth';
-        unset($_SESSION[ 'redirect_url' ]);
+        unset($_SESSION['redirect_url']);
         return redirect()->to($redirectURL)->with('error', lang('Auth.exception.insufficient_permissions'));
       } else {
 //                $redirectURL = session('redirect_url') ?? '/';
         $redirectURL = '/error_auth';
-        unset($_SESSION[ 'redirect_url' ]);
+        unset($_SESSION['redirect_url']);
 //                throw new PermissionException(lang('Auth.exception.insufficient_permissions'));
         return redirect()->to($redirectURL)->with('error', lang('Auth.exception.insufficient_permissions'));
       }
@@ -62,16 +66,18 @@ class PermissionFilter implements FilterInterface {
     return false;
   }
 
-  //----------------------------------------------------------------------------
   /**
-   * Allows After filters to inspect and modify the response
-   * object as needed. This method does not allow any way
-   * to stop execution of other after filters, short of
-   * throwing an Exception or Error.
+   * --------------------------------------------------------------------------
+   * After.
+   * --------------------------------------------------------------------------
    *
-   * @param RequestInterface $request
+   * Allows After filters to inspect and modify the response object as needed.
+   * This method does not allow any way to stop execution of other after filters,
+   * short of throwing an Exception or Error.
+   *
+   * @param RequestInterface  $request
    * @param ResponseInterface $response
-   * @param array|null $arguments
+   * @param array|null        $arguments
    *
    * @return void
    */

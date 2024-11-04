@@ -3,7 +3,6 @@
 namespace CI4\Auth\Exceptions;
 
 class UserNotFoundException extends \RuntimeException implements ExceptionInterface {
-  //---------------------------------------------------------------------------
   /**
    * This static method is responsible for creating a new instance of the UserNotFoundException.
    * It takes an integer as input, which should be the user's ID.

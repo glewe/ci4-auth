@@ -18,8 +18,11 @@ class CreateUser extends BaseCommand {
     'email' => "The email address of the new user to create",
   ];
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Run.
+   * --------------------------------------------------------------------------
+   *
    * This method is responsible for creating a new user in the system.
    * It takes an array of parameters as input, which should contain the user's username and email.
    * If the username is not provided, it prompts the user to enter it.
@@ -40,15 +43,15 @@ class CreateUser extends BaseCommand {
     ];
 
     // Consume or prompt for username
-    $row[ 'username' ] = array_shift($params);
-    if (empty($row[ 'username' ])) {
-      $row[ 'username' ] = CLI::prompt('Username', null, 'required');
+    $row['username'] = array_shift($params);
+    if (empty($row['username'])) {
+      $row['username'] = CLI::prompt('Username', null, 'required');
     }
 
     // Consume or prompt for email
-    $row[ 'email' ] = array_shift($params);
-    if (empty($row[ 'email' ])) {
-      $row[ 'email' ] = CLI::prompt('Email', null, 'required');
+    $row['email'] = array_shift($params);
+    if (empty($row['email'])) {
+      $row['email'] = CLI::prompt('Email', null, 'required');
     }
 
     // Run the user through the entity and insert it
@@ -56,7 +59,7 @@ class CreateUser extends BaseCommand {
 
     $users = model(UserModel::class);
     if ($userId = $users->insert($user)) {
-      CLI::write(lang('Auth.register.create_success', [ $row[ 'username' ], $userId ]), 'green');
+      CLI::write(lang('Auth.register.create_success', [ $row['username'], $userId ]), 'green');
     } else {
       foreach ($users->errors() as $message) {
         CLI::write($message, 'red');

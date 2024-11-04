@@ -8,16 +8,19 @@ use CodeIgniter\Filters\FilterInterface;
 use Config\App;
 
 class LoginFilter implements FilterInterface {
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Before.
+   * --------------------------------------------------------------------------
+   *
    * Verifies that a user is logged in, or redirects to login.
    *
    * @param RequestInterface $request
-   * @param array|null $params
+   * @param array|null       $arguments
    *
-   * @return mixed
+   * @return \CodeIgniter\HTTP\RedirectResponse|bool
    */
-  public function before(RequestInterface $request, $params = null) {
+  public function before(RequestInterface $request, $arguments = null): \CodeIgniter\HTTP\RedirectResponse|bool {
     if (!function_exists('logged_in')) {
       helper('auth');
     }
@@ -53,11 +56,18 @@ class LoginFilter implements FilterInterface {
     return true;
   }
 
-  //---------------------------------------------------------------------------
   /**
-   * @param RequestInterface $request
+   * --------------------------------------------------------------------------
+   * After.
+   * --------------------------------------------------------------------------
+   *
+   * Allows After filters to inspect and modify the response object as needed.
+   * This method does not allow any way to stop execution of other after filters,
+   * short of throwing an Exception or Error.
+   *
+   * @param RequestInterface  $request
    * @param ResponseInterface $response
-   * @param array|null $arguments
+   * @param array|null        $arguments
    *
    * @return void
    */

@@ -16,8 +16,11 @@ class HashPassword extends BaseCommand {
     'password' => 'Password value you want to hash.',
   ];
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Run.
+   * --------------------------------------------------------------------------
+   *
    * This method is responsible for hashing a given password.
    * It takes an array of parameters as input, which should contain the password.
    * If the password is not provided, it prompts the user to enter it.

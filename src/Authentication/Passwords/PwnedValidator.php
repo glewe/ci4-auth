@@ -11,10 +11,11 @@ use CI4\Auth\Exceptions\AuthException;
  *
  * Checks if the password has been compromised by checking against
  * an online database of over 555 million stolen passwords.
- * @see https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/
+ *
+ * @see     https://www.troyhunt.com/ive-just-launched-pwned-passwords-version-2/
  *
  * NIST recommend to check passwords against those obtained from previous data breaches.
- * @see https://pages.nist.gov/800-63-3/sp800-63b.html#sec5
+ * @see     https://pages.nist.gov/800-63-3/sp800-63b.html#sec5
  *
  * @package CI4\Auth\Authentication\Passwords\Validators
  */

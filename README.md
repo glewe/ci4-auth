@@ -16,7 +16,7 @@ quite large. I decided to build CI4-Auth based on Myth-Auth, changing and adding
 ## Requirements
 
 - PHP 8.1+
-- CodeIgniter 4.4+
+- CodeIgniter 4.5+
 - [RobThree TwoFactorAuth](http://github.com/RobThree/TwoFactorAuth)
 
 ## Features

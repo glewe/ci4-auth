@@ -66,8 +66,11 @@ class Publish extends BaseCommand {
    */
   protected $viewsPublished = false;
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Run.
+   * --------------------------------------------------------------------------
+   *
    * Displays the help for the spark cli script itself.
    *
    * @param array $params
@@ -244,8 +247,11 @@ class Publish extends BaseCommand {
   // Utilities
   //---------------------------------------------------------------------------
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Replace Namespace.
+   * --------------------------------------------------------------------------
+   *
    * Replaces the Lewe\Auth namespace in the published
    * file with the applications current namespace.
    *
@@ -263,8 +269,11 @@ class Publish extends BaseCommand {
     return str_replace($originalNamespace, $newNamespace, $contents);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Determine Source Path.
+   * --------------------------------------------------------------------------
+   *
    * Determines the current source path from which all other files are located.
    */
   protected function determineSourcePath() {
@@ -276,17 +285,22 @@ class Publish extends BaseCommand {
     }
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Write File.
+   * --------------------------------------------------------------------------
+   *
    * Write a file, catching any exceptions and showing a
    * nicely formatted error.
    *
    * @param string $path
    * @param string $content
+   *
+   * @return void
    */
-  protected function writeFile(string $path, string $content) {
+  protected function writeFile(string $path, string $content): void {
     $config = new Autoload();
-    $appPath = $config->psr4[ APP_NAMESPACE ];
+    $appPath = $config->psr4[APP_NAMESPACE];
 
     $filename = $appPath . $path;
     $directory = dirname($filename);

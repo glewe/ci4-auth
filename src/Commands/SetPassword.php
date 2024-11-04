@@ -17,8 +17,11 @@ class SetPassword extends BaseCommand {
     'password' => 'Password value you want to set.',
   ];
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Run.
+   * --------------------------------------------------------------------------
+   *
    * This method is responsible for setting a new password for a user.
    * It takes an array of parameters as input, which should contain the user's identity and the new password.
    * If the identity is not provided, it prompts the user to enter it.
@@ -34,8 +37,8 @@ class SetPassword extends BaseCommand {
    */
   public function run(array $params = []) {
     // Consume or prompt for password
-    $identity = isset($params[ 0 ]) ? $params[ 0 ] : null;
-    $password = isset($params[ 1 ]) ? $params[ 1 ] : null;
+    $identity = isset($params[0]) ? $params[0] : null;
+    $password = isset($params[1]) ? $params[1] : null;
 
     if (empty($identity)) {
       $identity = CLI::prompt('Identity', null, 'required');

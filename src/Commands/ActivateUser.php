@@ -16,8 +16,11 @@ class ActivateUser extends BaseCommand {
     'identity' => 'User identity.',
   ];
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Run.
+   * --------------------------------------------------------------------------
+   *
    * This method is responsible for activating a user in the system.
    * It takes an array of parameters as input, which should contain the user's identity.
    * If the identity is not provided, it prompts the user to enter it.
@@ -29,8 +32,10 @@ class ActivateUser extends BaseCommand {
    * If the activation fails, it outputs a failure message.
    *
    * @param array $params An array of parameters. The first element should be the user's identity.
+   *
+   * @return void
    */
-  public function run(array $params = []) {
+  public function run(array $params = []): void {
     // Consume or prompt for password
     $identity = array_shift($params);
 

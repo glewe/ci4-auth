@@ -87,8 +87,11 @@ class UserModel extends Model {
    */
   protected $assignRole;
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Add to Group.
+   * --------------------------------------------------------------------------
+   *
    * If a default role is assigned in Config\Auth, will add this user to that
    * role. Will do nothing if the role cannot be found.
    *
@@ -96,65 +99,76 @@ class UserModel extends Model {
    *
    * @return mixed
    */
-  protected function addToGroup($data) {
+  protected function addToGroup($data): mixed {
     if (is_numeric($this->assignGroup)) {
       $groupModel = model(GroupModel::class);
-      $groupModel->addUserToGroup($data[ 'id' ], $this->assignGroup);
+      $groupModel->addUserToGroup($data['id'], $this->assignGroup);
     }
 
     return $data;
   }
 
-  //---------------------------------------------------------------------------
   /**
-   * If a default role is assigned in Config\Auth, will
-   * add this user to that role. Will do nothing
-   * if the role cannot be found.
+   * --------------------------------------------------------------------------
+   * Add to Role.
+   * --------------------------------------------------------------------------
+   *
+   * If a default role is assigned in Config\Auth, will add this user to that
+   * role. Will do nothing if the role cannot be found.
    *
    * @param mixed $data
    *
    * @return mixed
    */
-  protected function addToRole($data) {
+  protected function addToRole($data): mixed {
     if (is_numeric($this->assignRole)) {
       $roleModel = model(RoleModel::class);
-      $roleModel->addUserToRole($data[ 'id' ], $this->assignRole);
+      $roleModel->addUserToRole($data['id'], $this->assignRole);
     }
 
     return $data;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Clear Group.
+   * --------------------------------------------------------------------------
+   *
    * Clears the group to assign to newly created users.
    *
    * @return $this
    */
-  public function clearGroup() {
+  public function clearGroup(): UserModel {
     $this->assignGroup = null;
     return $this;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Clear Role.
+   * --------------------------------------------------------------------------
+   *
    * Clears the role to assign to newly created users.
    *
    * @return $this
    */
-  public function clearRole() {
+  public function clearRole(): UserModel {
     $this->assignRole = null;
     return $this;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Create User.
+   * --------------------------------------------------------------------------
+   *
    * Creates a user.
    *
    * @param array $data User data
    *
    * @return mixed
    */
-  public function createUser($data) {
+  public function createUser($data): mixed {
     $validation = service('validation', null, false);
     $validation->setRules($this->validationRules, $this->validationMessages);
 
@@ -172,15 +186,18 @@ class UserModel extends Model {
     return false;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Delete User.
+   * --------------------------------------------------------------------------
+   *
    * Deletes a user.
    *
    * @param int $teamId
    *
    * @return bool
    */
-  public function deleteUser(int $id) {
+  public function deleteUser(int $id): bool {
     if (!$this->delete($id)) {
       $this->error = $this->errors();
       return false;
@@ -189,15 +206,20 @@ class UserModel extends Model {
     return true;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Log Activation Attempt.
+   * --------------------------------------------------------------------------
+   *
    * Logs an activation attempt for posterity sake.
    *
    * @param string|null $token
    * @param string|null $ipAddress
    * @param string|null $userAgent
+   *
+   * @return void
    */
-  public function logActivationAttempt(string $token = null, string $ipAddress = null, string $userAgent = null) {
+  public function logActivationAttempt(string $token = null, string $ipAddress = null, string $userAgent = null): void {
     $this->db->table('auth_activation_attempts')->insert([
       'ip_address' => $ipAddress,
       'user_agent' => $userAgent,
@@ -206,16 +228,21 @@ class UserModel extends Model {
     ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Log Reset Attempt.
+   * --------------------------------------------------------------------------
+   *
    * Logs a password reset attempt for posterity sake.
    *
-   * @param string $email
+   * @param string      $email
    * @param string|null $token
    * @param string|null $ipAddress
    * @param string|null $userAgent
+   *
+   * @return void
    */
-  public function logResetAttempt(string $email, string $token = null, string $ipAddress = null, string $userAgent = null) {
+  public function logResetAttempt(string $email, string $token = null, string $ipAddress = null, string $userAgent = null): void {
     $this->db->table('auth_reset_attempts')->insert([
       'email' => $email,
       'ip_address' => $ipAddress,
@@ -225,29 +252,35 @@ class UserModel extends Model {
     ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * With Group.
+   * --------------------------------------------------------------------------
+   *
    * Sets the group to assign when a user is created.
    *
    * @param string $groupName
    *
    * @return $this
    */
-  public function withGroup(string $groupName) {
+  public function withGroup(string $groupName): UserModel {
     $group = $this->db->table('auth_groups')->where('name', $groupName)->get()->getFirstRow();
     $this->assignGroup = $group->id;
     return $this;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * With Role.
+   * --------------------------------------------------------------------------
+   *
    * Sets the role to assign any users created.
    *
    * @param string $roleName
    *
    * @return $this
    */
-  public function withRole(string $roleName) {
+  public function withRole(string $roleName): UserModel {
     $role = $this->db->table('auth_roles')->where('name', $roleName)->get()->getFirstRow();
     $this->assignRole = $role->id;
     return $this;

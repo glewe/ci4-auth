@@ -22,13 +22,16 @@ class PasswordValidator {
     $this->config = $config;
   }
 
-  //-------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Check.
+   * --------------------------------------------------------------------------
+   *
    * Checks a password against all of the Validators specified
    * in `$passwordValidators` setting in Config\Auth.php.
    *
    * @param string $password
-   * @param User $user
+   * @param User   $user
    *
    * @return bool
    */
@@ -64,20 +67,25 @@ class PasswordValidator {
     return $valid;
   }
 
-  //-------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Error.
+   * --------------------------------------------------------------------------
+   *
    * Returns the current error, as defined by validator
    * it failed to pass.
    *
    * @return mixed
    */
   public function error() {
-
     return $this->error;
   }
 
-  //-------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Suggestion.
+   * --------------------------------------------------------------------------
+   *
    * Returns a string with any suggested fix
    * based on the validator it failed to pass.
    *

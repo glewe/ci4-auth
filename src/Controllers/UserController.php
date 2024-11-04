@@ -29,9 +29,10 @@ class UserController extends BaseController {
    */
   protected $validation;
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
    * Constructor.
+   * --------------------------------------------------------------------------
    */
   public function __construct() {
     //
@@ -43,13 +44,16 @@ class UserController extends BaseController {
     $this->validation = service('validation');
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Users.
+   * --------------------------------------------------------------------------
+   *
    * Shows all user records.
    *
    * @return \CodeIgniter\HTTP\RedirectResponse | string
    */
-  public function users() {
+  public function users(): \CodeIgniter\HTTP\RedirectResponse|string {
     $users = model(UserModel::class);
 
     $data = [
@@ -71,7 +75,7 @@ class UserController extends BaseController {
         } else {
           if (!$users->deleteUser($recId)) {
             $this->session->set('errors', $users->errors());
-            return $this->_render($this->authConfig->views[ 'users' ], $data);
+            return $this->_render($this->authConfig->views['users'], $data);
           }
           return redirect()->route('users')->with('success', lang('Auth.user.delete_success', [ $user->username, $user->email ]));
         }
@@ -97,28 +101,40 @@ class UserController extends BaseController {
         //
         $search = $this->request->getPost('search');
         $where = '`username` LIKE "%' . $search . '%" OR `email` LIKE "%' . $search . '%" OR `firstname` LIKE "%' . $search . '%" OR `lastname` LIKE "%' . $search . '%"';
-        $data[ 'users' ] = $users->where($where)->orderBy('username', 'asc')->findAll();
-        $data[ 'search' ] = $search;
+        $data['users'] = $users->where($where)->orderBy('username', 'asc')->findAll();
+        $data['search'] = $search;
       }
     }
 
-    return $this->_render($this->authConfig->views[ 'users' ], $data);
+    return $this->_render($this->authConfig->views['users'], $data);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Users Create.
+   * --------------------------------------------------------------------------
+   *
    * Displays the user create page.
+   *
+   * @param int $id User ID
+   *
+   * @return string
    */
-  public function usersCreate($id = null) {
-    return $this->_render($this->authConfig->views[ 'usersCreate' ], [ 'config' => $this->authConfig ]);
+  public function usersCreate($id = null): string {
+    return $this->_render($this->authConfig->views['usersCreate'], [ 'config' => $this->authConfig ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Users Create Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempt to create a new user.
    * To be be used by administrators. User will be activated automatically.
+   *
+   * @return \CodeIgniter\HTTP\RedirectResponse
    */
-  public function usersCreateDo() {
+  public function usersCreateDo(): \CodeIgniter\HTTP\RedirectResponse {
     $users = model(UserModel::class);
 
     //
@@ -186,13 +202,18 @@ class UserController extends BaseController {
     return redirect()->route('users')->with('success', lang('Auth.user.create_success', [ $user->username, $user->email ]));
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Users Edit.
+   * --------------------------------------------------------------------------
+   *
    * Displays the user edit page.
    *
    * @param int $id User ID
+   *
+   * @return \CodeIgniter\HTTP\RedirectResponse|string
    */
-  public function usersEdit($id = null) {
+  public function usersEdit($id = null): \CodeIgniter\HTTP\RedirectResponse|string {
     $users = model(UserModel::class);
 
     if (!$user = $users->where('id', $id)->first()) return redirect()->to('users');
@@ -206,7 +227,7 @@ class UserController extends BaseController {
     $userPersonalPermissions = $user->getPersonalPermissions();
     $userRoles = $this->authorize->userRoles($id);
 
-    return $this->_render($this->authConfig->views[ 'usersEdit' ], [
+    return $this->_render($this->authConfig->views['usersEdit'], [
       'auth' => $this->authorize,
       'config' => $this->authConfig,
       'user' => $user,
@@ -220,14 +241,19 @@ class UserController extends BaseController {
     ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Users Edit Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempt to create a new user.
    * To be be used by administrators. User will be activated automatically.
    *
    * @param int $id User ID
+   *
+   * @return \CodeIgniter\HTTP\RedirectResponse
    */
-  public function usersEditDo($id = null) {
+  public function usersEditDo($id = null): \CodeIgniter\HTTP\RedirectResponse {
     $users = model(UserModel::class);
 
     //
@@ -251,13 +277,13 @@ class UserController extends BaseController {
     //
     $emailChange = true;
     if ($this->request->getPost('email') == $user->email) {
-      $rules[ 'email' ] = 'required|valid_email';
+      $rules['email'] = 'required|valid_email';
       $emailChange = false;
     }
 
     $usernameChange = true;
     if ($this->request->getPost('username') == $user->username) {
-      $rules[ 'username' ] = 'required|alpha_numeric_space|min_length[3]|max_length[30]';
+      $rules['username'] = 'required|alpha_numeric_space|min_length[3]|max_length[30]';
       $usernameChange = false;
     }
 
@@ -396,16 +422,19 @@ class UserController extends BaseController {
     return redirect()->back()->withInput()->with('success', lang('Auth.user.update_success', [ $user->username, $user->email ]));
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Render.
+   * --------------------------------------------------------------------------
+   *
    * Render View.
    *
    * @param string $view
-   * @param array $data
+   * @param array  $data
    *
    * @return string
    */
-  protected function _render(string $view, array $data = []) {
+  protected function _render(string $view, array $data = []): string {
     //
     // In case you have a custom configuration that you want to pass to
     // your views (e.g. theme settings), it is added here.
@@ -413,7 +442,7 @@ class UserController extends BaseController {
     // It is assumed that have declared and set the variable $myConfig in
     // your BaseController.
     //
-    if (isset($this->myConfig)) $data[ 'myConfig' ] = $this->myConfig;
+    if (isset($this->myConfig)) $data['myConfig'] = $this->myConfig;
 
     return view($view, $data);
   }

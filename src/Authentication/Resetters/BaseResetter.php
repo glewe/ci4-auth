@@ -53,7 +53,7 @@ abstract class BaseResetter {
    * @return object
    */
   public function getResetterSettings() {
-    return (object)$this->config->userResetters[ static::class ];
+    return (object)$this->config->userResetters[static::class];
   }
 
   /**

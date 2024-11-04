@@ -28,9 +28,10 @@ class RoleController extends BaseController {
    */
   protected $validation;
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
    * Constructor.
+   * --------------------------------------------------------------------------
    */
   public function __construct() {
     //
@@ -42,13 +43,16 @@ class RoleController extends BaseController {
     $this->validation = service('validation');
   }
 
-  //-----------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Roles.
+   * --------------------------------------------------------------------------
+   *
    * Shows all role records.
    *
    * @return \CodeIgniter\HTTP\RedirectResponse | string
    */
-  public function roles() {
+  public function roles(): \CodeIgniter\HTTP\RedirectResponse|string {
     $roles = model(RoleModel::class);
     $allRoles = $roles->orderBy('name', 'asc')->findAll();
 
@@ -58,9 +62,9 @@ class RoleController extends BaseController {
     ];
 
     foreach ($allRoles as $role) {
-      $rolePermissions[ $role->id ][] = $roles->getPermissionsForRole($role->id);
+      $rolePermissions[$role->id][] = $roles->getPermissionsForRole($role->id);
     }
-    $data[ 'rolePermissions' ] = $rolePermissions;
+    $data['rolePermissions'] = $rolePermissions;
 
     if ($this->request->withMethod('post')) {
       //
@@ -76,7 +80,7 @@ class RoleController extends BaseController {
         } else {
           if (!$roles->deleteRole($recId)) {
             $this->session->set('errors', $roles->errors());
-            return $this->_render($this->authConfig->views[ 'roles' ], $data);
+            return $this->_render($this->authConfig->views['roles'], $data);
           }
           return redirect()->route('roles')->with('success', lang('Auth.role.delete_success', [ $role->name ]));
         }
@@ -86,36 +90,48 @@ class RoleController extends BaseController {
         //
         $search = $this->request->getPost('search');
         $where = '`name` LIKE "%' . $search . '%" OR `description` LIKE "%' . $search . '%"';
-        $data[ 'roles' ] = $roles->where($where)->orderBy('name', 'asc')->findAll();
-        $data[ 'search' ] = $search;
+        $data['roles'] = $roles->where($where)->orderBy('name', 'asc')->findAll();
+        $data['search'] = $search;
       }
     }
 
-    return $this->_render($this->authConfig->views[ 'roles' ], $data);
+    return $this->_render($this->authConfig->views['roles'], $data);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Roles Create.
+   * --------------------------------------------------------------------------
+   *
    * Displays the user create page.
+   *
+   * @param int $id Role ID
+   *
+   * @return string
    */
-  public function rolesCreate($id = null) {
-    return $this->_render($this->authConfig->views[ 'rolesCreate' ], [ 'config' => $this->authConfig ]);
+  public function rolesCreate($id = null): string {
+    return $this->_render($this->authConfig->views['rolesCreate'], [ 'config' => $this->authConfig ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Roles Create Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempt to create a new user.
    * To be be used by administrators. User will be activated automatically.
+   *
+   * @return \CodeIgniter\HTTP\RedirectResponse
    */
-  public function rolesCreateDo() {
+  public function rolesCreateDo(): \CodeIgniter\HTTP\RedirectResponse {
     $roles = model(RoleModel::class);
     $form = array();
 
     //
     // Get form fields
     //
-    $form[ 'name' ] = $this->request->getPost('name');
-    $form[ 'description' ] = $this->request->getPost('description');
+    $form['name'] = $this->request->getPost('name');
+    $form['description'] = $this->request->getPost('description');
 
     //
     // Set validation rules for adding a new role
@@ -125,7 +141,7 @@ class RoleController extends BaseController {
         'label' => lang('Auth.role.name'),
         'rules' => 'required|trim|max_length[255]|is_unique[auth_roles.name]',
         'errors' => [
-          'is_unique' => lang('Auth.role.not_unique', [ $form[ 'name' ] ])
+          'is_unique' => lang('Auth.role.not_unique', [ $form['name'] ])
         ]
       ],
       'description' => [
@@ -158,13 +174,18 @@ class RoleController extends BaseController {
     }
   }
 
-  //---------------------------------------------------------------------------
   /**
-   * Displays the user edit page.
+   * --------------------------------------------------------------------------
+   * Roles Edit.
+   * --------------------------------------------------------------------------
+   *
+   * Displays the role edit page.
    *
    * @param int $id Role ID
+   *
+   * @return \CodeIgniter\HTTP\RedirectResponse|string
    */
-  public function rolesEdit($id = null) {
+  public function rolesEdit($id = null): \CodeIgniter\HTTP\RedirectResponse|string {
     $roles = model(RoleModel::class);
 
     if (!$role = $roles->where('id', $id)->first()) return redirect()->to('roles');
@@ -172,7 +193,7 @@ class RoleController extends BaseController {
     $permissions = $this->auth->permissions();
     $rolePermissions = $roles->getPermissionsForRole($id);
 
-    return $this->_render($this->authConfig->views[ 'rolesEdit' ], [
+    return $this->_render($this->authConfig->views['rolesEdit'], [
       'config' => $this->authConfig,
       'role' => $role,
       'permissions' => $permissions,
@@ -180,13 +201,18 @@ class RoleController extends BaseController {
     ]);
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Roles Edit Do.
+   * --------------------------------------------------------------------------
+   *
    * Attempt to create a new role.
    *
    * @param int $id Role ID
+   *
+   * @return \CodeIgniter\HTTP\RedirectResponse
    */
-  public function rolesEditDo($id = null) {
+  public function rolesEditDo($id = null): \CodeIgniter\HTTP\RedirectResponse {
     $roles = model(RoleModel::class);
     $form = array();
 
@@ -212,18 +238,18 @@ class RoleController extends BaseController {
     //
     // Get form fields
     //
-    $form[ 'name' ] = $this->request->getPost('name');
-    $form[ 'description' ] = $this->request->getPost('description');
+    $form['name'] = $this->request->getPost('name');
+    $form['description'] = $this->request->getPost('description');
 
     //
     // If the role name changed, make sure the validator checks its uniqueness.
     //
-    if ($form[ 'name' ] != $role->name) {
-      $validationRules[ 'name' ] = [
+    if ($form['name'] != $role->name) {
+      $validationRules['name'] = [
         'label' => lang('Auth.role.name'),
         'rules' => 'required|trim|max_length[255]|is_unique[auth_roles.name]',
         'errors' => [
-          'is_unique' => lang('Auth.role.not_unique', [ $form[ 'name' ] ])
+          'is_unique' => lang('Auth.role.not_unique', [ $form['name'] ])
         ]
       ];
     }
@@ -241,7 +267,7 @@ class RoleController extends BaseController {
       //
       // Save the role name and description
       //
-      $res = $this->auth->updateRole($id, $form[ 'name' ], $form[ 'description' ]);
+      $res = $this->auth->updateRole($id, $form['name'], $form['description']);
       if (!$res) return redirect()->back()->withInput()->with('errors', $roles->errors());
 
       //
@@ -262,16 +288,19 @@ class RoleController extends BaseController {
     }
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Render.
+   * --------------------------------------------------------------------------
+   *
    * Render View.
    *
    * @param string $view
-   * @param array $data
+   * @param array  $data
    *
    * @return string
    */
-  protected function _render(string $view, array $data = []) {
+  protected function _render(string $view, array $data = []): string {
     //
     // In case you have a custom configuration that you want to pass to
     // your views (e.g. theme settings), it is added here.
@@ -279,7 +308,7 @@ class RoleController extends BaseController {
     // It is assumed that have declared and set the variable $myConfig in
     // your BaseController.
     //
-    if (isset($this->myConfig)) $data[ 'myConfig' ] = $this->myConfig;
+    if (isset($this->myConfig)) $data['myConfig'] = $this->myConfig;
 
     return view($view, $data);
   }

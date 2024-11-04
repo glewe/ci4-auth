@@ -12,8 +12,11 @@ class ListRoles extends BaseCommand {
   protected $description = 'Lists roles from the database.';
   protected $usage = 'auth:list_roles';
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Run.
+   * --------------------------------------------------------------------------
+   *
    * This method is responsible for listing all the roles from the database.
    * It does not require any parameters.
    * It first establishes a connection to the database.

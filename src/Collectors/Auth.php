@@ -42,8 +42,11 @@ class Auth extends BaseCollector {
    */
   protected $title = 'Auth';
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Get Title Details.
+   * --------------------------------------------------------------------------
+   *
    * Returns any information that should be shown next to the title.
    *
    * @return string
@@ -52,8 +55,11 @@ class Auth extends BaseCollector {
     return get_class(service('authentication'));
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Display.
+   * --------------------------------------------------------------------------
+   *
    * Returns the data of this collector to be formatted in the toolbar
    *
    * @return string
@@ -84,8 +90,11 @@ class Auth extends BaseCollector {
     return $html;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Get Badge Value.
+   * --------------------------------------------------------------------------
+   *
    * Gets the "badge" value for the button.
    *
    * @return int|null ID of the current User, or null when not logged in
@@ -94,8 +103,11 @@ class Auth extends BaseCollector {
     return service('authentication')->isLoggedIn() ? service('authentication')->id() : null;
   }
 
-  //---------------------------------------------------------------------------
   /**
+   * --------------------------------------------------------------------------
+   * Get Title Details.
+   * --------------------------------------------------------------------------
+   *
    * Display the icon.
    *
    * Icon from https://icons8.com - 1em package

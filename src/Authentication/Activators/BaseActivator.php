@@ -53,7 +53,7 @@ abstract class BaseActivator {
    * @return object
    */
   public function getActivatorSettings() {
-    return (object)$this->config->userActivators[ static::class ];
+    return (object)$this->config->userActivators[static::class];
   }
 
   /**

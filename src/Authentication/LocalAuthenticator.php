@@ -8,13 +8,15 @@ use CI4\Auth\Exceptions\AuthException;
 use CI4\Auth\Password;
 
 class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInterface {
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Attempt.
+   * --------------------------------------------------------------------------
+   *
    * Attempts to validate the credentials and log a user in.
    *
    * @param array $credentials
-   * @param bool $remember Should we remember the user (if enabled)
+   * @param bool  $remember Should we remember the user (if enabled)
    *
    * @return bool
    */
@@ -26,7 +28,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
       // User empty or unknown
       //
       $ipAddress = service('request')->getIPAddress();
-      $this->recordLoginAttempt($credentials[ 'email' ] ?? $credentials[ 'username' ], $ipAddress, $this->user->id ?? null, false, 'User unknown');
+      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false, 'User unknown');
       $this->user = null;
       return false;
     }
@@ -36,7 +38,7 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
       // User banned
       //
       $ipAddress = service('request')->getIPAddress();
-      $this->recordLoginAttempt($credentials[ 'email' ] ?? $credentials[ 'username' ], $ipAddress, $this->user->id ?? null, false, 'User banned');
+      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false, 'User banned');
       $this->error = lang('Auth.user.is_banned');
       $this->user = null;
       return false;
@@ -47,8 +49,8 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
       // User inactive
       //
       $ipAddress = service('request')->getIPAddress();
-      $this->recordLoginAttempt($credentials[ 'email' ] ?? $credentials[ 'username' ], $ipAddress, $this->user->id ?? null, false, 'User inactive');
-      $param = http_build_query([ 'login' => urlencode($credentials[ 'email' ] ?? $credentials[ 'username' ]) ]);
+      $this->recordLoginAttempt($credentials['email'] ?? $credentials['username'], $ipAddress, $this->user->id ?? null, false, 'User inactive');
+      $param = http_build_query([ 'login' => urlencode($credentials['email'] ?? $credentials['username']) ]);
       $this->error = lang('Auth.activation.not_activated') . '<br>' . anchor(route_to('resend-activate-account') . '?' . $param, lang('Auth.activation.resend'));
       $this->user = null;
       return false;
@@ -59,13 +61,15 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
     // Do not login the user yet. Return true only because a 2FA might still
     // be needed.
     //
-//        return $this->login($this->user, $remember);
+//    return $this->login($this->user, $remember);
     return true;
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Check.
+   * --------------------------------------------------------------------------
+   *
    * Checks to see if the user is logged in or not.
    *
    * @return bool
@@ -115,14 +119,16 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
     return true;
   }
 
-  //-------------------------------------------------------------------------
-
   /**
+   * --------------------------------------------------------------------------
+   * Validate.
+   * --------------------------------------------------------------------------
+   *
    * Checks the user's credentials to see if they could authenticate.
    * Unlike `attempt()`, will not log the user into the system.
    *
    * @param array $credentials
-   * @param bool $returnUser
+   * @param bool  $returnUser
    *
    * @return bool|User
    */
@@ -130,15 +136,15 @@ class LocalAuthenticator extends AuthenticationBase implements AuthenticatorInte
     //
     // Can't validate without a password.
     //
-    if (empty($credentials[ 'password' ]) || count($credentials) < 2) {
+    if (empty($credentials['password']) || count($credentials) < 2) {
       return false;
     }
 
     //
     // Only allowed 1 additional credential other than password
     //
-    $password = $credentials[ 'password' ];
-    unset($credentials[ 'password' ]);
+    $password = $credentials['password'];
+    unset($credentials['password']);
 
     if (count($credentials) > 1) {
       throw AuthException::forTooManyCredentials();
