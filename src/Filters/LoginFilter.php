@@ -8,6 +8,7 @@ use CodeIgniter\Filters\FilterInterface;
 use Config\App;
 
 class LoginFilter implements FilterInterface {
+
   /**
    * --------------------------------------------------------------------------
    * Before.
@@ -21,6 +22,9 @@ class LoginFilter implements FilterInterface {
    * @return \CodeIgniter\HTTP\RedirectResponse|bool
    */
   public function before(RequestInterface $request, $arguments = null): \CodeIgniter\HTTP\RedirectResponse|bool {
+    //
+    // Load the 'auth' helper if the 'logged_in' function does not exist
+    //
     if (!function_exists('logged_in')) {
       helper('auth');
     }

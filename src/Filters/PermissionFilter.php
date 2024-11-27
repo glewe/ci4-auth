@@ -8,7 +8,7 @@ use CodeIgniter\Filters\FilterInterface;
 use CI4\Auth\Exceptions\PermissionException;
 
 class PermissionFilter implements FilterInterface {
-  //---------------------------------------------------------------------------
+
   /**
    * --------------------------------------------------------------------------
    * Before.
@@ -23,43 +23,66 @@ class PermissionFilter implements FilterInterface {
    * @param RequestInterface $request
    * @param array|null       $arguments
    *
-   * @return mixed
+   * @return \CodeIgniter\HTTP\RedirectResponse|bool
    */
-  public function before(RequestInterface $request, $arguments = null): mixed {
-    if (!function_exists('logged_in')) helper('auth');
+  public function before(RequestInterface $request, $arguments = null): \CodeIgniter\HTTP\RedirectResponse|bool {
+    //
+    // Load the 'auth' helper if the 'logged_in' function does not exist
+    //
+    if (!function_exists('logged_in')) {
+      helper('auth');
+    }
 
-    if (empty($arguments)) return false;
+    //
+    // If no roles are specified, return without doing anything
+    //
+    if (empty($arguments)) {
+      return false;
+    }
 
+    //
+    // Get the authentication service
+    //
     $authenticate = service('authentication');
 
     //
-    // if no user is logged in then send to the login form
+    // If no user is logged in, redirect to the login form
     //
     if (!$authenticate->check()) {
       session()->set('redirect_url', current_url());
       return redirect('login');
     }
 
+    //
+    // Get the authorization service
+    //
     $authorize = service('authorization');
+
+    //
+    // Check if the user has any of the required permissions
+    //
     $result = true;
-    //
-    // Check each requested permission
-    //
     foreach ($arguments as $permission) {
       $result = $result && $authorize->hasPermission($permission, $authenticate->id());
     }
 
+    //
+    // If the user does not have the required permissions, handle the response
+    //
     if (!$result) {
       if ($authenticate->silent()) {
-//                $redirectURL = session('redirect_url') ?? '/';
+        // Redirect to the error page
         $redirectURL = '/error_auth';
         unset($_SESSION['redirect_url']);
         return redirect()->to($redirectURL)->with('error', lang('Auth.exception.insufficient_permissions'));
       } else {
-//                $redirectURL = session('redirect_url') ?? '/';
+
+        // Throw a PermissionException
+//        throw new PermissionException(lang('Auth.exception.insufficient_permissions'));
+
+        // Redirect to the error page
         $redirectURL = '/error_auth';
         unset($_SESSION['redirect_url']);
-//                throw new PermissionException(lang('Auth.exception.insufficient_permissions'));
         return redirect()->to($redirectURL)->with('error', lang('Auth.exception.insufficient_permissions'));
       }
     }

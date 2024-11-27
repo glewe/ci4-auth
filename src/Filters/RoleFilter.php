@@ -8,52 +8,76 @@ use CodeIgniter\Filters\FilterInterface;
 use CI4\Auth\Exceptions\PermissionException;
 
 class RoleFilter implements FilterInterface {
+
   /**
    * --------------------------------------------------------------------------
    * Before.
    * --------------------------------------------------------------------------
    *
-   * Do whatever processing this filter needs to do. By default it should not
-   * return anything during normal execution. However, when an abnormal state
-   * is found, it should return an instance of CodeIgniter\HTTP\Response. If
-   * it does, script execution will end and that Response will be sent back
-   * to the client, allowing for error pages, redirects, etc.
+   * Handles the logic to be executed before the request is processed.
    *
-   * @param RequestInterface $request
-   * @param array|null       $arguments
+   * This method checks if the user is logged in and has the required roles.
+   * If the user is not logged in, they are redirected to the login page.
+   * If the user does not have the required roles, they are redirected to an
+   * error page or an exception is thrown.
    *
-   * @return \CodeIgniter\HTTP\RedirectResponse|void
+   * @param RequestInterface $request   The current request instance.
+   * @param array|null       $arguments The roles required to access the resource.
+   *
+   * @return \CodeIgniter\HTTP\RedirectResponse|bool
    */
-  public function before(RequestInterface $request, $arguments = null): \CodeIgniter\HTTP\RedirectResponse {
-    if (!function_exists('logged_in')) helper('auth');
+  public function before(RequestInterface $request, $arguments = null): \CodeIgniter\HTTP\RedirectResponse|bool {
+    //
+    // Load the 'auth' helper if the 'logged_in' function does not exist
+    //
+    if (!function_exists('logged_in')) {
+      helper('auth');
+    }
 
-    if (empty($arguments)) return;
+    //
+    // If no roles are specified, return without doing anything
+    //
+    if (empty($arguments)) {
+      return false;
+    }
 
+    //
+    // Get the authentication service
+    //
     $authenticate = service('authentication');
 
     //
-    // If no user is logged in then send to the login form
+    // If no user is logged in, redirect to the login form
     //
     if (!$authenticate->check()) {
       session()->set('redirect_url', current_url());
       return redirect('login');
     }
 
+    //
+    // Get the authorization service
+    //
     $authorize = service('authorization');
 
     //
-    // Check each requested role
+    // Check if the user has any of the required roles
     //
     foreach ($arguments as $role) {
-      if ($authorize->inRole($role, $authenticate->id())) return;
+      if ($authorize->inRole($role, $authenticate->id())) {
+        return false;
+      }
     }
 
+    //
+    // If the user does not have the required roles, handle the response
+    //
     if ($authenticate->silent()) {
-//                $redirectURL = session('redirect_url') ?? '/';
+      // Redirect to the error page
       $redirectURL = '/error';
       unset($_SESSION['redirect_url']);
       return redirect()->to($redirectURL)->with('error', lang('Auth.exception.insufficient_permissions'));
     } else {
+      // Throw a PermissionException
       throw new PermissionException(lang('Auth.exception.insufficient_permissions'));
     }
   }
